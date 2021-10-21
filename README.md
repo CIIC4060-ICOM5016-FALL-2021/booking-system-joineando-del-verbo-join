@@ -6,7 +6,7 @@ Christan J. Robles Rodríguez - christian.robles3@upr.edu\
 Fabiola E. Robles Vega - fabiola.robles1@upr.edu\
 Peter L. Santana Rodríguez - peter.santana@upr.edu
 
-## Credenciales de Base de Datas en Heroku
+## Credenciales de Base de Datos en Heroku
 
 **Host**: `ec2-54-208-96-16.compute-1.amazonaws.com`\
 \
