@@ -51,6 +51,13 @@ def handle_reservation():
     else:
         return jsonify("Method Not Allowed."), 405
 
+@app.route('/reservation/<int:reservationid>', methods=['PUT'])
+def handle_reservationid(reservationid):
+    if request.method == 'PUT':
+        return BaseReservation().updateReservation(request.json, reservationid)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
 
 if __name__ == '__main__':
     app.run(debug=True)

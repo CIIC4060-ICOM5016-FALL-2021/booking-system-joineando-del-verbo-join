@@ -18,3 +18,13 @@ class ReservationDAO:
         self.conn.commit()
 
         return reservationid
+
+
+    def updateReservation(self, reservationid, hostid, roomid, reservationname, startdatetime, enddatetime):
+        cursor = self.conn.cursor()
+        query = "update reservation set hostid= %s, roomid= %s, reservationname= %s, startdatetime= %s, enddatetime= %s where reservationid=%s;"
+        cursor.execute(query, (hostid, roomid, reservationname, startdatetime, enddatetime, reservationid))
+        self.conn.commit()
+        affected_rows = cursor.rowcount
+
+        return affected_rows == 1

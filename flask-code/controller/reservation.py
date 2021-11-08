@@ -26,3 +26,19 @@ class BaseReservation:
         reservationid = dao.createReservation(hostid, roomid, reservationname, startdatetime, enddatetime)
         result = self.build_map_dict((reservationid, hostid, roomid, reservationname, startdatetime, enddatetime))
         return jsonify(result), 200
+
+    def updateReservation(self, json, reservationid):
+        hostid = json["hostid"]
+        roomid = json["roomid"]
+        reservationname = json["reservationname"]
+        startdatetime = json["startdatetime"]
+        enddatetime = json["enddatetime"]
+
+        dao = ReservationDAO()
+
+        updated = dao.updateReservation(reservationid, hostid, roomid, reservationname, startdatetime, enddatetime)
+        result = self.build_map_dict((reservationid, hostid, roomid, reservationname, startdatetime, enddatetime))
+        if updated:
+            return jsonify(result), 200
+        else:
+            return jsonify("NOT UPDATED"), 400
