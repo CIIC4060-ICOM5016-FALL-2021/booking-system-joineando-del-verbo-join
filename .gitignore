@@ -1,3 +1,6 @@
 ./venv/
 ./idea/
-./.idea/
+./flask-code/.idea/
+./flask-code/config/__pycache__/
+./flask-code/controller/__pycache__/
+./flask-code/model/__pycache__/
