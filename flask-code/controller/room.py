@@ -1,8 +1,10 @@
 from flask import jsonify
 from model.room import RoomDAO
 
+
 class BaseRoom:
 
+    # data formatter (list -> dict)
     def build_map_dict(self, row):
         result = {}
         result['roomid'] = row[0]
@@ -11,6 +13,18 @@ class BaseRoom:
         result['buildingid'] = row[3]
         result['typeid'] = row[4]
         return result
+
+    # methods
+    def addNewRoom(self, json):
+        roomnumber = json["roomnumber"]
+        roomcapacity = json["roomcapacity"]
+        buildingid = json["buildingid"]
+        typeid = json["typeid"]
+        dao = RoomDAO()
+        roomid = dao.insertRoom(roomnumber, roomcapacity, buildingid, typeid)
+        tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
+        result = self.build_map_dict(tuple)
+        return jsonify(result), 201
 
     def getAllRooms(self):
         dao = RoomDAO()
@@ -24,22 +38,11 @@ class BaseRoom:
     def getRoomByID(self, roomid):
         dao = RoomDAO()
         tuple = dao.getRoomById(roomid)
-        if not tuple:
-            return jsonify("Not Found"), 404
-        else:
+        if tuple:
             result = self.build_map_dict(tuple)
             return jsonify(result), 200
-
-    def addNewRoom(self, json):
-        roomnumber = json["roomnumber"]
-        roomcapacity = json["roomcapacity"]
-        buildingid = json["buildingid"]
-        typeid = json["typeid"]
-        dao = RoomDAO()
-        roomid = dao.insertRoom(roomnumber, roomcapacity, buildingid, typeid)
-        tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
-        result = self.build_map_dict(tuple)
-        return jsonify(result), 201
+        else:
+            return jsonify("Room Not Found."), 404
 
     def updateRoom(self, json, roomid):
         roomnumber = json["roomnumber"]
@@ -47,15 +50,18 @@ class BaseRoom:
         buildingid = json["buildingid"]
         typeid = json["typeid"]
         dao = RoomDAO()
-        updated_code = dao.updateRoom(roomid, roomnumber, roomcapacity, buildingid, typeid)
-        tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
-        result = self.build_map_dict(tuple)
-        return jsonify(result), 200
+        code_updated = dao.updateRoom(roomid, roomnumber, roomcapacity, buildingid, typeid)
+        if code_updated:
+            tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
+            result = self.build_map_dict(tuple)
+            return jsonify(result), 200
+        else:
+            return jsonify("Room Not Found."), 404
 
     def deleteRoom(self, roomid):
         dao = RoomDAO()
         result = dao.deleteRoom(roomid)
         if result:
-            return jsonify("DELETED"), 200
+            return jsonify("Room Deleted."), 200
         else:
-            return jsonify("NOT FOUND"), 404
+            return jsonify("Room Not Found."), 404

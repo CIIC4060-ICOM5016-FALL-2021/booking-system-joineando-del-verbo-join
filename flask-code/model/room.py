@@ -2,6 +2,7 @@ from config.dbconfig import pg_config
 import psycopg2
 
 class RoomDAO:
+
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (pg_config['database'], pg_config['user'],
                                                                         pg_config['password'], pg_config['port'],
@@ -36,8 +37,9 @@ class RoomDAO:
         cursor = self.conn.cursor()
         query = "update room set roomnumber=%s, roomcapacity=%s, buildingid=%s, typeid=%s where roomid=%s;"
         cursor.execute(query, (roomnumber, roomcapacity, buildingid, typeid, roomid))
+        rows_updated = cursor.rowcount
         self.conn.commit()
-        return True
+        return rows_updated != 0
 
     def deleteRoom(self, roomid):
         cursor = self.conn.cursor()
