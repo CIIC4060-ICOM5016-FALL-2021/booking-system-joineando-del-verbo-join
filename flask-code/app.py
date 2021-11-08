@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from controller.users import BaseUsers
 from controller.userrole import BaseUserRole
+from controller.reservation import BaseReservation
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -39,6 +40,14 @@ def handle_usersid(userid):
     elif request.method == 'DELETE':
         return BaseUsers().deleteUser(userid)
 
+    else:
+        return jsonify("Method Not Allowed."), 405
+
+
+@app.route('/reservation', methods=['POST'])
+def handle_reservation():
+    if request.method == 'POST':
+        return BaseReservation().addNewReservation(request.json)
     else:
         return jsonify("Method Not Allowed."), 405
 
