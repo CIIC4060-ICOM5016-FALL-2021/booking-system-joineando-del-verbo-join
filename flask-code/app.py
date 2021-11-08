@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from controller.users import BaseUsers
 from controller.userrole import BaseUserRole
+from controller.room import BaseRoom
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -27,7 +28,7 @@ def handle_userrole():
     if request.method == 'POST':
         return BaseUserRole().addNewUserRole(request.json)
     else:
-        return jsonify("Method Not Allowed."), 405
+        return jsonify("METHOD NOT ALLOWED"), 405
 
 
 @app.route('/users/<int:userid>', methods=['PUT', 'GET', 'DELETE'])
@@ -39,6 +40,27 @@ def handle_usersid(userid):
     elif request.method == 'DELETE':
         return BaseUsers().deleteUser(userid)
 
+    else:
+        return jsonify("Method Not Allowed."), 405
+
+
+@app.route('/room', methods=['POST', 'GET'])
+def handle_room():
+    if request.method == 'POST':
+        return BaseRoom().addNewRoom(request.json)
+    if request.method == 'GET':
+        return BaseRoom().getAllRooms()
+    else:
+        return jsonify("Method Not Allowed."), 405
+
+@app.route('/room/<int:roomid>', methods=['PUT', 'GET', 'DELETE'])
+def handle_roomid(roomid):
+    if request.method == 'PUT':
+        return BaseRoom().updateRoom(request.json, roomid)
+    elif request.method == 'GET':
+        return BaseRoom().getRoomByID(roomid)
+    elif request.method == 'DELETE':
+        return BaseRoom().deleteRoom(roomid)
     else:
         return jsonify("Method Not Allowed."), 405
 
