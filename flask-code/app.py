@@ -26,7 +26,7 @@ def handle_userrole():
     if request.method == 'POST':
         return BaseUserRole().addNewUserRole(request.json)
     else:
-        return jsonify("Method Not Allowed."), 405
+        return jsonify("METHOD NOT ALLOWED"), 405
 
 
 @app.route('/users/<int:userid>', methods=['PUT', 'GET', 'DELETE'])
