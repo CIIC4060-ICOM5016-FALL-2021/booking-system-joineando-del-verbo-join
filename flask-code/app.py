@@ -12,14 +12,16 @@ CORS(app)
 def hello_world():  # put application's code here
     return 'Hello World!'
 
+
 @app.route('/users', methods=['GET', 'POST'])
 def handle_users():
     if request.method == 'GET':
-         return BaseUsers().getAllUsers()
+        return BaseUsers().getAllUsers()
     elif request.method == 'POST':
-         return BaseUsers().addNewUser(request.json)
+        return BaseUsers().addNewUser(request.json)
     else:
         return jsonify("Method Not Allowed."), 405
+
 
 @app.route('/userrole', methods=['POST'])
 def handle_userrole():
@@ -40,6 +42,7 @@ def handle_usersid(userid):
 
     else:
         return jsonify("Method Not Allowed."), 405
+
 
 @app.route('/room', methods=['POST', 'GET'])
 def handle_room():
