@@ -9,7 +9,7 @@ class BaseRoom:
         result['roomnumber'] = row[1]
         result['roomcapacity'] = row[2]
         result['buildingid'] = row[3]
-        result['typrid'] = row[4]
+        result['typeid'] = row[4]
         return result
 
     def getAllRooms(self):
@@ -21,7 +21,7 @@ class BaseRoom:
             result_list.append(obj)
         return jsonify(result_list)
 
-    def getRoomById(self, roomid):
+    def getRoomByID(self, roomid):
         dao = RoomDAO()
         tuple = dao.getRoomById(roomid)
         if not tuple:
@@ -31,22 +31,21 @@ class BaseRoom:
             return jsonify(result), 200
 
     def addNewRoom(self, json):
-        roomnumber = json['roomnumber']
-        roomcapacity = json['roomcapacity']
-        buildingid = json['buildingid']
-        typeid = json['typeid']
+        roomnumber = json["roomnumber"]
+        roomcapacity = json["roomcapacity"]
+        buildingid = json["buildingid"]
+        typeid = json["typeid"]
         dao = RoomDAO()
         roomid = dao.insertRoom(roomnumber, roomcapacity, buildingid, typeid)
         tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
         result = self.build_map_dict(tuple)
         return jsonify(result), 201
 
-    def updateRoom(self, json):
-        roomnumber = json['roomnumber']
-        roomcapacity = json['roomcapacity']
-        buildingid = json['buildingid']
-        typeid = json['typeid']
-        roomid = json['roomid']
+    def updateRoom(self, json, roomid):
+        roomnumber = json["roomnumber"]
+        roomcapacity = json["roomcapacity"]
+        buildingid = json["buildingid"]
+        typeid = json["typeid"]
         dao = RoomDAO()
         updated_code = dao.updateRoom(roomid, roomnumber, roomcapacity, buildingid, typeid)
         tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
