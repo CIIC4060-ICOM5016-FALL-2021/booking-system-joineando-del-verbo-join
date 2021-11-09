@@ -80,8 +80,8 @@ def handle_buildingid(buildingid):
         return BaseBuilding().updateBuilding(request.json, buildingid)
     elif request.method == 'GET':
         return BaseBuilding().getBuildingByID(buildingid)
-    # elif request.method == 'DELETE':
-    #     return BaseRoom().deleteRoom(roomid)
+    elif request.method == 'DELETE':
+        return BaseBuilding().deleteBuilding(buildingid)
     else:
         return jsonify("Method Not Allowed."), 405
 

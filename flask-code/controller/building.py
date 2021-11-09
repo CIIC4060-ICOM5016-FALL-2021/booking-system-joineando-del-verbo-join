@@ -42,3 +42,12 @@ class BaseBuilding:
             return jsonify(result), 200
         else:
             return jsonify("Not Found"), 404
+
+
+    def deleteBuilding(self, buildingid):
+        dao = BuildingDAO()
+        result = dao.deleteBuilding(buildingid)
+        if result:
+            return jsonify("DELETED"), 200
+        else:
+            return jsonify("NOT FOUND"), 404

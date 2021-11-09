@@ -34,3 +34,12 @@ class BuildingDAO:
         cursor.execute(query, (buildingid,))
         result = cursor.fetchone()
         return result
+
+
+    def deleteBuilding(self, buildingid):
+        cursor = self.conn.cursor()
+        query = "delete from building where buildingid=%s;"
+        cursor.execute(query, (buildingid,))
+        self.conn.commit()
+        affected_rows = cursor.rowcount
+        return affected_rows == 1
