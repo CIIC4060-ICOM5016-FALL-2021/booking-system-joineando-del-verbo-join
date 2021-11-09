@@ -14,6 +14,7 @@ class BaseReservation:
         result['enddatetime'] = row[5]
         return result
 
+
     def addNewReservation(self, json):
         hostid = json["hostid"]
         roomid = json["roomid"]
@@ -26,6 +27,7 @@ class BaseReservation:
         reservationid = dao.createReservation(hostid, roomid, reservationname, startdatetime, enddatetime)
         result = self.build_map_dict((reservationid, hostid, roomid, reservationname, startdatetime, enddatetime))
         return jsonify(result), 200
+
 
     def updateReservation(self, json, reservationid):
         hostid = json["hostid"]

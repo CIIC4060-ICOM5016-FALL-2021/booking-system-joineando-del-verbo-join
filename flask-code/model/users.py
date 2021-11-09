@@ -41,7 +41,6 @@ class UsersDAO:
         return result
 
 
-        return
 
     def deleteUser(self, userid):
         cursor = self.conn.cursor()
