@@ -78,8 +78,8 @@ def handle_building():
 def handle_buildingid(buildingid):
     if request.method == 'PUT':
         return BaseBuilding().updateBuilding(request.json, buildingid)
-    # elif request.method == 'GET':
-    #     return BaseRoom().getRoomByID(roomid)
+    elif request.method == 'GET':
+        return BaseBuilding().getBuildingByID(buildingid)
     # elif request.method == 'DELETE':
     #     return BaseRoom().deleteRoom(roomid)
     else:

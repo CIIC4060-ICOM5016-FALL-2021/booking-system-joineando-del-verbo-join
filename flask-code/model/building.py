@@ -26,3 +26,11 @@ class BuildingDAO:
         self.conn.commit()
         affected_rows = cursor.rowcount
         return affected_rows == 1
+
+
+    def getBuildingByID(self, buildingid):
+        cursor = self.conn.cursor()
+        query = "select buildingid, buildingname from building where buildingid=%s;"
+        cursor.execute(query, (buildingid,))
+        result = cursor.fetchone()
+        return result

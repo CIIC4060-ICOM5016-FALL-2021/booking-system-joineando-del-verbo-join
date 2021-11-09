@@ -32,3 +32,13 @@ class BaseBuilding:
             return jsonify(result), 200
         else:
             return jsonify("NOT UPDATED"), 400
+
+
+    def getBuildingByID(self, buildingid):
+        dao = BuildingDAO()
+        building = dao.getBuildingByID(buildingid)
+        result = self.build_map_dict(building)
+        if building:
+            return jsonify(result), 200
+        else:
+            return jsonify("Not Found"), 404
