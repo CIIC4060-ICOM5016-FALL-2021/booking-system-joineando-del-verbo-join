@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from controller.users import BaseUsers
 from controller.userrole import BaseUserRole
 from controller.room import BaseRoom
+from controller.building import  BaseBuilding
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -61,6 +62,14 @@ def handle_roomid(roomid):
         return BaseRoom().getRoomByID(roomid)
     elif request.method == 'DELETE':
         return BaseRoom().deleteRoom(roomid)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
+
+@app.route('/building', methods=['POST'])
+def handle_building():
+    if request.method == 'POST':
+        return BaseBuilding().addNewBuilding(request.json)
     else:
         return jsonify("Method Not Allowed."), 405
 
