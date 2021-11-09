@@ -19,3 +19,16 @@ class BaseBuilding:
         buildingid = dao.insertBuilding(buildingname)
         result = self.build_map_dict((buildingid, buildingname))
         return jsonify(result), 200
+
+
+    def updateBuilding(self, json, buildingid):
+        buildingname = json["buildingname"]
+
+        dao = BuildingDAO()
+
+        updated = dao.updateBuilding(buildingid, buildingname)
+        result = self.build_map_dict((buildingid, buildingname))
+        if updated:
+            return jsonify(result), 200
+        else:
+            return jsonify("NOT UPDATED"), 400

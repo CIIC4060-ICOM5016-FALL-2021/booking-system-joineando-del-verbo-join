@@ -74,5 +74,17 @@ def handle_building():
         return jsonify("Method Not Allowed."), 405
 
 
+@app.route('/building/<int:buildingid>', methods=['PUT', 'GET', 'DELETE'])
+def handle_buildingid(buildingid):
+    if request.method == 'PUT':
+        return BaseBuilding().updateBuilding(request.json, buildingid)
+    # elif request.method == 'GET':
+    #     return BaseRoom().getRoomByID(roomid)
+    # elif request.method == 'DELETE':
+    #     return BaseRoom().deleteRoom(roomid)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
+
 if __name__ == '__main__':
     app.run(debug=True)

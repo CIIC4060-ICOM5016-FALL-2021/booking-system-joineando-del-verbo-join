@@ -17,3 +17,12 @@ class BuildingDAO:
         buildingid = cursor.fetchone()[0]
         self.conn.commit()
         return buildingid
+
+
+    def updateBuilding(self, buildingid, buildingname):
+        cursor = self.conn.cursor()
+        query = "update building set buildingname=%s where buildingid=%s;"
+        cursor.execute(query, (buildingname, buildingid))
+        self.conn.commit()
+        affected_rows = cursor.rowcount
+        return affected_rows == 1
