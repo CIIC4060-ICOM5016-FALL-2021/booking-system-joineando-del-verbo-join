@@ -39,7 +39,6 @@ def handle_usersid(userid):
         return BaseUsers().getUserByID(userid)
     elif request.method == 'DELETE':
         return BaseUsers().deleteUser(userid)
-
     else:
         return jsonify("Method Not Allowed."), 405
 
@@ -51,10 +50,15 @@ def handle_reservation():
     else:
         return jsonify("Method Not Allowed."), 405
 
-@app.route('/reservation/<int:reservationid>', methods=['PUT'])
+
+@app.route('/reservation/<int:reservationid>', methods=['PUT', 'DELETE', 'GET'])
 def handle_reservationid(reservationid):
     if request.method == 'PUT':
         return BaseReservation().updateReservation(request.json, reservationid)
+    elif request.method == 'DELETE':
+        return BaseReservation().deleteReservation(reservationid)
+    elif request.method == 'GET':
+        return BaseReservation().getReservationByID(reservationid)
     else:
         return jsonify("Method Not Allowed."), 405
 

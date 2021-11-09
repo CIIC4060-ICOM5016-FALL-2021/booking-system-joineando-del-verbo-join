@@ -42,3 +42,24 @@ class BaseReservation:
             return jsonify(result), 200
         else:
             return jsonify("NOT UPDATED"), 400
+
+
+    def deleteReservation(self, reservatioid):
+        dao = ReservationDAO()
+        result = dao.deleteReservation(reservatioid)
+        if result:
+            return jsonify("DELETED"), 200
+        else:
+            return jsonify("NOT FOUND"), 404
+
+
+    def getReservationByID(self, reservationid):
+        dao = ReservationDAO()
+        reservation = dao.getReservationByID(reservationid)
+        result = self.build_map_dict(reservation)
+        if result:
+            return jsonify(result), 200
+        else:
+            return jsonify("Not Found"), 404
+
+

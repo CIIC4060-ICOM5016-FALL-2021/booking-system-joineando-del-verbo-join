@@ -28,3 +28,23 @@ class ReservationDAO:
         affected_rows = cursor.rowcount
 
         return affected_rows == 1
+
+
+    def deleteReservation(self, reservationid):
+        cursor = self.conn.cursor()
+        query = "delete from reservation where reservationid=%s;"
+        cursor.execute(query, (reservationid,))
+        self.conn.commit()
+        affected_rows = cursor.rowcount
+
+        return affected_rows == 1
+
+
+    def getReservationByID(self, reservationid):
+        cursor = self.conn.cursor()
+        query = "select reservationid, hostid, roomid, reservationname, startdatetime, enddatetime from reservation where reservationid=%s;"
+        cursor.execute(query, (reservationid,))
+        result = cursor.fetchone()
+        return result
+
+
