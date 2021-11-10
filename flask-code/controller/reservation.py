@@ -18,13 +18,7 @@ class BaseReservation:
         return result
 
 
-    def addNewReservation(self, json):
-        hostid = json["hostid"]
-        roomid = json["roomid"]
-        reservationname = json["reservationname"]
-        startdatetime = json["startdatetime"]
-        enddatetime = json["enddatetime"]
-
+    def reservationPreCheck(self, hostid, roomid, startdatetime, enddatetime):
         start = datetime.strptime(startdatetime, "%Y-%m-%d %H:%M:%S.%f")
         end = datetime.strptime(enddatetime, "%Y-%m-%d %H:%M:%S.%f")
         if start > end:
@@ -39,6 +33,21 @@ class BaseReservation:
         roomAvailable = roomDAO.checkRoomAvailability(roomid, startdatetime, enddatetime)
         if not roomAvailable:
             return jsonify("TIMESLOT NOT AVAILABLE IN ROOM"), 400
+
+        return "OK"
+
+
+    def addNewReservation(self, json):
+        hostid = json["hostid"]
+        roomid = json["roomid"]
+        reservationname = json["reservationname"]
+        startdatetime = json["startdatetime"]
+        enddatetime = json["enddatetime"]
+
+        precheck = self.reservationPreCheck(hostid, roomid, startdatetime, enddatetime)
+
+        if precheck != "OK":
+            return precheck
 
         dao = ReservationDAO()
         reservationid = dao.createReservation(hostid, roomid, reservationname, startdatetime, enddatetime)
@@ -58,6 +67,12 @@ class BaseReservation:
         enddatetime = json["enddatetime"]
 
         dao = ReservationDAO()
+
+        if dao.didChangeTime(reservationid, startdatetime, enddatetime):
+            precheck = self.reservationPreCheck(hostid, roomid, startdatetime, enddatetime)
+
+            if precheck != "OK":
+                return precheck
 
         updated = dao.updateReservation(reservationid, hostid, roomid, reservationname, startdatetime, enddatetime)
         if updated:

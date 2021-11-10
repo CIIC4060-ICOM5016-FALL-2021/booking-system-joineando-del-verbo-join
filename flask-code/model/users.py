@@ -45,7 +45,6 @@ class UsersDAO:
         return result
 
 
-
     def deleteUser(self, userid):
         cursor = self.conn.cursor()
         query = "delete from users where userid=%s;"
