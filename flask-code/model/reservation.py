@@ -2,6 +2,7 @@ from config.dbconfig import pg_config
 import psycopg2
 
 
+
 class ReservationDAO:
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (pg_config['database'], pg_config['user'],
@@ -11,10 +12,16 @@ class ReservationDAO:
 
 
     def createReservation(self, hostid, roomid, reservationname, startdatetime, enddatetime):
+
         cursor = self.conn.cursor()
+
         query = "insert into reservation(hostid, roomid, reservationname, startdatetime, enddatetime) values (%s, %s, %s, %s, %s) returning reservationid;"
         cursor.execute(query, (hostid, roomid, reservationname, startdatetime, enddatetime))
         reservationid = cursor.fetchone()[0]
+        self.conn.commit()
+
+        query = "insert into userunavailability(userid, startdatetime, enddatetime) values (%s, %s, %s);"
+        cursor.execute(query, (hostid, startdatetime, enddatetime))
         self.conn.commit()
 
         return reservationid

@@ -1,4 +1,6 @@
 from flask import jsonify
+from datetime import datetime
+from model.users import UsersDAO
 from model.reservation import ReservationDAO
 
 
@@ -22,11 +24,27 @@ class BaseReservation:
         startdatetime = json["startdatetime"]
         enddatetime = json["enddatetime"]
 
+
+
+        start = datetime.strptime(startdatetime, "%Y-%m-%d %H:%M:%S.%f")
+        end = datetime.strptime(enddatetime, "%Y-%m-%d %H:%M:%S.%f")
+        if start > end:
+            return jsonify("END TIME SHOULD BE AFTER START TIME"), 400
+
+        userDAO = UsersDAO()
+        hostAvailable = userDAO.checkUserAvailability(hostid, startdatetime, enddatetime)
+        if not hostAvailable:
+            return jsonify("TIMESLOT NOT AVAILABLE"), 400
+
         dao = ReservationDAO()
 
         reservationid = dao.createReservation(hostid, roomid, reservationname, startdatetime, enddatetime)
-        result = self.build_map_dict((reservationid, hostid, roomid, reservationname, startdatetime, enddatetime))
-        return jsonify(result), 200
+
+        if reservationid:
+            result = self.build_map_dict((reservationid, hostid, roomid, reservationname, startdatetime, enddatetime))
+            return jsonify(result), 200
+        else:
+            return jsonify("NOT CREATED"), 400
 
 
     def updateReservation(self, json, reservationid):
@@ -39,8 +57,8 @@ class BaseReservation:
         dao = ReservationDAO()
 
         updated = dao.updateReservation(reservationid, hostid, roomid, reservationname, startdatetime, enddatetime)
-        result = self.build_map_dict((reservationid, hostid, roomid, reservationname, startdatetime, enddatetime))
         if updated:
+            result = self.build_map_dict((reservationid, hostid, roomid, reservationname, startdatetime, enddatetime))
             return jsonify(result), 200
         else:
             return jsonify("NOT UPDATED"), 400
@@ -58,8 +76,8 @@ class BaseReservation:
     def getReservationByID(self, reservationid):
         dao = ReservationDAO()
         reservation = dao.getReservationByID(reservationid)
-        result = self.build_map_dict(reservation)
-        if result:
+        if reservation:
+            result = self.build_map_dict(reservation)
             return jsonify(result), 200
         else:
             return jsonify("Not Found"), 404
