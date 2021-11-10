@@ -73,3 +73,4 @@ class BaseUsers:
             return jsonify("DELETED"), 200
         else:
             return jsonify("NOT FOUND"), 404
+

@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from controller.users import BaseUsers
 from controller.userrole import BaseUserRole
+from controller.reservation import BaseReservation
 from controller.room import BaseRoom
 from flask_cors import CORS
 
@@ -39,7 +40,26 @@ def handle_usersid(userid):
         return BaseUsers().getUserByID(userid)
     elif request.method == 'DELETE':
         return BaseUsers().deleteUser(userid)
+    else:
+        return jsonify("Method Not Allowed."), 405
 
+
+@app.route('/reservation', methods=['POST'])
+def handle_reservation():
+    if request.method == 'POST':
+        return BaseReservation().addNewReservation(request.json)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
+
+@app.route('/reservation/<int:reservationid>', methods=['PUT', 'DELETE', 'GET'])
+def handle_reservationid(reservationid):
+    if request.method == 'PUT':
+        return BaseReservation().updateReservation(request.json, reservationid)
+    elif request.method == 'DELETE':
+        return BaseReservation().deleteReservation(reservationid)
+    elif request.method == 'GET':
+        return BaseReservation().getReservationByID(reservationid)
     else:
         return jsonify("Method Not Allowed."), 405
 
