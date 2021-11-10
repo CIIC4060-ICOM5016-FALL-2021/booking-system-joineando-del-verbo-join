@@ -16,7 +16,7 @@ class ReservationDAO:
         cursor = self.conn.cursor()
 
         query = "insert into reservation(hostid, roomid, reservationname, startdatetime, enddatetime) \
-        values (%s, %s, %s, %s, %s) returning reservationid;"
+                    values (%s, %s, %s, %s, %s) returning reservationid;"
         cursor.execute(query, (hostid, roomid, reservationname, startdatetime, enddatetime))
         reservationid = cursor.fetchone()[0]
         self.conn.commit()
@@ -35,26 +35,28 @@ class ReservationDAO:
     def updateReservation(self, reservationid, hostid, roomid, reservationname, startdatetime, enddatetime):
         cursor = self.conn.cursor()
         query = "update reservation set hostid= %s, roomid= %s, reservationname= %s, startdatetime= %s, \
-        enddatetime= %s where reservationid=%s;"
+                    enddatetime= %s where reservationid=%s;"
         cursor.execute(query, (hostid, roomid, reservationname, startdatetime, enddatetime, reservationid))
         self.conn.commit()
 
+        # could be subquery
         queryID = "select userunavailabilityid from userunavailability where userid=%s and startdatetime=%s \
-        and enddatetime=%s;"
+                    and enddatetime=%s;"
         cursor.execute(queryID, (hostid, startdatetime, enddatetime))
         userunavailabilityid = cursor.fetchone()
 
         query2 = "update userunavailability set userid= %s, startdatetime= %s, enddatetime= %s \
-        where userunavailabilityid =%s;"
+                    where userunavailabilityid =%s;"
         cursor.execute(query2, (hostid, startdatetime, enddatetime, userunavailabilityid))
         self.conn.commit()
 
+        # could be subquery
         queryID = "select roomunavailabilityid from roomunavailability where  startdatetime=%s and enddatetime=%s;"
         cursor.execute(queryID, (startdatetime, enddatetime))
         roomunavailabilityid = cursor.fetchone()
 
         query3 = "update roomunavailability set roomid= %s, startdatetime= %s, enddatetime= %s \
-        where roomunavailabilityid =%s;"
+                    where roomunavailabilityid =%s;"
         cursor.execute(query3, (roomid, startdatetime, enddatetime, roomunavailabilityid))
         self.conn.commit()
 
@@ -65,9 +67,36 @@ class ReservationDAO:
 
     def deleteReservation(self, reservationid):
         cursor = self.conn.cursor()
-        query = "delete from reservation where reservationid=%s;"
-        cursor.execute(query, (reservationid,))
+        # could be subquery
+        queryID = "select userunavailabilityid from userunavailability, reservation \
+                    where reservation.hostid=userunavailability.userid \
+                    and reservationid=%s \
+                    and reservation.startdatetime=userunavailability.startdatetime \
+                    and reservation.enddatetime=userunavailability.enddatetime;"
+        cursor.execute(queryID, (reservationid,))
+        userunavailabilityid = cursor.fetchone()
+
+        query1 = "delete from userunavailability where userunavailabilityid=%s;"
+        cursor.execute(query1, (userunavailabilityid,))
         self.conn.commit()
+
+        #could be subquery
+        queryID = "select roomunavailabilityid from roomunavailability, reservation \
+                            where reservation.roomid=roomunavailability.roomid \
+                            and reservationid=%s \
+                            and reservation.startdatetime=roomunavailability.startdatetime \
+                            and reservation.enddatetime=roomunavailability.enddatetime;"
+        cursor.execute(queryID, (reservationid,))
+        roomunavailabilityid = cursor.fetchone()
+
+        query2 = "delete from roomunavailability where roomunavailabilityid=%s;"
+        cursor.execute(query2, (roomunavailabilityid,))
+        self.conn.commit()
+
+        query3 = "delete from reservation where reservationid=%s;"
+        cursor.execute(query3, (reservationid,))
+        self.conn.commit()
+
         affected_rows = cursor.rowcount
 
         return affected_rows == 1
