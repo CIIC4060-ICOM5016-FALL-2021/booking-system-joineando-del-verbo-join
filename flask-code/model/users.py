@@ -58,13 +58,13 @@ class UsersDAO:
     def checkUserAvailability(self, userid, startdatetime, enddatetime):
         cursor = self.conn.cursor()
         query = "select count(*) from userunavailability \
-        where userunavailability.userid = %s \
-        and ((%s >= userunavailability.startdatetime \
-        and %s <= userunavailability.enddatetime) \
-        or (%s >= userunavailability.startdatetime \
-        and %s<= userunavailability.enddatetime) \
-        or (%s <= userunavailability.startdatetime \
-        and %s >= userunavailability.enddatetime ));"
+               where userunavailability.userid = %s \
+               and ((%s >= userunavailability.startdatetime \
+               and %s <= userunavailability.enddatetime) \
+               or (%s >= userunavailability.startdatetime \
+               and %s<= userunavailability.enddatetime) \
+               or (%s <= userunavailability.startdatetime \
+               and %s >= userunavailability.enddatetime ));"
 
         cursor.execute(query, (userid, startdatetime, startdatetime, enddatetime,
                                enddatetime, startdatetime, enddatetime))

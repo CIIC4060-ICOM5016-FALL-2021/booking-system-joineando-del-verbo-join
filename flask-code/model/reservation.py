@@ -2,8 +2,8 @@ from config.dbconfig import pg_config
 import psycopg2
 
 
-
 class ReservationDAO:
+
     def __init__(self):
         connection_url = "dbname=%s user=%s password=%s port=%s host=%s" % (pg_config['database'], pg_config['user'],
                                                                             pg_config['password'], pg_config['port'],
@@ -20,8 +20,12 @@ class ReservationDAO:
         reservationid = cursor.fetchone()[0]
         self.conn.commit()
 
-        query = "insert into userunavailability(userid, startdatetime, enddatetime) values (%s, %s, %s);"
-        cursor.execute(query, (hostid, startdatetime, enddatetime))
+        query2 = "insert into userunavailability(userid, startdatetime, enddatetime) values (%s, %s, %s);"
+        cursor.execute(query2, (hostid, startdatetime, enddatetime))
+        self.conn.commit()
+
+        query3 = "insert into roomunavailability(roomid, startdatetime, enddatetime) values (%s, %s, %s);"
+        cursor.execute(query3, (roomid, startdatetime, enddatetime))
         self.conn.commit()
 
         return reservationid
@@ -49,7 +53,8 @@ class ReservationDAO:
 
     def getReservationByID(self, reservationid):
         cursor = self.conn.cursor()
-        query = "select reservationid, hostid, roomid, reservationname, startdatetime, enddatetime from reservation where reservationid=%s;"
+        query = "select reservationid, hostid, roomid, reservationname,\
+         startdatetime, enddatetime from reservation where reservationid=%s;"
         cursor.execute(query, (reservationid,))
         result = cursor.fetchone()
         return result

@@ -2,6 +2,7 @@ from flask import jsonify
 from datetime import datetime
 from model.users import UsersDAO
 from model.reservation import ReservationDAO
+from model.room import RoomDAO
 
 
 class BaseReservation:
@@ -24,8 +25,6 @@ class BaseReservation:
         startdatetime = json["startdatetime"]
         enddatetime = json["enddatetime"]
 
-
-
         start = datetime.strptime(startdatetime, "%Y-%m-%d %H:%M:%S.%f")
         end = datetime.strptime(enddatetime, "%Y-%m-%d %H:%M:%S.%f")
         if start > end:
@@ -34,10 +33,14 @@ class BaseReservation:
         userDAO = UsersDAO()
         hostAvailable = userDAO.checkUserAvailability(hostid, startdatetime, enddatetime)
         if not hostAvailable:
-            return jsonify("TIMESLOT NOT AVAILABLE"), 400
+            return jsonify("TIMESLOT NOT AVAILABLE FOR USER"), 400
+
+        roomDAO = RoomDAO()
+        roomAvailable = roomDAO.checkRoomAvailability(roomid, startdatetime, enddatetime)
+        if not roomAvailable:
+            return jsonify("TIMESLOT NOT AVAILABLE IN ROOM"), 400
 
         dao = ReservationDAO()
-
         reservationid = dao.createReservation(hostid, roomid, reservationname, startdatetime, enddatetime)
 
         if reservationid:
