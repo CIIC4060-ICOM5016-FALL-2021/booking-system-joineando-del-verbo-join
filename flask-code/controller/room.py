@@ -14,6 +14,13 @@ class BaseRoom:
         result['typeid'] = row[4]
         return result
 
+    def build_map_dict_unaivalaible(self, row):
+        result = {}
+        result['reservationname'] = row[0]
+        result['startdatetime'] = row[1]
+        result['enddatetime'] = row[2]
+        return result
+
     # methods
     def addNewRoom(self, json):
         roomnumber = json["roomnumber"]
@@ -33,7 +40,7 @@ class BaseRoom:
         for row in room_list:
             obj = self.build_map_dict(row)
             result_list.append(obj)
-        return jsonify(result_list)
+        return jsonify(result_list), 200
 
     def getRoomByID(self, roomid):
         dao = RoomDAO()
@@ -65,3 +72,13 @@ class BaseRoom:
             return jsonify("Room Deleted."), 200
         else:
             return jsonify("Room Not Found."), 404
+
+    def allDayScheduleRoom(self, roomid):
+        dao = RoomDAO()
+        schedules = dao.allDayScheduleRoom(roomid)
+        result_list = []
+        for row in schedules:
+            obj = self.build_map_dict_unaivalaible(row)
+            result_list.append(obj)
+        return jsonify(result_list), 200
+

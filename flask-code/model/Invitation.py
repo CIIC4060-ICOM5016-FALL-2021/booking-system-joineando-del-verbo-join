@@ -16,10 +16,16 @@ class InvitationDAO:
         cursor.execute(query1, (userid,reservationid,))
         self.conn.commit()
 
-        # query2 = "insert into userunavailability(userid, startdatetime, enddatetime) values (%s, %s, %s);"
-        # cursor.execute(query2, (userid, startdatetime, enddatetime))
-        # userunavailabilityid = cursor.fetchone()[0]
-        # self.conn.commit()
+        queryID = "select startdatetime, enddatetime " \
+                  "from reservation " \
+                  "where reservationid = %s;"
+        cursor.execute(queryID, (reservationid,))
+        startdatetime = cursor.fetchone()[0]
+        enddatetime = cursor.fetchone()[1]
+
+        query2 = "insert into userunavailability(userid, startdatetime, enddatetime) values (%s, %s, %s);"
+        cursor.execute(query2, (userid, startdatetime, enddatetime))
+        self.conn.commit()
 
 
         return True
@@ -35,6 +41,7 @@ class InvitationDAO:
             result.append(row)
         return result
 
+
     def updateInvitation(self, userid, reservationid):
         cursor = self.conn.cursor()
         query = "update invitation set userid = %s where reservationid = %s;"
@@ -48,7 +55,7 @@ class InvitationDAO:
         cursor.execute(query,(userid, reservationid,))
         self.conn.commit()
 
-        query2 = "delete from userunavailability "
+        # query2 = "delete from userunavailability "
 
         affectedrows = cursor.rowcount
 
