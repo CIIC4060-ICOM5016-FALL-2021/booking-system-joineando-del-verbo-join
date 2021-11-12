@@ -71,6 +71,11 @@ class UsersDAO:
 
         return availability == 0
 
+    # def allDayScheduleUser(self, userid):
+    #     cursor = self.conn.cursor()
+    #     query = "select reservationname, startdatetime, enddatetime " \
+    #             "from "
+
 
 
 

@@ -91,6 +91,20 @@ def handle_roomschedule(roomid):
     else:
         return jsonify("Method Not Allowed."), 405
 
+@app.route('/room/whoappointed/<int:roomid>', methods=['GET'])
+def handle_whoappointed(roomid):
+    if request.method == 'GET':
+        return BaseRoom().whoAppointedRoom(roomid, request.json)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
+@app.route('/room/availableroom', methods=['GET'])
+def handle_availableroom():
+    if request.method == 'GET':
+        return BaseRoom().availableRoomAtTimeFrame(request.json)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
 
 if __name__ == '__main__':
     app.run(debug=True)
