@@ -90,7 +90,7 @@ class RoomDAO:
 
         if availables > 0:
             roomid = cursor.fetchone()[0]
-            print(roomid)
+
 
         else:
             queryID = "select roomid " \
@@ -99,14 +99,14 @@ class RoomDAO:
                       "and %s > enddatetime;"
             cursor.execute(queryID, (end, start,))
             roomid = cursor.fetchone()[0]
-            print(roomid)
+
 
         query = "select buildingname, roomnumber, roomtypename " \
                 "from room natural inner join building natural inner join roomtype " \
                 "where roomid = %s;"
         cursor.execute(query, (roomid,))
         room = cursor.fetchone()
-        print(room)
+
 
         return room
 

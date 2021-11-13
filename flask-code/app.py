@@ -4,6 +4,7 @@ from controller.userrole import BaseUserRole
 from controller.reservation import BaseReservation
 from controller.room import BaseRoom
 from flask_cors import CORS
+from controller.invitation import BaseInvitation
 
 app = Flask(__name__)
 CORS(app)
@@ -42,6 +43,16 @@ def handle_usersid(userid):
         return BaseUsers().deleteUser(userid)
     else:
         return jsonify("Method Not Allowed."), 405
+
+@app.route('/users/marktimeunavailable/<int:userid>', methods=['PUT', 'DELETE'])
+def handle_timeunavailable(userid):
+    if request.method == 'PUT':
+        return BaseUsers().markTimeUnavailable(userid, request.json)
+    elif request.method == 'DELETE':
+        return BaseUsers().markTimeAvailable(userid, request.json)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
 
 
 @app.route('/reservation', methods=['POST'])
@@ -105,6 +116,19 @@ def handle_availableroom():
     else:
         return jsonify("Method Not Allowed."), 405
 
+@app.route('/invitation', methods=['POST'])
+def handle_invitation():
+    if request.method == 'POST':
+        return BaseInvitation().createInvitation(request.json)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
+@app.route('/invitation/<int:reservationid>', methods=['GET'])
+def handle_invitations(reservationid):
+    if request.method == 'GET':
+        return BaseInvitation().allInviteesForReservation(reservationid)
+    else:
+        return jsonify('Method Not Allowed.'), 405
 
 if __name__ == '__main__':
     app.run(debug=True)
