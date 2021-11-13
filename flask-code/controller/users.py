@@ -1,5 +1,6 @@
 from flask import jsonify
 from model.users import UsersDAO
+from datetime import datetime
 
 class BaseUsers:
 
@@ -11,6 +12,12 @@ class BaseUsers:
         result['email'] = row[3]
         result['password'] = row[4]
         result['roleid'] = row[5]
+        return result
+
+    def build_map_dict_unaivalaible(self, row):
+        result = {}
+        result['startdatetime'] = row[0]
+        result['enddatetime'] = row[1]
         return result
 
     def getAllUsers(self):
@@ -73,4 +80,22 @@ class BaseUsers:
             return jsonify("DELETED"), 200
         else:
             return jsonify("NOT FOUND"), 404
+
+    def markTimeUnavailable(self, userid, json):
+        startdatetime = json['startdatetime']
+        enddatetime = json['enddatetime']
+        startdatetime = datetime.strptime(startdatetime, "%Y-%m-%d %H:%M:%S.%f")
+        enddatetime = datetime.strptime(enddatetime, "%Y-%m-%d %H:%M:%S.%f")
+        dao = UsersDAO()
+        time_busy = dao.markTimeUnavailable(userid,startdatetime,enddatetime)
+        result = self.build_map_dict_unaivalaible(time_busy)
+        return jsonify(result), 200
+
+    def markTimeAvailable(self, userid, json):
+        userunavailabilityid = json['userunavailabilityid']
+        dao = UsersDAO()
+        time_available = dao.markTimeAvailable(userid, userunavailabilityid)
+        result = self.build_map_dict_unaivalaible(time_available)
+        return jsonify(result), 200
+
 

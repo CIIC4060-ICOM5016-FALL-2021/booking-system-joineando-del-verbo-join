@@ -1,5 +1,6 @@
 from flask import jsonify
 from model.room import RoomDAO
+from datetime import datetime
 
 
 class BaseRoom:
@@ -13,6 +14,28 @@ class BaseRoom:
         result['buildingid'] = row[3]
         result['typeid'] = row[4]
         return result
+
+    def build_map_dict_unaivalaible(self, row):
+        result = {}
+        result['reservationname'] = row[0]
+        result['startdatetime'] = row[1]
+        result['enddatetime'] = row[2]
+        return result
+
+    def build_map_dict_name(self, row):
+        result = {}
+        result['firstname'] = row[0]
+        result['lastname'] = row[1]
+        result['userid'] = row[2]
+        return result
+
+    def build_map_dict_roomavailable(self, row):
+        result = {}
+        result['buildingname'] = row[0]
+        result['roomnumber'] = row[1]
+        result['roomtypename'] = row[2]
+        return result
+
 
     # methods
     def addNewRoom(self, json):
@@ -33,7 +56,7 @@ class BaseRoom:
         for row in room_list:
             obj = self.build_map_dict(row)
             result_list.append(obj)
-        return jsonify(result_list)
+        return jsonify(result_list), 200
 
     def getRoomByID(self, roomid):
         dao = RoomDAO()
@@ -65,3 +88,32 @@ class BaseRoom:
             return jsonify("Room Deleted."), 200
         else:
             return jsonify("Room Not Found."), 404
+
+    def allDayScheduleRoom(self, roomid):
+        dao = RoomDAO()
+        schedules = dao.allDayScheduleRoom(roomid)
+        result_list = []
+        for row in schedules:
+            obj = self.build_map_dict_unaivalaible(row)
+            result_list.append(obj)
+        return jsonify(result_list), 200
+
+    def whoAppointedRoom(self, roomid, json):
+        time = json['time']
+        time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
+        dao = RoomDAO()
+        name = dao.whoAppointedRoom(roomid, time)
+        result = self.build_map_dict_name(name)
+        return jsonify(result), 200
+
+    def availableRoomAtTimeFrame(self, json):
+        start = json['startdatetime']
+        end = json['enddatetime']
+        start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S.%f")
+        end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S.%f")
+        dao = RoomDAO()
+        room = dao.availableRoomAtTimeFrame(start, end)
+        result = self.build_map_dict_roomavailable(room)
+        return jsonify(result), 200
+
+

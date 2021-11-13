@@ -71,6 +71,26 @@ class UsersDAO:
 
         return availability == 0
 
+    def markTimeUnavailable(self,userid, startdatetime,enddatetime):
+        cursor = self.conn.cursor()
+        query = "insert into userunavailability(userid, startdatetime, enddatetime) " \
+                "values(%s, %s,%s) returning startdatetime, enddatetime;"
+        cursor.execute(query, (userid, startdatetime, enddatetime,))
+        time_busy = cursor.fetchone()
+        self.conn.commit()
+
+        return time_busy
+
+    def markTimeAvailable(self, userid, userunavailabilityid):
+        cursor = self.conn.cursor()
+        query = "delete from userunavailability " \
+                "where userid = %s and userunavailabilityid = %s " \
+                "returning startdatetime, enddatetime;"
+        cursor.execute(query, (userid, userunavailabilityid,))
+        time_available = cursor.fetchone()
+        self.conn.commit()
+
+        return time_available
 
 
 
