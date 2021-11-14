@@ -20,6 +20,7 @@ class BaseUsers:
         result['enddatetime'] = row[1]
         return result
 
+    # verified
     def getAllUsers(self):
         dao = UsersDAO()
         users_tuple = dao.getAllUsers()
@@ -30,8 +31,9 @@ class BaseUsers:
             for user in users_tuple:
                 result = self.build_map_dict(user)
                 result_list.append(result)
-            return jsonify(result), 200
+            return jsonify(result_list), 200
 
+    # verified
     def addNewUser(self, json):
         firstname = json["firstname"]
         lastname = json["lastname"]
@@ -42,11 +44,14 @@ class BaseUsers:
         dao = UsersDAO()
 
         userid = dao.insertUser(firstname, lastname, email, password, roleid)
-        tuple = (userid, firstname, lastname, email, password, roleid)
-        result = self.build_map_dict(tuple)
+        if userid:
+            user_tuple = (userid, firstname, lastname, email, password, roleid)
+            result = self.build_map_dict(user_tuple)
+            return jsonify(result), 200
+        else:
+            return jsonify("USER NOT CREATED"), 500
 
-        return jsonify(result), 200
-
+    # verified
     def updateUser(self, json, userid):
         firstname = json["firstname"]
         lastname = json["lastname"]
@@ -57,29 +62,30 @@ class BaseUsers:
         dao = UsersDAO()
 
         updated = dao.updateUser( firstname, lastname, email, password, roleid, userid,)
-        result = self.build_map_dict((userid, firstname, lastname, email, password, roleid))
         if updated:
+            result = self.build_map_dict((userid, firstname, lastname, email, password, roleid))
             return jsonify(result), 200
         else:
-            return jsonify("NOT UPDATED"), 400
+            return jsonify("USER NOT FOUND"), 404
 
+    # verified
     def getUserByID(self, userid):
         dao = UsersDAO()
         user = dao.getUserByID(userid)
-        result = self.build_map_dict(user)
         if user:
+            result = self.build_map_dict(user)
             return jsonify(result), 200
         else:
-            return jsonify("Not Found"), 404
+            return jsonify("USER NOT FOUND"), 404
 
 
     def deleteUser(self, userid):
         dao = UsersDAO()
         result = dao.deleteUser(userid)
         if result:
-            return jsonify("DELETED"), 200
+            return jsonify("DELETED USER"), 200
         else:
-            return jsonify("NOT FOUND"), 404
+            return jsonify("USER NOT FOUND"), 404
 
     def markTimeUnavailable(self, userid, json):
         startdatetime = json['startdatetime']

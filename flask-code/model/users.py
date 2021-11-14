@@ -34,7 +34,8 @@ class UsersDAO:
         query = "update users set firstname= %s, lastname= %s, email = %s, password= %s, roleid= %s where userid=%s;"
         cursor.execute(query, (firstname, lastname, email, password, roleid,userid))
         self.conn.commit()
-        return True
+        rows_updated = cursor.rowcount
+        return rows_updated != 0
 
 
     def getUserByID(self, userid):
