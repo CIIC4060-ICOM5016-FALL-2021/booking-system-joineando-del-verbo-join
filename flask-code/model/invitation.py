@@ -27,6 +27,16 @@ class InvitationDAO:
 
         return confirmation
 
+    def getInvitationByID(self, reservationid, inviteeid):
+        cursor = self.conn.cursor()
+        query = "select hostid, inviteeid, reservationid, reservationname, startdatetime, enddatetime, roomid " \
+                "from invitation natural inner join reservation " \
+                "where invitation.reservationid=%s and invitation.inviteeid=%s;"
+        cursor.execute(query, (reservationid, inviteeid))
+        invitation = cursor.fetchone()
+        return invitation
+
+
     def allInviteesForReservation(self, reservationid):
         cursor = self.conn.cursor()
         query = "select userid, firstname, lastname " \
@@ -58,12 +68,14 @@ class InvitationDAO:
         query = "delete from invitation where inviteeid = %s and reservationid = %s;"
         cursor.execute(query,(userid, reservationid,))
         self.conn.commit()
-
+        affectedrows = cursor.rowcount
 
         query2 = "delete from userunavailability " \
                  "where startdatetime = (select startdatetime from reservation where reservationid = %s) " \
-                 "and enddatetime = (select enddatetime from reservation where reservationid = %s);"
-        cursor.execute(query2, (reservationid, reservationid,))
-        affectedrows = cursor.rowcount
+                 "and enddatetime = (select enddatetime from reservation where reservationid = %s)" \
+                 "and userid=%s;"
+        cursor.execute(query2, (reservationid, reservationid, userid))
+        self.conn.commit()
 
-        return True
+
+        return affectedrows !=0
