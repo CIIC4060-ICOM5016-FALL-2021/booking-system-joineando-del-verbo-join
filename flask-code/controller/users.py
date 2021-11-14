@@ -98,4 +98,17 @@ class BaseUsers:
         result = self.build_map_dict_unaivalaible(time_available)
         return jsonify(result), 200
 
+    def allDaySchedule(self, userid):
+        dao = UsersDAO()
+        schedule_tuple = dao.allDaySchedule(userid)
+        result_list = []
+        if not schedule_tuple:
+            return jsonify("No schedule"), 404
+        else:
+            for time in schedule_tuple:
+                result = self.build_map_dict_unaivalaible(time)
+                result_list.append(result)
+            return jsonify(result_list), 200
+
+
 

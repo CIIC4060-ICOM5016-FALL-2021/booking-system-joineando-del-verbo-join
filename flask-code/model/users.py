@@ -92,6 +92,17 @@ class UsersDAO:
 
         return time_available
 
+    def allDaySchedule(self, userid):
+        cursor = self.conn.cursor()
+        query = "select startdatetime, enddatetime " \
+                "from userunavailability " \
+                "where userid = %s;"
+        cursor.execute(query, (userid,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
 
 
 

@@ -53,7 +53,12 @@ def handle_timeunavailable(userid):
     else:
         return jsonify("Method Not Allowed."), 405
 
-
+@app.route('/userschedule/<int:userid>', methods=['GET'])
+def handle_userschedule(userid):
+    if request.method == 'GET':
+        return BaseUsers().allDaySchedule(userid)
+    else:
+        return jsonify("Method Not Allowed."), 405
 
 @app.route('/reservation', methods=['POST'])
 def handle_reservation():
