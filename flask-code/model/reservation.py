@@ -34,26 +34,30 @@ class ReservationDAO:
 
     def updateReservation(self, reservationid, hostid, roomid, reservationname, startdatetime, enddatetime):
         cursor = self.conn.cursor()
+        queryID = "select userunavailabilityid from userunavailability where userid=%s and startdatetime=%s \
+                            and enddatetime=%s;"
+        cursor.execute(queryID, (hostid, startdatetime, enddatetime))
+        userunavailabilityid = cursor.fetchone()
+
+        # could be subquery
+        queryID = "select roomunavailabilityid from roomunavailability where  startdatetime=%s and enddatetime=%s;"
+        cursor.execute(queryID, (startdatetime, enddatetime))
+        roomunavailabilityid = cursor.fetchone()
+
+        # Aqui se llamaria a la funcion de update de invitation
+
+
         query = "update reservation set hostid= %s, roomid= %s, reservationname= %s, startdatetime= %s, \
                     enddatetime= %s where reservationid=%s;"
         cursor.execute(query, (hostid, roomid, reservationname, startdatetime, enddatetime, reservationid))
         self.conn.commit()
 
-        # could be subquery
-        queryID = "select userunavailabilityid from userunavailability where userid=%s and startdatetime=%s \
-                    and enddatetime=%s;"
-        cursor.execute(queryID, (hostid, startdatetime, enddatetime))
-        userunavailabilityid = cursor.fetchone()
 
         query2 = "update userunavailability set userid= %s, startdatetime= %s, enddatetime= %s \
                     where userunavailabilityid =%s;"
         cursor.execute(query2, (hostid, startdatetime, enddatetime, userunavailabilityid))
         self.conn.commit()
 
-        # could be subquery
-        queryID = "select roomunavailabilityid from roomunavailability where  startdatetime=%s and enddatetime=%s;"
-        cursor.execute(queryID, (startdatetime, enddatetime))
-        roomunavailabilityid = cursor.fetchone()
 
         query3 = "update roomunavailability set roomid= %s, startdatetime= %s, enddatetime= %s \
                     where roomunavailabilityid =%s;"

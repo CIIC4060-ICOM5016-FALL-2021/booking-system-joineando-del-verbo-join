@@ -22,7 +22,7 @@ class InvitationDAO:
         query3 = "select reservationname, startdatetime, enddatetime " \
                  "from reservation " \
                  "where reservationid = %s;"
-        cursor.execute(query3, (reservationid))
+        cursor.execute(query3, (reservationid,))
         confirmation = cursor.fetchone()
 
         return confirmation
@@ -38,34 +38,32 @@ class InvitationDAO:
             result.append(row)
         return result
 
-    # def getAllInvitationsByID(self, userid):
-    #     cursor = self.conn.cursor()
-    #     query = "select reservationname, startdatetime, enddatetime " \
-    #             "from reservation " \
-    #             "where reservationid IN " \
-    #             "(select reservationid from invitation where userid = %s);"
-    #     cursor.execute(query, (userid,))
-    #     result = []
-    #     for row in cursor:
-    #         result.append(row)
-    #     return result
-
 
     def updateInvitation(self, reservationid, startdatetime, enddatetime):
         cursor = self.conn.cursor()
-        query = "update invitation set userid = %s where reservationid = %s;"
-        cursor.execute(query,(reservationid,))
+
+        query = "update userunavailability " \
+                "set startdatetime = %s, enddatetime = %s " \
+                "where startdatetime = (select startdatetime from reservation where reservationid = %s) " \
+                "and enddatetime = (select enddatetime from reservation where reservationid = %s);"
+        cursor.execute(query, (startdatetime, enddatetime, reservationid, reservationid, ))
         self.conn.commit()
-        return True
+        affectedrows = cursor.rowcount
+
+        return affectedrows != 0
+
 
     def deleteInvitation(self, userid, reservationid):
         cursor = self.conn.cursor()
-        query = "delete from invitation where userid = %s and reservationid = %s;"
+        query = "delete from invitation where inviteeid = %s and reservationid = %s;"
         cursor.execute(query,(userid, reservationid,))
         self.conn.commit()
 
-        query2 = "delete from userunavailability where reservationid = %s"
-        cursor.execute(query2, (reservationid,))
+
+        query2 = "delete from userunavailability " \
+                 "where startdatetime = (select startdatetime from reservation where reservationid = %s) " \
+                 "and enddatetime = (select enddatetime from reservation where reservationid = %s);"
+        cursor.execute(query2, (reservationid, reservationid,))
         affectedrows = cursor.rowcount
 
-        return affectedrows == 1
+        return True
