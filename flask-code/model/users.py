@@ -93,6 +93,14 @@ class UsersDAO:
 
         return time_available
 
+
+    def allDaySchedule(self, userid):
+        cursor = self.conn.cursor()
+        query = "select startdatetime, enddatetime " \
+                "from userunavailability " \
+                "where userid = %s;"
+        cursor.execute(query, (userid,))
+
     #statistics
 
     def userWithMostReservation(self):
@@ -144,10 +152,12 @@ class UsersDAO:
                 "order by total desc, userid " \
                 "limit 10;"
         cursor.execute(query)
+
         result = []
         for row in cursor:
             result.append(row)
         return result
+
 
     def userMostUsedRoom(self, userid):
         cursor = self.conn.cursor()
@@ -160,6 +170,7 @@ class UsersDAO:
         cursor.execute(query, (userid,))
         result = cursor.fetchone()
         return result
+
 
 
 
