@@ -123,12 +123,21 @@ def handle_invitation():
     else:
         return jsonify("Method Not Allowed."), 405
 
-@app.route('/invitation/<int:reservationid>', methods=['GET'])
+@app.route('/invitation/<int:reservationid>', methods=['GET','PUT'])
 def handle_invitations(reservationid):
     if request.method == 'GET':
         return BaseInvitation().allInviteesForReservation(reservationid)
+    elif request.method == 'PUT':
+        return BaseInvitation().updateInvitation(reservationid, request.json)
     else:
         return jsonify('Method Not Allowed.'), 405
+
+@app.route('/invitation/<int:reservationid>/<int:inviteeid>', methods=['DELETE'])
+def handle_invitations_delete(reservationid,inviteeid):
+    if request.method == 'DELETE':
+        return BaseInvitation().deleteInvitation(inviteeid,reservationid)
+    else:
+        return jsonify("Method Not Allowed."), 405
 
 if __name__ == '__main__':
     app.run(debug=True)
