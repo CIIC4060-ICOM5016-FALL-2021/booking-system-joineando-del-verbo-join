@@ -122,7 +122,7 @@ class RoomDAO:
         result = []
         for row in cursor:
             result.append(row)
-        return result;
+        return result
 
 
     def checkRoomAvailability(self, roomid, startdatetime, enddatetime):
@@ -141,6 +141,10 @@ class RoomDAO:
         availability = cursor.fetchone()[0]
 
         return availability == 0
+
+
+
+
 
 
 
