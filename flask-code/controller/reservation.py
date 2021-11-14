@@ -3,6 +3,7 @@ from datetime import datetime
 from model.users import UsersDAO
 from model.reservation import ReservationDAO
 from model.room import RoomDAO
+from model.invitation import InvitationDAO
 
 
 class BaseReservation:
@@ -18,7 +19,7 @@ class BaseReservation:
         return result
 
 
-    def reservationPreCheck(self, hostid, roomid, startdatetime, enddatetime):
+    def reservationPreCheck(self, hostid, roomid, startdatetime, enddatetime, inviteesIds):
         start = datetime.strptime(startdatetime, "%Y-%m-%d %H:%M:%S.%f")
         end = datetime.strptime(enddatetime, "%Y-%m-%d %H:%M:%S.%f")
         if start > end:
@@ -27,7 +28,12 @@ class BaseReservation:
         userDAO = UsersDAO()
         hostAvailable = userDAO.checkUserAvailability(hostid, startdatetime, enddatetime)
         if not hostAvailable:
-            return jsonify("TIMESLOT NOT AVAILABLE FOR USER"), 400
+            return jsonify("TIMESLOT NOT AVAILABLE FOR HOST"), 400
+
+        for invitee in inviteesIds:
+            if not userDAO.checkUserAvailability(invitee, startdatetime, enddatetime):
+                return jsonify("TIMESLOT NOT AVAILABLE FOR A INVITEE: ", invitee), 400       # change for privacy later
+
 
         roomDAO = RoomDAO()
         roomAvailable = roomDAO.checkRoomAvailability(roomid, startdatetime, enddatetime)
@@ -43,8 +49,9 @@ class BaseReservation:
         reservationname = json["reservationname"]
         startdatetime = json["startdatetime"]
         enddatetime = json["enddatetime"]
+        inviteesIds = json["inviteesIds"]
 
-        precheck = self.reservationPreCheck(hostid, roomid, startdatetime, enddatetime)
+        precheck = self.reservationPreCheck(hostid, roomid, startdatetime, enddatetime, inviteesIds)
 
         if precheck != "OK":
             return precheck
@@ -53,6 +60,11 @@ class BaseReservation:
         reservationid = dao.createReservation(hostid, roomid, reservationname, startdatetime, enddatetime)
 
         if reservationid:
+            invitationDao = InvitationDAO()
+            for invitee in inviteesIds:
+                if invitee != hostid:
+                    invitationDao.createInvitation(invitee, reservationid, startdatetime, enddatetime)
+
             result = self.build_map_dict((reservationid, hostid, roomid, reservationname, startdatetime, enddatetime))
             return jsonify(result), 200
         else:
@@ -65,11 +77,12 @@ class BaseReservation:
         reservationname = json["reservationname"]
         startdatetime = json["startdatetime"]
         enddatetime = json["enddatetime"]
+        invitees = json["invitees"]
 
         dao = ReservationDAO()
 
         if dao.didChangeTime(reservationid, startdatetime, enddatetime):
-            precheck = self.reservationPreCheck(hostid, roomid, startdatetime, enddatetime)
+            precheck = self.reservationPreCheck(hostid, roomid, startdatetime, enddatetime, invitees)
 
             if precheck != "OK":
                 return precheck

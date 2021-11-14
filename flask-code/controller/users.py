@@ -46,11 +46,13 @@ class BaseUsers:
         users_tuple = dao.getAllUsers()
         result_list = []
         if not users_tuple:
-            return jsonify("Not Found"), 404
+            dao.conn.close()
+            return jsonify("NOT FOUND"), 404
         else:
             for user in users_tuple:
                 result = self.build_map_dict(user)
                 result_list.append(result)
+            dao.conn.close()
             return jsonify(result_list), 200
 
     # verified
@@ -67,8 +69,10 @@ class BaseUsers:
         if userid:
             user_tuple = (userid, firstname, lastname, email, password, roleid)
             result = self.build_map_dict(user_tuple)
+            dao.conn.close()
             return jsonify(result), 200
         else:
+            dao.conn.close()
             return jsonify("USER NOT CREATED"), 500
 
     # verified
@@ -84,8 +88,10 @@ class BaseUsers:
         updated = dao.updateUser( firstname, lastname, email, password, roleid, userid,)
         if updated:
             result = self.build_map_dict((userid, firstname, lastname, email, password, roleid))
+            dao.conn.close()
             return jsonify(result), 200
         else:
+            dao.conn.close()
             return jsonify("USER NOT FOUND"), 404
 
     # verified
@@ -94,8 +100,10 @@ class BaseUsers:
         user = dao.getUserByID(userid)
         if user:
             result = self.build_map_dict(user)
+            dao.conn.close()
             return jsonify(result), 200
         else:
+            dao.conn.close()
             return jsonify("USER NOT FOUND"), 404
 
 
@@ -103,8 +111,10 @@ class BaseUsers:
         dao = UsersDAO()
         result = dao.deleteUser(userid)
         if result:
+            dao.conn.close()
             return jsonify("DELETED USER"), 200
         else:
+            dao.conn.close()
             return jsonify("USER NOT FOUND"), 404
 
     def markTimeUnavailable(self, userid, json):
