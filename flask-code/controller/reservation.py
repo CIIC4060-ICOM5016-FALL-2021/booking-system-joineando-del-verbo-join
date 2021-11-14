@@ -95,9 +95,15 @@ class BaseReservation:
             return jsonify("NOT UPDATED"), 400
 
 
-    def deleteReservation(self, reservatioid):
+    def deleteReservation(self, reservationid):
         dao = ReservationDAO()
-        result = dao.deleteReservation(reservatioid)
+        invitationDAO = InvitationDAO()
+
+        inviteedIds = invitationDAO.allInviteesForReservation(reservationid)
+        for user in inviteedIds:
+            invitationDAO.deleteInvitation(user[0], reservationid)
+
+        result = dao.deleteReservation(reservationid)
         if result:
             return jsonify("DELETED"), 200
         else:
