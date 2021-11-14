@@ -111,6 +111,24 @@ class RoomDAO:
         return room
 
 
+    def checkRoomAvailability(self, roomid, startdatetime, enddatetime):
+        cursor = self.conn.cursor()
+        query = "select count(*) from roomunavailability \
+               where roomunavailability.roomid = %s \
+               and ((%s >= roomunavailability.startdatetime \
+               and %s <= roomunavailability.enddatetime) \
+               or (%s >= roomunavailability.startdatetime \
+               and %s<= roomunavailability.enddatetime) \
+               or (%s <= roomunavailability.startdatetime \
+               and %s >= roomunavailability.enddatetime ));"
+
+        cursor.execute(query, (roomid, startdatetime, startdatetime, enddatetime,
+                               enddatetime, startdatetime, enddatetime))
+        availability = cursor.fetchone()[0]
+
+        return availability == 0
+
+
 
 
 

@@ -84,7 +84,7 @@ def handle_reservation():
         return jsonify("METHOD NOT ALLOWED"), 405
 
 
-@app.route('/joineando-del-verbo-join/reservation<int:reservationid>', methods=['PUT', 'DELETE', 'GET'])
+@app.route('/joineando-del-verbo-join/reservation/<int:reservationid>', methods=['PUT', 'DELETE', 'GET'])
 def handle_reservationid(reservationid):
     if request.method == 'PUT':
         return BaseReservation().updateReservation(request.json, reservationid)

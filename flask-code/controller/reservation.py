@@ -98,6 +98,6 @@ class BaseReservation:
             result = self.build_map_dict(reservation)
             return jsonify(result), 200
         else:
-            return jsonify("Not Found"), 404
+            return jsonify("NOT FOUND RESERVATION"), 404
 
 

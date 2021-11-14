@@ -44,9 +44,12 @@ class BaseRoom:
         typeid = json["typeid"]
         dao = RoomDAO()
         roomid = dao.insertRoom(roomnumber, roomcapacity, buildingid, typeid)
-        tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
-        result = self.build_map_dict(tuple)
-        return jsonify(result), 201
+        if roomid:
+            room_tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
+            result = self.build_map_dict(room_tuple)
+            return jsonify(result), 200
+        else:
+            return jsonify("NOT CREATED"), 400
 
     # verified
     def getAllRooms(self):
