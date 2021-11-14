@@ -36,6 +36,13 @@ class BaseRoom:
         result['roomtypename'] = row[2]
         return result
 
+    def build_map_dict_mostreserved(self, row):
+        result = {}
+        result['roomid'] = row[0]
+        result['buildingname'] = row[1]
+        result['roomnumber'] = row[2]
+        return result
+
 
     # methods
     def addNewRoom(self, json):
@@ -115,5 +122,17 @@ class BaseRoom:
         room = dao.availableRoomAtTimeFrame(start, end)
         result = self.build_map_dict_roomavailable(room)
         return jsonify(result), 200
+
+    #statistics
+
+    def roomTopTen(self):
+        dao = RoomDAO()
+        tuples = dao.roomTopTen()
+        result = []
+        for row in tuples:
+            result.append(self.build_map_dict_mostreserved(row))
+        return jsonify(result), 200
+
+
 
 

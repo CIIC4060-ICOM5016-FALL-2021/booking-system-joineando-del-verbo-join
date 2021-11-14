@@ -130,5 +130,41 @@ def handle_invitations(reservationid):
     else:
         return jsonify('Method Not Allowed.'), 405
 
+@app.route('/users/stats/mostreservations', methods = ['GET'])
+def handle_usermostreservations():
+    if request.method == 'GET':
+        return BaseUsers().userWithMostReservation()
+    else:
+        return jsonify('Method Not Allowed.', 405)
+
+@app.route('/users/stats/topten', methods = ['GET'])
+def handle_userstopten():
+    if request.method == 'GET':
+        return BaseUsers().usersTopTen()
+    else:
+        return jsonify('Method Not Allowed.', 405)
+
+@app.route('/room/stats/topten', methods = ['GET'])
+def handle_roomtopten():
+    if request.method == 'GET':
+        return BaseRoom().roomTopTen()
+    else:
+        return jsonify('Method Not Allowed.', 405)
+
+@app.route('/users/stats/mostusedroom/<int:userid>', methods = ['GET'])
+def handle_mostusedroom(userid):
+    if request.method == 'GET':
+        return BaseUsers().userMostUsedRoom(userid)
+    else:
+        return jsonify('Method Not Allowed.', 405)
+
+@app.route('/reservation/stats/busiesthours', methods = ['GET'])
+def handle_busiesthours():
+    if request.method == 'GET':
+        return BaseReservation().busiestHours()
+    else:
+        return jsonify('Method Not Allowed.', 405)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

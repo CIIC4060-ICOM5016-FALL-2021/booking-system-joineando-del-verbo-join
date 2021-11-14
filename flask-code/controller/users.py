@@ -20,6 +20,23 @@ class BaseUsers:
         result['enddatetime'] = row[1]
         return result
 
+    def build_map_dict_mostreservations(self, row):
+        result = {}
+        result['userid'] = row[0]
+        result['firstname'] = row[1]
+        result['lastname'] = row[2]
+        result['email'] = row[3]
+        result['meetings'] = row[4]
+        return result
+
+    def build_map_dict_mostusedroom(self, row):
+        result = {}
+        result['roomid'] = row[0]
+        result['buildingname'] = row[1]
+        result['roomnumber'] = row[2]
+        return result
+
+
     def getAllUsers(self):
         dao = UsersDAO()
         users_tuple = dao.getAllUsers()
@@ -30,7 +47,7 @@ class BaseUsers:
             for user in users_tuple:
                 result = self.build_map_dict(user)
                 result_list.append(result)
-            return jsonify(result), 200
+            return jsonify(result_list), 200
 
     def addNewUser(self, json):
         firstname = json["firstname"]
@@ -97,5 +114,40 @@ class BaseUsers:
         time_available = dao.markTimeAvailable(userid, userunavailabilityid)
         result = self.build_map_dict_unaivalaible(time_available)
         return jsonify(result), 200
+
+    #statistics
+
+    def userWithMostReservation(self):
+        dao = UsersDAO()
+        tuple = dao.userWithMostReservation()
+        result = self.build_map_dict_mostreservations(tuple)
+        return jsonify(result), 200
+        # result =[ ]
+        # if not tuple:
+        #     return jsonify("Not Found"), 404
+        # else:
+        #     for row in tuple:
+        #         result.append(self.build_map_dict_mostreservations(row))
+        #     return jsonify(result), 200
+
+    def usersTopTen(self):
+        dao = UsersDAO()
+        tuples = dao.userTopTen()
+        result = []
+        if not tuples:
+            return jsonify("Not Found"), 404
+        else:
+            for row in tuples:
+                result.append(self.build_map_dict_mostreservations(row))
+            return jsonify(result), 200
+
+    def userMostUsedRoom(self, userid):
+        dao = UsersDAO()
+        tuple = dao.userMostUsedRoom(userid)
+        if not tuple:
+            return jsonify("No Result Found.")
+        else:
+            result = self.build_map_dict_mostusedroom(tuple)
+            return jsonify(result), 200
 
 

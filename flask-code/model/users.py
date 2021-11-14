@@ -92,6 +92,73 @@ class UsersDAO:
 
         return time_available
 
+    #statistics
+
+    def userWithMostReservation(self):
+        cursor = self.conn.cursor()
+        # query = "select t.userid, t.firstname, t.lastname, t.email " \
+        #         "from (select userid, firstname, lastname, email, count(hostid) " \
+        #         "from users, reservation "  \
+        #         "where userid = hostid " \
+        #         "group by userid " \
+        #         "order by count(hostid) desc, userid) as t "
+        query = "select userid, firstname, lastname, email, total " \
+                "from users natural inner join (select userid, sum(quantity) as total " \
+                "from ((select hostid as userid, count(hostid) as quantity " \
+                "from reservation " \
+                "group by hostid) " \
+                "union all " \
+                "(select inviteeid as userid, count(inviteeid) as quantity " \
+                "from invitation " \
+                "group by inviteeid)) as t1 " \
+                "group by userid) as t2 " \
+                "order by total desc, userid;"
+        cursor.execute(query)
+        top_user = cursor.fetchone()
+        return top_user
+        # result = []
+        # for row in cursor:
+        #     result.append(row)
+        # return result
+
+    def userTopTen(self):
+        cursor = self.conn.cursor()
+        # query = "select t.userid, t.firstname, t.lastname, email " \
+        #         "from (select userid, firstname, lastname, email, count(hostid) " \
+        #         "from users, reservation "  \
+        #         "where userid = hostid " \
+        #         "group by userid " \
+        #         "order by count(hostid) desc, userid) as t " \
+        #         "limit 10;"
+        query = "select userid, firstname, lastname, email, total " \
+                "from users natural inner join (select userid, sum(quantity) as total " \
+                "from ((select hostid as userid, count(hostid) as quantity " \
+                "from reservation " \
+                "group by hostid) " \
+                "union all " \
+                "(select inviteeid as userid, count(inviteeid) as quantity " \
+                "from invitation " \
+                "group by inviteeid)) as t1 " \
+                "group by userid) as t2 " \
+                "order by total desc, userid " \
+                "limit 10;"
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def userMostUsedRoom(self, userid):
+        cursor = self.conn.cursor()
+        query = "select t.roomid, t.buildingname, t.roomnumber " \
+                "from (select roomid, buildingname, roomnumber, count(roomid) " \
+                "from room natural inner join building natural inner join reservation " \
+                "where hostid = %s " \
+                "group by roomid, buildingname, roomnumber " \
+                "order by count(roomid) desc, roomid) as t;"
+        cursor.execute(query, (userid,))
+        result = cursor.fetchone()
+        return result
 
 
 
