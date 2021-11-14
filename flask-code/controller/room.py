@@ -1,5 +1,6 @@
 from flask import jsonify
 from model.room import RoomDAO
+from model.users import UsersDAO
 from datetime import datetime
 
 

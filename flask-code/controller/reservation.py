@@ -128,4 +128,22 @@ class BaseReservation:
             result.append({"hour": row[0]})
         return jsonify(result), 200
 
+    def getRoomAppointments(self, roomid, json):
+        userID = json["userid"]
+        userDao = UsersDAO()
+        user = userDao.getUserByID(userID)
+
+        if user[5] == 3:
+            reservationDao = ReservationDAO()
+            appointments = reservationDao.getRoomAppointments(roomid)
+            if appointments:
+                result = []
+                for row in appointments:
+                    result.append(self.build_map_dict(row))
+                return jsonify(result), 200
+            else:
+                return jsonify("APPOINTMENTS NOT FOUND"), 404
+        else:
+            return jsonify("ACCESS DENIED"), 403
+
 

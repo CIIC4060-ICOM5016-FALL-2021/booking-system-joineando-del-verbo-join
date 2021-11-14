@@ -141,3 +141,13 @@ class ReservationDAO:
             result.append(row)
         return result
 
+
+    def getRoomAppointments(self, roomid):
+        cursor = self.conn.cursor()
+        query = "select reservationID  , hostID , roomID , reservationName , startDateTime , " \
+                "endDateTime from  reservation where reservation.roomid = %s;"
+        cursor.execute(query, (roomid,))
+        result = []
+        for row in cursor:
+           result.append(row)
+        return result
