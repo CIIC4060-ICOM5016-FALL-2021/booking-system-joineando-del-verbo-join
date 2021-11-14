@@ -125,6 +125,17 @@ class ReservationDAO:
 
         return count == 0
 
+    def allReservationsForRoom(self, roomid):
+        cursor = self.conn.cursor()
+        query = "select reservationid, hostid, roomid, reservationname, startdatetime, enddatetime " \
+                "from reservation " \
+                "where roomid = %s;"
+        cursor.execute(query, (roomid,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     def busiestHours(self):
         cursor = self.conn.cursor()
         query = "select t.hours " \

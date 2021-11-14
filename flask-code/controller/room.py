@@ -1,6 +1,8 @@
 from flask import jsonify
 from model.room import RoomDAO
 from datetime import datetime
+from model.reservation import ReservationDAO
+from controller.reservation import BaseReservation
 
 
 class BaseRoom:
@@ -95,6 +97,11 @@ class BaseRoom:
             return jsonify("ROOM NOT FOUND"), 404
 
     def deleteRoom(self, roomid):
+        dao = ReservationDAO()
+        room_reservations = dao.allReservationsForRoom(roomid)
+        for res in room_reservations:
+            BaseReservation().deleteReservation(res[0])
+
         dao = RoomDAO()
         result = dao.deleteRoom(roomid)
         if result:
