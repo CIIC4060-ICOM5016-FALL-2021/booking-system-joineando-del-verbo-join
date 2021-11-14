@@ -142,6 +142,25 @@ class RoomDAO:
 
         return availability == 0
 
+    def makeRoomUnavailable(self, roomid, startdatetime, enddatetime):
+        cursor = self.conn.cursor()
+        query = "insert into roomunavailability(roomid, startdatetime, enddatetime) values (%s, %s, %s) " \
+                "returning roomunavailabilityid;"
+        cursor.execute(query, (roomid,startdatetime, enddatetime))
+        roomunavailabilityid = cursor.fetchone()[0]
+        self.conn.commit()
+        return roomunavailabilityid
+
+    def makeRoomAvailable(self, roomid, startdatetime, enddatetime):
+        cursor = self.conn.cursor()
+        query = "delete from roomunavailability where roomid = %s and startdatetime = %s and enddatetime = %s;"
+        cursor.execute(query, (roomid, startdatetime, enddatetime))
+        rows_deleted = cursor.rowcount
+        self.conn.commit()
+        return rows_deleted != 0
+
+
+
 
 
 

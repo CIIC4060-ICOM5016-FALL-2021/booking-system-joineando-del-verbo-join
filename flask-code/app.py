@@ -80,6 +80,16 @@ def handle_roomid(roomid):
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
+@app.route('/room/roomunavailablility/<int:roomid>', methods = ['POST', 'DELETE'])
+def handle_roomavailavility(roomid):
+    if request.method == 'POST':
+        return BaseRoom().makeRoomUnavailable(roomid, request.json)
+    elif request.method == 'DELETE':
+        return BaseRoom().makeRoomAvailable(roomid, request.json)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
+
 
 
 #####################################################################
