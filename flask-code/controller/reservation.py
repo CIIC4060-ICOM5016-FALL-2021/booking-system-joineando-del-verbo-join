@@ -98,6 +98,15 @@ class BaseReservation:
             result = self.build_map_dict(reservation)
             return jsonify(result), 200
         else:
-            return jsonify("Not Found"), 404
+            return jsonify("NOT FOUND RESERVATION"), 404
+
+
+    def busiestHours(self):
+        dao = ReservationDAO()
+        busiest_hours = dao.busiestHours()
+        result = []
+        for row in busiest_hours:
+            result.append({"hour": row[0]})
+        return jsonify(result), 200
 
 

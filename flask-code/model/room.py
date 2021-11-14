@@ -106,9 +106,41 @@ class RoomDAO:
                 "where roomid = %s;"
         cursor.execute(query, (roomid,))
         room = cursor.fetchone()
-
-
         return room
+
+    #statistics
+
+    def roomTopTen(self):
+        cursor = self.conn.cursor()
+        query = "select t.roomid, t.buildingname, t.roomnumber " \
+                "from (select roomid, buildingname, roomnumber, count(roomid) " \
+                "from room natural inner join building natural inner join reservation " \
+                "group by roomid, buildingname, roomnumber " \
+                "order by count(roomid) desc, roomid) as t " \
+                "limit 10;"
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result;
+
+
+    def checkRoomAvailability(self, roomid, startdatetime, enddatetime):
+        cursor = self.conn.cursor()
+        query = "select count(*) from roomunavailability \
+               where roomunavailability.roomid = %s \
+               and ((%s >= roomunavailability.startdatetime \
+               and %s <= roomunavailability.enddatetime) \
+               or (%s >= roomunavailability.startdatetime \
+               and %s<= roomunavailability.enddatetime) \
+               or (%s <= roomunavailability.startdatetime \
+               and %s >= roomunavailability.enddatetime ));"
+
+        cursor.execute(query, (roomid, startdatetime, startdatetime, enddatetime,
+                               enddatetime, startdatetime, enddatetime))
+        availability = cursor.fetchone()[0]
+
+        return availability == 0
 
 
 
