@@ -45,8 +45,9 @@ class InvitationDAO:
         query = "update userunavailability " \
                 "set startdatetime = %s, enddatetime = %s " \
                 "where startdatetime = (select startdatetime from reservation where reservationid = %s) " \
-                "and enddatetime = (select enddatetime from reservation where reservationid = %s);"
-        cursor.execute(query, (startdatetime, enddatetime, reservationid, reservationid, ))
+                "and enddatetime = (select enddatetime from reservation where reservationid = %s) " \
+                "and userid IN (select inviteeid from invitation where reservationid =%s);"
+        cursor.execute(query, (startdatetime, enddatetime, reservationid, reservationid,reservationid ))
         self.conn.commit()
         affectedrows = cursor.rowcount
 
@@ -62,8 +63,10 @@ class InvitationDAO:
 
         query2 = "delete from userunavailability " \
                  "where startdatetime = (select startdatetime from reservation where reservationid = %s) " \
-                 "and enddatetime = (select enddatetime from reservation where reservationid = %s);"
-        cursor.execute(query2, (reservationid, reservationid,))
+                 "and enddatetime = (select enddatetime from reservation where reservationid = %s) " \
+                 "and userid = %s"
+        cursor.execute(query2, (reservationid, reservationid, userid))
+        self.conn.commit()
         affectedrows = cursor.rowcount
 
-        return True
+        return affectedrows != 0
