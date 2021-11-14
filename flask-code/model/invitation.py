@@ -66,6 +66,7 @@ class InvitationDAO:
                  "and enddatetime = (select enddatetime from reservation where reservationid = %s) " \
                  "and userid = %s"
         cursor.execute(query2, (reservationid, reservationid, userid))
+        self.conn.commit()
         affectedrows = cursor.rowcount
 
-        return True
+        return affectedrows != 0
