@@ -36,7 +36,6 @@ class BaseRoom:
         result['roomtypename'] = row[2]
         return result
 
-
     # methods
     def addNewRoom(self, json):
         roomnumber = json["roomnumber"]
@@ -49,6 +48,7 @@ class BaseRoom:
         result = self.build_map_dict(tuple)
         return jsonify(result), 201
 
+    # verified
     def getAllRooms(self):
         dao = RoomDAO()
         room_list = dao.getAllRooms()
@@ -58,15 +58,17 @@ class BaseRoom:
             result_list.append(obj)
         return jsonify(result_list), 200
 
+    # verified
     def getRoomByID(self, roomid):
         dao = RoomDAO()
-        tuple = dao.getRoomById(roomid)
-        if tuple:
-            result = self.build_map_dict(tuple)
+        room_tuple = dao.getRoomById(roomid)
+        if room_tuple:
+            result = self.build_map_dict(room_tuple)
             return jsonify(result), 200
         else:
-            return jsonify("Room Not Found."), 404
+            return jsonify("ROOM NOT FOUND"), 404
 
+    # verified
     def updateRoom(self, json, roomid):
         roomnumber = json["roomnumber"]
         roomcapacity = json["roomcapacity"]
@@ -75,19 +77,19 @@ class BaseRoom:
         dao = RoomDAO()
         code_updated = dao.updateRoom(roomid, roomnumber, roomcapacity, buildingid, typeid)
         if code_updated:
-            tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
-            result = self.build_map_dict(tuple)
+            room_tuple = (roomid, roomnumber, roomcapacity, buildingid, typeid)
+            result = self.build_map_dict(room_tuple)
             return jsonify(result), 200
         else:
-            return jsonify("Room Not Found."), 404
+            return jsonify("ROOM NOT FOUND"), 404
 
     def deleteRoom(self, roomid):
         dao = RoomDAO()
         result = dao.deleteRoom(roomid)
         if result:
-            return jsonify("Room Deleted."), 200
+            return jsonify("ROOM DELETED"), 200
         else:
-            return jsonify("Room Not Found."), 404
+            return jsonify("ROOM NOT FOUND"), 404
 
     def allDayScheduleRoom(self, roomid):
         dao = RoomDAO()
