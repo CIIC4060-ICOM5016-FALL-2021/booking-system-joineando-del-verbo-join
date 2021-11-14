@@ -126,11 +126,8 @@ def handle_invitations(reservationid, inviteeid):
         return BaseInvitation().getInvitationByID(inviteeid, reservationid)
     elif request.method == 'DELETE':
         return BaseInvitation().deleteInvitation(inviteeid, reservationid)
-        # return BaseInvitation().allInviteesForReservation(invitationid)
-    # elif request.method == 'PUT':
-        # return BaseInvitation().updateInvitation(invitationid, request.json)
     else:
-        return jsonify('Method Not Allowed.'), 405
+        return jsonify("METHOD NOT ALLOWED"), 405
 
 
 
@@ -196,12 +193,6 @@ def handle_busiesthours():
         return jsonify('Method Not Allowed.', 405)
 
 
-@app.route('/invitation/<int:reservationid>/<int:inviteeid>', methods=['DELETE'])
-def handle_invitations_delete(reservationid,inviteeid):
-    if request.method == 'DELETE':
-        return BaseInvitation().deleteInvitation(inviteeid,reservationid)
-    else:
-        return jsonify("Method Not Allowed."), 405
 
 
 if __name__ == '__main__':
