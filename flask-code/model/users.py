@@ -178,6 +178,24 @@ class UsersDAO:
         result = cursor.fetchone()
         return result
 
+    def checkUnavailableOnTimeFrame(self, userid, startdatetime, enddatetime):
+        cursor = self.conn.cursor()
+        query = "select userid, startdatetime, enddatetime from userunavailability \
+               where userunavailability.userid = %s \
+               and ((%s >= userunavailability.startdatetime \
+               and %s <= userunavailability.enddatetime) \
+               or (%s >= userunavailability.startdatetime \
+               and %s<= userunavailability.enddatetime) \
+               or (%s <= userunavailability.startdatetime \
+               and %s >= userunavailability.enddatetime ));"
+        cursor.execute(query, (userid, startdatetime, startdatetime, enddatetime,
+                               enddatetime, startdatetime, enddatetime))
+        result = []
+        for row in cursor:
+            result.append(row)
+
+        return result
+
 
 
 

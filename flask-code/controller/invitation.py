@@ -70,9 +70,12 @@ class BaseInvitation:
         if not user:
             return jsonify("USER DOES NOT EXIST."), 404
 
-        # verificar si el invitation ya existe utilizando getInvitationByID de fabi
-
         invDAO = InvitationDAO()
+        invitation = invDAO.getInvitationByID(reservationid, inviteeid)
+        if  invitation:
+            return jsonify("INVITATION ALREADY EXIST."), 500
+
+
         invitation = invDAO.createInvitation(inviteeid, reservationid)
         if invitation:
             result = self.build_map_dict_create(invitation)

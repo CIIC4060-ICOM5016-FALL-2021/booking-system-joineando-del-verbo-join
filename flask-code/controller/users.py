@@ -20,6 +20,13 @@ class BaseUsers:
         result['enddatetime'] = row[1]
         return result
 
+    def build_map_dict_checkunaivalaible(self, row):
+        result = {}
+        result['userid'] = row[0]
+        result['startdatetime'] = row[1]
+        result['enddatetime'] = row[2]
+        return result
+
 
     def build_map_dict_mostreservations(self, row):
         result = {}
@@ -143,7 +150,7 @@ class BaseUsers:
         schedule_tuple = dao.allDaySchedule(userid, daystart, dayend)
         result_list = []
         if not schedule_tuple:
-            return jsonify("No schedule"), 404
+            return jsonify("NO SCHEDULE"), 404
         else:
             for time in schedule_tuple:
                 result = self.build_map_dict_unaivalaible(time)
@@ -185,6 +192,23 @@ class BaseUsers:
         else:
             result = self.build_map_dict_mostusedroom(tuple)
             return jsonify(result), 200
+
+    def checkUnavailableOnTimeFrame(self, json):
+        dao = UsersDAO()
+        users = json['usersIDs']
+        startdatetime = json['startdatetime']
+        enddatetime = json['enddatetime']
+        times = []
+        for userid in users:
+            temp = dao.checkUnavailableOnTimeFrame(userid, startdatetime, enddatetime)
+            if temp:
+                times += temp
+
+        result = []
+        for item in times:
+            result.append(self.build_map_dict_checkunaivalaible(item))
+
+        return jsonify(result), 200
 
 
 
