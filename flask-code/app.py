@@ -39,6 +39,13 @@ def handle_usersid(userid):
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
+@app.route('/joineando-del-verbo-join/users/schedule/<int:userid>', methods=['GET'])
+def handle_userschedule(userid):
+    if request.method == 'GET':
+        return BaseUsers().allDaySchedule(userid)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
 @app.route('/users/marktimeunavailable/<int:userid>', methods=['PUT', 'DELETE'])
 def handle_timeunavailable(userid):
     if request.method == 'PUT':
@@ -49,12 +56,7 @@ def handle_timeunavailable(userid):
         return jsonify("Method Not Allowed."), 405
 
 
-@app.route('/userschedule/<int:userid>', methods=['GET'])
-def handle_userschedule(userid):
-    if request.method == 'GET':
-        return BaseUsers().allDaySchedule(userid)
-    else:
-        return jsonify("Method Not Allowed."), 405
+
 
 #####################################################################
 #                              ROOM                                 #
@@ -84,6 +86,20 @@ def handle_roomid(roomid):
 def handle_availableroom():
     if request.method == 'GET':
         return BaseRoom().availableRoomAtTimeFrame(request.json)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
+@app.route('/joineando-del-verbo-join/room/whoappointed/<int:roomid>', methods=['GET'])
+def handle_whoappointed(roomid):
+    if request.method == 'GET':
+        return BaseRoom().whoAppointedRoom(roomid, request.json)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
+@app.route('/joineando-del-verbo-join/room/schedule/<int:roomid>', methods=['GET'])
+def handle_roomschedule(roomid):
+    if request.method == 'GET':
+        return BaseRoom().allDayScheduleRoom(roomid)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
@@ -137,12 +153,6 @@ def handle_invitations(reservationid, inviteeid):
 
 
 
-@app.route('/room/whoappointed/<int:roomid>', methods=['GET'])
-def handle_whoappointed(roomid):
-    if request.method == 'GET':
-        return BaseRoom().whoAppointedRoom(roomid, request.json)
-    else:
-        return jsonify("METHOD NOT ALLOWED"), 405
 
 
 
@@ -150,12 +160,8 @@ def handle_whoappointed(roomid):
 
 
 
-@app.route('/room/schedule/<int:roomid>', methods=['GET'])
-def handle_roomschedule(roomid):
-    if request.method == 'GET':
-        return BaseRoom().allDayScheduleRoom(roomid)
-    else:
-        return jsonify("METHOD NOT ALLOWED"), 405
+
+
 
 @app.route('/users/stats/mostreservations', methods = ['GET'])
 def handle_usermostreservations():
