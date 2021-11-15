@@ -134,7 +134,7 @@ class ReservationDAO:
         and startdatetime=%s and enddatetime=%s;"
         cursor.execute(query, (reservationid,  startdatetime, enddatetime))
         count = cursor.fetchone()[0]
-
+        self.conn.close()
         return count == 0
 
     def allReservationsForRoom(self, roomid):
@@ -146,6 +146,7 @@ class ReservationDAO:
         result = []
         for row in cursor:
             result.append(row)
+        self.conn.close()
         return result
 
     def busiestHours(self):
@@ -156,12 +157,12 @@ class ReservationDAO:
                 "group by hours " \
                 "order by qty desc, hours) as t " \
                 "limit 5;"
-        # query = "select startdatetime " \
-        #         "from reservation;"
+
         cursor.execute(query)
         result = []
         for row in cursor:
             result.append(row)
+        self.conn.close()
         return result
 
     def getRoomAppointments(self, roomid):
@@ -172,4 +173,5 @@ class ReservationDAO:
         result = []
         for row in cursor:
            result.append(row)
+        self.conn.close()
         return result

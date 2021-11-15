@@ -18,6 +18,7 @@ class UsersDAO:
         result = []
         for row in cursor:
             result.append(row)
+        self.conn.close()
         return result
 
 
@@ -27,6 +28,7 @@ class UsersDAO:
         cursor.execute(query, (firstname, lastname, email, password, roleid))
         userid = cursor.fetchone()[0]
         self.conn.commit()
+        self.conn.close()
         return userid
 
 
@@ -36,6 +38,7 @@ class UsersDAO:
         cursor.execute(query, (firstname, lastname, email, password, roleid,userid))
         self.conn.commit()
         rows_updated = cursor.rowcount
+        self.conn.close()
         return rows_updated != 0
 
 
@@ -44,6 +47,7 @@ class UsersDAO:
         query = "select userid, firstname, lastname, email, password, roleid from users where userid = %s;"
         cursor.execute(query, (userid,))
         result = cursor.fetchone()
+        self.conn.close()
         return result
 
 
@@ -53,6 +57,7 @@ class UsersDAO:
         cursor.execute(query, (userid,))
         affected_rows = cursor.rowcount
         self.conn.commit()
+        self.conn.close()
         return affected_rows == 1
 
 
@@ -70,7 +75,7 @@ class UsersDAO:
         cursor.execute(query, (userid, startdatetime, startdatetime, enddatetime,
                                enddatetime, startdatetime, enddatetime))
         availability = cursor.fetchone()[0]
-
+        self.conn.close()
         return availability == 0
 
     def markTimeUnavailable(self,userid, startdatetime,enddatetime):
@@ -80,7 +85,7 @@ class UsersDAO:
         cursor.execute(query, (userid, startdatetime, enddatetime,))
         time_busy = cursor.fetchone()
         self.conn.commit()
-
+        self.conn.close()
         return time_busy
 
     def markTimeAvailable(self, userid, userunavailabilityid):
@@ -91,7 +96,7 @@ class UsersDAO:
         cursor.execute(query, (userid, userunavailabilityid,))
         time_available = cursor.fetchone()
         self.conn.commit()
-
+        self.conn.close()
         return time_available
 
 
@@ -104,6 +109,7 @@ class UsersDAO:
         result = []
         for row in cursor:
             result.append(row)
+        self.conn.close()
         return result
 
 
@@ -131,6 +137,7 @@ class UsersDAO:
                 "order by total desc, userid;"
         cursor.execute(query)
         top_user = cursor.fetchone()
+        self.conn.close()
         return top_user
         # result = []
         # for row in cursor:
@@ -163,6 +170,7 @@ class UsersDAO:
         result = []
         for row in cursor:
             result.append(row)
+        self.conn.close()
         return result
 
 
@@ -176,6 +184,7 @@ class UsersDAO:
                 "order by count(roomid) desc, roomid) as t;"
         cursor.execute(query, (userid,))
         result = cursor.fetchone()
+        self.conn.close()
         return result
 
     def checkUnavailableOnTimeFrame(self, userid, startdatetime, enddatetime):
@@ -193,7 +202,7 @@ class UsersDAO:
         result = []
         for row in cursor:
             result.append(row)
-
+        self.conn.close()
         return result
 
 

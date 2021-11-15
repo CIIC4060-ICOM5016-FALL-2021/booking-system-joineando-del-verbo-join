@@ -63,7 +63,7 @@ class BaseReservation:
             invitationDao = InvitationDAO()
             for invitee in inviteesIds:
                 if invitee != hostid:
-                    invitationDao.createInvitation(invitee, reservationid, startdatetime, enddatetime)
+                    invitationDao.createInvitation(invitee, reservationid)
 
             result = self.build_map_dict((reservationid, hostid, roomid, reservationname, startdatetime, enddatetime))
             return jsonify(result), 200

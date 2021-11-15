@@ -14,4 +14,5 @@ class UserRoleDAO:
         cursor.execute(query, (userrolename,))
         userroleid = cursor.fetchone()[0]
         self.conn.commit()
+        self.conn.close()
         return userroleid

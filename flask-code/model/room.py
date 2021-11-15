@@ -15,6 +15,7 @@ class RoomDAO:
         cursor.execute(query, (roomnumber, roomcapacity, buildingid, typeid))
         roomid = cursor.fetchone()[0]
         self.conn.commit()
+        self.conn.close()
         return roomid
 
     def getAllRooms(self):
@@ -24,6 +25,7 @@ class RoomDAO:
         result = []
         for row in cursor:
             result.append(row)
+        self.conn.close()
         return result
 
     def getRoomById(self, roomid):
@@ -31,6 +33,7 @@ class RoomDAO:
         query = "select roomid, roomnumber, roomcapacity, buildingid, typeid from room where roomid=%s;"
         cursor.execute(query, (roomid,))
         result = cursor.fetchone()
+        self.conn.close()
         return result
 
     def updateRoom(self, roomid, roomnumber, roomcapacity, buildingid, typeid):
@@ -39,6 +42,7 @@ class RoomDAO:
         cursor.execute(query, (roomnumber, roomcapacity, buildingid, typeid, roomid))
         rows_updated = cursor.rowcount
         self.conn.commit()
+        self.conn.close()
         return rows_updated != 0
 
     def deleteRoom(self, roomid):
@@ -47,6 +51,7 @@ class RoomDAO:
         cursor.execute(query, (roomid,))
         rows_deleted = cursor.rowcount
         self.conn.commit()
+        self.conn.close()
         return rows_deleted != 0
 
     def allDayScheduleRoom(self, roomid, startday,endday):
@@ -58,6 +63,7 @@ class RoomDAO:
         result = []
         for row in cursor:
             result.append(row)
+        self.conn.close()
         return result
 
     def whoAppointedRoom(self, roomid, time):
@@ -79,7 +85,7 @@ class RoomDAO:
 
         cursor.execute(query, (hostid,))
         name = cursor.fetchone()
-
+        self.conn.close()
         return name
 
     def availableRoomAtTimeFrame(self, start, end):
@@ -110,6 +116,7 @@ class RoomDAO:
                 "where roomid = %s;"
         cursor.execute(query, (roomid,))
         room = cursor.fetchone()
+        self.conn.close()
         return room
 
     #statistics
@@ -126,6 +133,7 @@ class RoomDAO:
         result = []
         for row in cursor:
             result.append(row)
+        self.conn.close()
         return result
 
 
@@ -144,6 +152,7 @@ class RoomDAO:
                                enddatetime, startdatetime, enddatetime))
         availability = cursor.fetchone()[0]
 
+        self.conn.close()
         return availability == 0
 
     def makeRoomUnavailable(self, roomid, startdatetime, enddatetime):
@@ -153,6 +162,7 @@ class RoomDAO:
         cursor.execute(query, (roomid,startdatetime, enddatetime))
         roomunavailabilityid = cursor.fetchone()[0]
         self.conn.commit()
+        self.conn.close()
         return roomunavailabilityid
 
     def makeRoomAvailable(self, roomid, roomunavailabilityid):
@@ -161,6 +171,7 @@ class RoomDAO:
         cursor.execute(query, (roomunavailabilityid, roomid))
         rows_deleted = cursor.rowcount
         self.conn.commit()
+        self.conn.close()
         return rows_deleted != 0
 
 
