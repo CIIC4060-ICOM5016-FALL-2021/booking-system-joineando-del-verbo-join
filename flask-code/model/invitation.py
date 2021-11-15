@@ -33,7 +33,7 @@ class InvitationDAO:
                  "where reservationid = %s and inviteeid = %s;"
         cursor.execute(query4, (reservationid, userid))
         confirmation = cursor.fetchone()
-        self.conn.close()
+
         return confirmation
 
     def getInvitationByID(self, reservationid, inviteeid):
@@ -43,7 +43,7 @@ class InvitationDAO:
                 "where invitation.reservationid=%s and invitation.inviteeid=%s;"
         cursor.execute(query, (reservationid, inviteeid))
         invitation = cursor.fetchone()
-        self.conn.close()
+
         return invitation
 
 
@@ -56,7 +56,7 @@ class InvitationDAO:
         result = []
         for row in cursor:
             result.append(row)
-        self.conn.close()
+
         return result
 
 
@@ -71,7 +71,7 @@ class InvitationDAO:
         cursor.execute(query, (startdatetime, enddatetime, reservationid, reservationid,reservationid ))
         self.conn.commit()
         affectedrows = cursor.rowcount
-        self.conn.close()
+
         return affectedrows != 0
 
 
@@ -89,6 +89,5 @@ class InvitationDAO:
         cursor.execute(query2, (reservationid, reservationid, userid))
         self.conn.commit()
 
-        self.conn.close()
         return affectedrows !=0
 

@@ -107,10 +107,10 @@ class BaseUsers:
         user = dao.getUserByID(userid)
         if user:
             result = self.build_map_dict(user)
-            dao.conn.close()
+
             return jsonify(result), 200
         else:
-            dao.conn.close()
+
             return jsonify("USER NOT FOUND"), 404
 
 

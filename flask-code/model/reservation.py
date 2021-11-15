@@ -173,5 +173,4 @@ class ReservationDAO:
         result = []
         for row in cursor:
            result.append(row)
-        self.conn.close()
         return result
