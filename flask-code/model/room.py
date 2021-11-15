@@ -49,14 +49,12 @@ class RoomDAO:
         self.conn.commit()
         return rows_deleted != 0
 
-    def allDayScheduleRoom(self, roomid):
+    def allDayScheduleRoom(self, roomid, startday,endday):
         cursor = self.conn.cursor()
         query1 = "select reservationname, startdatetime, enddatetime " \
                   "from reservation " \
-                  "where roomid = %s;"
-
-        cursor.execute(query1, (roomid,))
-
+                  "where roomid = %s and startdatetime >= %s and enddatetime <= %s;"
+        cursor.execute(query1, (roomid, startday, endday,))
         result = []
         for row in cursor:
             result.append(row)
