@@ -1,6 +1,10 @@
 from flask import jsonify
 from model.room import RoomDAO
-from datetime import datetime
+from model.users import UsersDAO
+from datetime import datetime, timedelta
+from model.reservation import ReservationDAO
+from controller.reservation import BaseReservation
+from model.users import UsersDAO
 
 
 class BaseRoom:
@@ -42,6 +46,14 @@ class BaseRoom:
         result['roomid'] = row[0]
         result['buildingname'] = row[1]
         result['roomnumber'] = row[2]
+        return result
+
+    def build_map_dict_roomunavailable(self, row):
+        result={}
+        result['roomunavailabilityid'] = row[0]
+        result['roomid'] = row[1]
+        result['startdatetime'] = row[2]
+        result['enddatetime'] = row[3]
         return result
 
     # methods
@@ -95,6 +107,11 @@ class BaseRoom:
             return jsonify("ROOM NOT FOUND"), 404
 
     def deleteRoom(self, roomid):
+        dao = ReservationDAO()
+        room_reservations = dao.allReservationsForRoom(roomid)
+        for res in room_reservations:
+            BaseReservation().deleteReservation(res[0])
+
         dao = RoomDAO()
         result = dao.deleteRoom(roomid)
         if result:
@@ -102,9 +119,12 @@ class BaseRoom:
         else:
             return jsonify("ROOM NOT FOUND"), 404
 
-    def allDayScheduleRoom(self, roomid):
+    def allDayScheduleRoom(self, roomid, json):
+        daystart = json['day']
+        daystart = datetime.strptime(daystart, "%Y-%m-%d %H:%M:%S.%f")
+        dayend = daystart + timedelta(days=1)
         dao = RoomDAO()
-        schedules = dao.allDayScheduleRoom(roomid)
+        schedules = dao.allDayScheduleRoom(roomid, daystart, dayend)
         result_list = []
         for row in schedules:
             obj = self.build_map_dict_unaivalaible(row)
@@ -142,6 +162,52 @@ class BaseRoom:
             result.append(self.build_map_dict_mostreserved(row))
         return jsonify(result), 200
 
+    def makeRoomUnavailable(self, roomid, json):
+        userid = json['userid']
+        start = json['startdatetime']
+        end = json['enddatetime']
+        start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S.%f")
+        end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S.%f")
+
+        usersDAO = UsersDAO()
+        userInfo = usersDAO.getUserByID(userid)
+        if userInfo:
+            userRoleID = userInfo[5]
+        else:
+            userRoleID = 0
+
+        if userRoleID == 3:
+            roomDAO = RoomDAO()
+            roomunavailabilityid = roomDAO.makeRoomUnavailable(roomid, start, end)
+            tuple = (roomunavailabilityid, roomid, start, end)
+            result = self.build_map_dict_roomunavailable(tuple)
+            return jsonify(result), 201
+        else:
+            return jsonify("ACCESS DENIED"), 403
+
+    def makeRoomAvailable(self, roomid, json):
+        userid = json['userid']
+        start = json['startdatetime']
+        end = json['enddatetime']
+        start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S.%f")
+        end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S.%f")
+
+        usersDAO = UsersDAO()
+        userInfo = usersDAO.getUserByID(userid)
+        if userInfo:
+            userRoleID = userInfo[5]
+        else:
+            userRoleID = 0
+
+        if userRoleID == 3:
+            roomDAO = RoomDAO()
+            is_deleted = roomDAO.makeRoomAvailable(roomid, start, end)
+            if is_deleted:
+                return jsonify("ROOM WAS MADE AVAILABLE"), 201
+            else:
+                return jsonify("ROOM WAS ALREADY AVAILABLE"), 404
+        else:
+            return jsonify("ACCESS DENIED"), 403
 
 
 

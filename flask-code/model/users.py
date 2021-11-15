@@ -1,5 +1,6 @@
 from config.dbconfig import pg_config
 import psycopg2
+from datetime import datetime
 
 
 class UsersDAO:
@@ -94,12 +95,18 @@ class UsersDAO:
         return time_available
 
 
-    def allDaySchedule(self, userid):
+    def allDaySchedule(self, userid, startday, endday):
         cursor = self.conn.cursor()
         query = "select startdatetime, enddatetime " \
                 "from userunavailability " \
-                "where userid = %s;"
-        cursor.execute(query, (userid,))
+                "where userid = %s and startdatetime >= %s and enddatetime <= %s;"
+        cursor.execute(query, (userid, startday, endday))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+
 
     #statistics
 

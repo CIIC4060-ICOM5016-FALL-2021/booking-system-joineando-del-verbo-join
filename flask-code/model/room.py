@@ -49,14 +49,12 @@ class RoomDAO:
         self.conn.commit()
         return rows_deleted != 0
 
-    def allDayScheduleRoom(self, roomid):
+    def allDayScheduleRoom(self, roomid, startday,endday):
         cursor = self.conn.cursor()
         query1 = "select reservationname, startdatetime, enddatetime " \
                   "from reservation " \
-                  "where roomid = %s;"
-
-        cursor.execute(query1, (roomid,))
-
+                  "where roomid = %s and startdatetime >= %s and enddatetime <= %s;"
+        cursor.execute(query1, (roomid, startday, endday,))
         result = []
         for row in cursor:
             result.append(row)
@@ -128,7 +126,7 @@ class RoomDAO:
         result = []
         for row in cursor:
             result.append(row)
-        return result;
+        return result
 
 
     def checkRoomAvailability(self, roomid, startdatetime, enddatetime):
@@ -147,6 +145,29 @@ class RoomDAO:
         availability = cursor.fetchone()[0]
 
         return availability == 0
+
+    def makeRoomUnavailable(self, roomid, startdatetime, enddatetime):
+        cursor = self.conn.cursor()
+        query = "insert into roomunavailability(roomid, startdatetime, enddatetime) values (%s, %s, %s) " \
+                "returning roomunavailabilityid;"
+        cursor.execute(query, (roomid,startdatetime, enddatetime))
+        roomunavailabilityid = cursor.fetchone()[0]
+        self.conn.commit()
+        return roomunavailabilityid
+
+    def makeRoomAvailable(self, roomid, startdatetime, enddatetime):
+        cursor = self.conn.cursor()
+        query = "delete from roomunavailability where roomid = %s and startdatetime = %s and enddatetime = %s;"
+        cursor.execute(query, (roomid, startdatetime, enddatetime))
+        rows_deleted = cursor.rowcount
+        self.conn.commit()
+        return rows_deleted != 0
+
+
+
+
+
+
 
 
 

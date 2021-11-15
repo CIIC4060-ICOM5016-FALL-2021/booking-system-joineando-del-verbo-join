@@ -44,17 +44,41 @@ class BaseInvitation:
         result['reservationid'] = row[1]
         return result
 
+    def build_map_dict_create(self, row):
+        result = {}
+        result['hostid'] = row[0]
+        result['inviteeid'] = row[1]
+        result['reservationid'] = row[2]
+        result['reservationname'] = row[3]
+        result['startdatetime'] = row[4]
+        result['enddatetime'] = row[5]
+        result['roomid'] = row[6]
+        return result
+
+
     def createInvitation(self, json):
         inviteeid = json['inviteeid']
         reservationid = json['reservationid']
-        startdatetime = json['startdatetime']
-        enddatetime = json['enddatetime']
-        startdatetime = datetime.strptime(startdatetime, "%Y-%m-%d %H:%M:%S.%f")
-        enddatetime = datetime.strptime(enddatetime, "%Y-%m-%d %H:%M:%S.%f")
-        dao = InvitationDAO()
-        invited = dao.createInvitation(inviteeid, reservationid, startdatetime, enddatetime)
-        result = self.build_map_dict(invited)
-        return jsonify(result), 200
+
+        resDAO = ReservationDAO()
+        reservation = resDAO.getReservationByID(reservationid)
+        if not reservation:
+            return jsonify("RESERVATION DOES NOT EXIST."), 404
+
+        userDAO = UsersDAO()
+        user = userDAO.getUserByID(inviteeid)
+        if not user:
+            return jsonify("USER DOES NOT EXIST."), 404
+
+        # verificar si el invitation ya existe utilizando getInvitationByID de fabi
+
+        invDAO = InvitationDAO()
+        invitation = invDAO.createInvitation(inviteeid, reservationid)
+        if invitation:
+            result = self.build_map_dict_create(invitation)
+            return jsonify(result), 200
+        else:
+            return jsonify("INVITATION NOT CREATED."), 500
 
     def getInvitationByID(self, inviteeid, reservationid):
         dao = InvitationDAO()
@@ -93,7 +117,10 @@ class BaseInvitation:
         if deleted:
             return jsonify("INVITATION DELETED"), 200
         else:
+
             return jsonify("COULD NOT DELELETE INVITATION"), 404
+
+
 
 
 

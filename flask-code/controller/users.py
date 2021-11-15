@@ -1,6 +1,6 @@
 from flask import jsonify
 from model.users import UsersDAO
-from datetime import datetime
+from datetime import datetime, date, time, timedelta
 
 class BaseUsers:
 
@@ -135,9 +135,12 @@ class BaseUsers:
         return jsonify(result), 200
 
 
-    def allDaySchedule(self, userid):
+    def allDaySchedule(self, userid, json):
+        daystart = json['daystart']
+        daystart = datetime.strptime(daystart, "%Y-%m-%d %H:%M:%S.%f")
+        dayend = daystart + timedelta(days=1)
         dao = UsersDAO()
-        schedule_tuple = dao.allDaySchedule(userid)
+        schedule_tuple = dao.allDaySchedule(userid, daystart, dayend)
         result_list = []
         if not schedule_tuple:
             return jsonify("No schedule"), 404
@@ -178,7 +181,7 @@ class BaseUsers:
         dao = UsersDAO()
         tuple = dao.userMostUsedRoom(userid)
         if not tuple:
-            return jsonify("No Result Found.")
+            return jsonify("No Result Found."), 404
         else:
             result = self.build_map_dict_mostusedroom(tuple)
             return jsonify(result), 200

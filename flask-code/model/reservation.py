@@ -34,34 +34,46 @@ class ReservationDAO:
 
     def updateReservation(self, reservationid, hostid, roomid, reservationname, startdatetime, enddatetime):
         cursor = self.conn.cursor()
-        queryID = "select userunavailabilityid from userunavailability where userid=%s and startdatetime=%s \
-                            and enddatetime=%s;"
-        cursor.execute(queryID, (hostid, startdatetime, enddatetime))
+
+        # update userunavailability for host
+        query1 = "select userunavailabilityid from userunavailability " \
+                 "where userid=(select hostid from reservation where reservationid = %s) " \
+                 "and startdatetime= (select startdatetime from reservation where reservationid = %s)" \
+                 "and enddatetime= (select enddatetime from reservation where reservationid = %s);"
+        cursor.execute(query1, (reservationid, reservationid, reservationid))
         userunavailabilityid = cursor.fetchone()
 
-        # could be subquery
-        queryID = "select roomunavailabilityid from roomunavailability where  startdatetime=%s and enddatetime=%s;"
-        cursor.execute(queryID, (startdatetime, enddatetime))
-        roomunavailabilityid = cursor.fetchone()
-
-        # Aqui se llamaria a la funcion de update de invitation
-
-
-        query = "update reservation set hostid= %s, roomid= %s, reservationname= %s, startdatetime= %s, \
-                    enddatetime= %s where reservationid=%s;"
-        cursor.execute(query, (hostid, roomid, reservationname, startdatetime, enddatetime, reservationid))
-        self.conn.commit()
-
-
         query2 = "update userunavailability set userid= %s, startdatetime= %s, enddatetime= %s \
-                    where userunavailabilityid =%s;"
+                            where userunavailabilityid =%s;"
         cursor.execute(query2, (hostid, startdatetime, enddatetime, userunavailabilityid))
         self.conn.commit()
 
+        # update userunavailability for invitees
+        query3 = "update userunavailability " \
+                 "set startdatetime = %s, enddatetime = %s " \
+                 "where startdatetime = (select startdatetime from reservation where reservationid = %s) " \
+                 "and enddatetime = (select enddatetime from reservation where reservationid = %s) " \
+                 "and userid IN (select inviteeid from invitation where reservationid =%s);"
+        cursor.execute(query3, (startdatetime, enddatetime, reservationid, reservationid, reservationid))
+        self.conn.commit()
 
-        query3 = "update roomunavailability set roomid= %s, startdatetime= %s, enddatetime= %s \
-                    where roomunavailabilityid =%s;"
-        cursor.execute(query3, (roomid, startdatetime, enddatetime, roomunavailabilityid))
+        # update roomunavailability
+        query4 = "select roomunavailabilityid from roomunavailability " \
+                 "where roomid=(select roomid from reservation where reservationid = %s) " \
+                 "and startdatetime=(select startdatetime from reservation where reservationid = %s) " \
+                 "and enddatetime=(select enddatetime from reservation where reservationid = %s);"
+        cursor.execute(query4, (reservationid, reservationid, reservationid))
+        roomunavailabilityid = cursor.fetchone()
+
+        query5 = "update roomunavailability set roomid= %s, startdatetime= %s, enddatetime= %s \
+                            where roomunavailabilityid =%s;"
+        cursor.execute(query5, (roomid, startdatetime, enddatetime, roomunavailabilityid))
+        self.conn.commit()
+
+        # update reservation
+        query6 = "update reservation set hostid= %s, roomid= %s, reservationname= %s, startdatetime= %s, \
+                            enddatetime= %s where reservationid=%s;"
+        cursor.execute(query6, (hostid, roomid, reservationname, startdatetime, enddatetime, reservationid))
         self.conn.commit()
 
         affected_rows = cursor.rowcount
@@ -125,6 +137,17 @@ class ReservationDAO:
 
         return count == 0
 
+    def allReservationsForRoom(self, roomid):
+        cursor = self.conn.cursor()
+        query = "select reservationid, hostid, roomid, reservationname, startdatetime, enddatetime " \
+                "from reservation " \
+                "where roomid = %s;"
+        cursor.execute(query, (roomid,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     def busiestHours(self):
         cursor = self.conn.cursor()
         query = "select t.hours " \
@@ -141,3 +164,12 @@ class ReservationDAO:
             result.append(row)
         return result
 
+    def getRoomAppointments(self, roomid):
+        cursor = self.conn.cursor()
+        query = "select reservationID  , hostID , roomID , reservationName , startDateTime , " \
+                "endDateTime from  reservation where reservation.roomid = %s;"
+        cursor.execute(query, (roomid,))
+        result = []
+        for row in cursor:
+           result.append(row)
+        return result
