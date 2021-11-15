@@ -165,13 +165,6 @@ class BaseUsers:
         tuple = dao.userWithMostReservation()
         result = self.build_map_dict_mostreservations(tuple)
         return jsonify(result), 200
-        # result =[ ]
-        # if not tuple:
-        #     return jsonify("Not Found"), 404
-        # else:
-        #     for row in tuple:
-        #         result.append(self.build_map_dict_mostreservations(row))
-        #     return jsonify(result), 200
 
     def usersTopTen(self):
         dao = UsersDAO()
