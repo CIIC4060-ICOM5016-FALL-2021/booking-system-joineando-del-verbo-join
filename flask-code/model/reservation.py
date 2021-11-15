@@ -134,7 +134,7 @@ class ReservationDAO:
         and startdatetime=%s and enddatetime=%s;"
         cursor.execute(query, (reservationid,  startdatetime, enddatetime))
         count = cursor.fetchone()[0]
-        self.conn.close()
+
         return count == 0
 
     def allReservationsForRoom(self, roomid):
