@@ -155,10 +155,10 @@ class RoomDAO:
         self.conn.commit()
         return roomunavailabilityid
 
-    def makeRoomAvailable(self, roomid, startdatetime, enddatetime):
+    def makeRoomAvailable(self, roomid, roomunavailabilityid):
         cursor = self.conn.cursor()
-        query = "delete from roomunavailability where roomid = %s and startdatetime = %s and enddatetime = %s;"
-        cursor.execute(query, (roomid, startdatetime, enddatetime))
+        query = "delete from roomunavailability where roomunavailabilityid = %s and roomid=%s;"
+        cursor.execute(query, (roomunavailabilityid, roomid))
         rows_deleted = cursor.rowcount
         self.conn.commit()
         return rows_deleted != 0
