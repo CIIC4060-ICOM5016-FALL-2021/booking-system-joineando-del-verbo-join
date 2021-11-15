@@ -120,15 +120,18 @@ class BaseRoom:
             return jsonify("ROOM NOT FOUND"), 404
 
     def allDayScheduleRoom(self, roomid, json):
-        daystart = json['day']
+        daystart = json['daystart']
         daystart = datetime.strptime(daystart, "%Y-%m-%d %H:%M:%S.%f")
         dayend = daystart + timedelta(days=1)
         dao = RoomDAO()
         schedules = dao.allDayScheduleRoom(roomid, daystart, dayend)
+        if not schedules:
+            return jsonify("NO SCHEDULE"), 404
         result_list = []
         for row in schedules:
             obj = self.build_map_dict_unaivalaible(row)
             result_list.append(obj)
+
         return jsonify(result_list), 200
 
     def whoAppointedRoom(self, roomid, json):
