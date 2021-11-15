@@ -15,7 +15,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "booking-app-joineando" #Must be unique in Heroku
           heroku_email: "fabiola.robles1@upr.edu"
-          usedocker: true
           appdir: "flask-code" # <- This will point to the api folder in your project
         env:
           HD_DB_HOST: ec2-54-208-96-16.compute-1.amazonaws.com
