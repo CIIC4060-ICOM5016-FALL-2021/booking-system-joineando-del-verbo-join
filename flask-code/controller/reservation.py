@@ -77,10 +77,15 @@ class BaseReservation:
         reservationname = json["reservationname"]
         startdatetime = json["startdatetime"]
         enddatetime = json["enddatetime"]
-        invitees = json["invitees"]
+
+        invDAO = InvitationDAO()
+        result = invDAO.allInviteesForReservation(reservationid)
+
+        invitees = []
+        for row in result:
+            invitees.append(row[0])
 
         dao = ReservationDAO()
-
         if dao.didChangeTime(reservationid, startdatetime, enddatetime):
             precheck = self.reservationPreCheck(hostid, roomid, startdatetime, enddatetime, invitees)
 
