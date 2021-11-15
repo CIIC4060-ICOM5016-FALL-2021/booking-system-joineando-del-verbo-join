@@ -139,7 +139,6 @@ class BaseUsers:
         daystart = json['daystart']
         daystart = datetime.strptime(daystart, "%Y-%m-%d %H:%M:%S.%f")
         dayend = daystart + timedelta(days=1)
-        print(dayend)
         dao = UsersDAO()
         schedule_tuple = dao.allDaySchedule(userid, daystart, dayend)
         result_list = []

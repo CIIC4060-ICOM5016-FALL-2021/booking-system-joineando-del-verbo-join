@@ -1,7 +1,7 @@
 from flask import jsonify
 from model.room import RoomDAO
 from model.users import UsersDAO
-from datetime import datetime
+from datetime import datetime, timedelta
 from model.reservation import ReservationDAO
 from controller.reservation import BaseReservation
 from model.users import UsersDAO
@@ -119,9 +119,12 @@ class BaseRoom:
         else:
             return jsonify("ROOM NOT FOUND"), 404
 
-    def allDayScheduleRoom(self, roomid):
+    def allDayScheduleRoom(self, roomid, json):
+        daystart = json['day']
+        daystart = datetime.strptime(daystart, "%Y-%m-%d %H:%M:%S.%f")
+        dayend = daystart + timedelta(days=1)
         dao = RoomDAO()
-        schedules = dao.allDayScheduleRoom(roomid)
+        schedules = dao.allDayScheduleRoom(roomid, daystart, dayend)
         result_list = []
         for row in schedules:
             obj = self.build_map_dict_unaivalaible(row)
