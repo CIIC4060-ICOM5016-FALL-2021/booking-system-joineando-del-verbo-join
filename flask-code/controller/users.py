@@ -143,7 +143,7 @@ class BaseUsers:
         schedule_tuple = dao.allDaySchedule(userid, daystart, dayend)
         result_list = []
         if not schedule_tuple:
-            return jsonify("No schedule"), 404
+            return jsonify("NO SCHEDULE"), 404
         else:
             for time in schedule_tuple:
                 result = self.build_map_dict_unaivalaible(time)
