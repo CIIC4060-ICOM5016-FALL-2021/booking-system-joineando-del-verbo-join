@@ -21,6 +21,17 @@ class BaseInvitation:
         result['lastname'] = row[2]
         return result
 
+    def build_map_dict_get(self, row):
+        result = {}
+        result['hostid'] = row[0]
+        result['inviteeid'] = row[1]
+        result['reservationid'] = row[2]
+        result['reservationname'] = row[3]
+        result['startdatetime'] = row[4]
+        result['enddatetime'] = row[5]
+        result['roomid'] =row[6]
+        return result
+
     def build_map_dict_update(self,row):
         result = {}
         result['reservationid'] = row[0]
@@ -69,6 +80,15 @@ class BaseInvitation:
         else:
             return jsonify("INVITATION NOT CREATED."), 500
 
+    def getInvitationByID(self, inviteeid, reservationid):
+        dao = InvitationDAO()
+        invitation = dao.getInvitationByID(reservationid, inviteeid)
+        if invitation:
+            result = self.build_map_dict_get(invitation)
+            return jsonify(result), 200
+        else:
+            return jsonify("INVITATION NOT FOUND"), 404
+
     def allInviteesForReservation(self, reservationid):
         dao = InvitationDAO()
         invitation_list = dao.allInviteesForReservation(reservationid)
@@ -95,10 +115,12 @@ class BaseInvitation:
         dao = InvitationDAO()
         deleted = dao.deleteInvitation(userid, reservationid)
         if deleted:
-            result = self.build_map_dict_delete((userid, reservationid))
-            return jsonify(result), 200
+            return jsonify("INVITATION DELETED"), 200
         else:
-            return jsonify("COULD NOT DELETE INVITATION"), 404
+
+            return jsonify("COULD NOT DELELETE INVITATION"), 404
+
+
 
 
 

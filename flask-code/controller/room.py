@@ -26,7 +26,7 @@ class BaseRoom:
         result['enddatetime'] = row[2]
         return result
 
-    def build_map_dict_name(self, row):
+    def build_map_dict_name(self, row: tuple):
         result = {}
         result['firstname'] = row[0]
         result['lastname'] = row[1]
@@ -136,8 +136,11 @@ class BaseRoom:
         time = datetime.strptime(time, "%Y-%m-%d %H:%M:%S.%f")
         dao = RoomDAO()
         name = dao.whoAppointedRoom(roomid, time)
-        result = self.build_map_dict_name(name)
-        return jsonify(result), 200
+        if name:
+            result = self.build_map_dict_name(name)
+            return jsonify(result), 200
+        else:
+            return("NOT FOUND"), 404
 
     def availableRoomAtTimeFrame(self, json):
         start = json['startdatetime']

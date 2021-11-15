@@ -39,6 +39,13 @@ def handle_usersid(userid):
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
+@app.route('/joineando-del-verbo-join/users/schedule/<int:userid>', methods=['GET'])
+def handle_userschedule(userid):
+    if request.method == 'GET':
+        return BaseUsers().allDaySchedule(userid)
+    else:
+        return jsonify("Method Not Allowed."), 405
+
 @app.route('/users/marktimeunavailable/<int:userid>', methods=['PUT', 'DELETE'])
 def handle_timeunavailable(userid):
     if request.method == 'PUT':
@@ -49,12 +56,14 @@ def handle_timeunavailable(userid):
         return jsonify("Method Not Allowed."), 405
 
 
+
 @app.route('/userschedule/<int:userid>', methods=['GET'])
 def handle_userschedule(userid):
     if request.method == 'GET':
         return BaseUsers().allDaySchedule(userid, request.json)
     else:
         return jsonify("Method Not Allowed."), 405
+
 
 #####################################################################
 #                              ROOM                                 #
@@ -80,6 +89,21 @@ def handle_roomid(roomid):
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
+
+@app.route('/joineando-del-verbo-join/room/availableroom', methods=['GET'])
+def handle_availableroom():
+    if request.method == 'GET':
+        return BaseRoom().availableRoomAtTimeFrame(request.json)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
+@app.route('/joineando-del-verbo-join/room/whoappointed/<int:roomid>', methods=['GET'])
+def handle_whoappointed(roomid):
+    if request.method == 'GET':
+        return BaseRoom().whoAppointedRoom(roomid, request.json)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
 @app.route('/room/roomunavailablility/<int:roomid>', methods = ['POST', 'DELETE'])
 def handle_roomavailavility(roomid):
     if request.method == 'POST':
@@ -91,6 +115,13 @@ def handle_roomavailavility(roomid):
 
 
 
+
+@app.route('/joineando-del-verbo-join/room/schedule/<int:roomid>', methods=['GET'])
+def handle_roomschedule(roomid):
+    if request.method == 'GET':
+        return BaseRoom().allDayScheduleRoom(roomid)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
 
 #####################################################################
 #                          RESERVATION                              #
@@ -114,12 +145,39 @@ def handle_reservationid(reservationid):
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
-@app.route('/room/schedule/<int:roomid>', methods=['GET'])
-def handle_roomschedule(roomid):
-    if request.method == 'GET':
-        return BaseRoom().allDayScheduleRoom(roomid)
+#####################################################################
+#                          INVITATION                               #
+#####################################################################
+
+@app.route('/joineando-del-verbo-join/invitation', methods=['POST'])
+def handle_invitation():
+    if request.method == 'POST':
+        return BaseInvitation().createInvitation(request.json)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
+
+@app.route('/joineando-del-verbo-join/invitation/<int:inviteeid>/<int:reservationid>', methods=['GET','DELETE'])
+def handle_invitations(reservationid, inviteeid):
+    if request.method == 'GET':
+        return BaseInvitation().getInvitationByID(inviteeid, reservationid)
+    elif request.method == 'DELETE':
+        return BaseInvitation().deleteInvitation(inviteeid, reservationid)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
+
+
+#####################################################################
+#                             OTHERS                                #
+#####################################################################
+
+
+
+
+
+
+
+
 
 
 
@@ -154,6 +212,7 @@ def handle_invitations(reservationid):
         return BaseInvitation().updateInvitation(reservationid, request.json)
     else:
         return jsonify('METHOD NOT ALLOWED', 405)
+
 
 
 @app.route('/users/stats/mostreservations', methods = ['GET'])
@@ -192,12 +251,14 @@ def handle_busiesthours():
         return jsonify('METHOD NOT ALLOWED', 405)
 
 
+
 @app.route('/invitation/<int:reservationid>/<int:inviteeid>', methods=['DELETE'])
 def handle_invitations_delete(reservationid,inviteeid):
     if request.method == 'DELETE':
         return BaseInvitation().deleteInvitation(inviteeid,reservationid)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
+
 
 
 @app.route('/getroomappointments/<int:roomid>', methods=['GET'])

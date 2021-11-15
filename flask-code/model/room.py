@@ -62,18 +62,24 @@ class RoomDAO:
 
     def whoAppointedRoom(self, roomid, time):
         cursor = self.conn.cursor()
+
         queryID = "select hostid " \
                  "from reservation " \
                  "where roomid = %s " \
                  "and startdatetime <= %s " \
                  "and enddatetime >= %s;"
         cursor.execute(queryID, (roomid, time, time,))
-        hostid = cursor.fetchone()[0]
+        if not cursor.fetchone():
+            return
+        hostid = list(cursor.fetchone())[0]
+
         query = "select firstname, lastname, userid " \
                 "from users " \
                 "where userid = %s;"
+
         cursor.execute(query, (hostid,))
         name = cursor.fetchone()
+
         return name
 
     def availableRoomAtTimeFrame(self, start, end):
