@@ -110,7 +110,7 @@ def handle_roomavailable(roomid):
         return jsonify("METHOD NOT ALLOWED"), 405
 
 #new route yet to verify -----------------------------------------------------------------------------------
-@app.route('/joineando-del-verbo-join/room/makeroomvailable/', methods = ['DELETE'])
+@app.route('/joineando-del-verbo-join/room/makeroomavailable/', methods = ['DELETE'])
 def handle_roomunavailable():
     if request.method == 'DELETE':
         return BaseRoom().makeRoomAvailable(request.json)

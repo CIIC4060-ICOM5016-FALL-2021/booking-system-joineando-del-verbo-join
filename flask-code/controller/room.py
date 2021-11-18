@@ -125,23 +125,35 @@ class BaseRoom:
 
     # changed
     def allDayScheduleRoom(self, roomid, json):
+        userid = json['userid']
         daystart = json['daystart']
         daystart = datetime.strptime(daystart, "%Y-%m-%d %H:%M:%S.%f")
         dayend = daystart + timedelta(days=1)
-        dao = RoomDAO()
-        schedule, sch_unavailable = dao.allDayScheduleRoom(roomid, daystart, dayend)
-        if not schedule and not sch_unavailable:
-            return jsonify("NO SCHEDULE"), 404
+
+        usersDAO = UsersDAO()
+        userInfo = usersDAO.getUserByID(userid)
+        if userInfo:
+            userRoleID = userInfo[5]
         else:
-            result_list = []
-            for row in schedule:
-                obj = self.build_map_dict_schedule(row)
-                result_list.append(obj)
-            for row in sch_unavailable:
-                tuple = (-1, -1, "Unavailable Time Space", row[0], row[1])
-                obj = self.build_map_dict_schedule(tuple)
-                result_list.append(obj)
-            return jsonify(result_list), 200
+            userRoleID = -1
+
+        if userRoleID == 3:
+            dao = RoomDAO()
+            schedule, sch_unavailable = dao.allDayScheduleRoom(roomid, daystart, dayend)
+            if not schedule and not sch_unavailable:
+                return jsonify("NO SCHEDULE"), 404
+            else:
+                result_list = []
+                for row in schedule:
+                    obj = self.build_map_dict_schedule(row)
+                    result_list.append(obj)
+                for row in sch_unavailable:
+                    tuple = (-1, -1, "Unavailable Time Space", row[0], row[1])
+                    obj = self.build_map_dict_schedule(tuple)
+                    result_list.append(obj)
+                return jsonify(result_list), 200
+        else:
+            return jsonify("ACCESS DENIED"), 403
 
     def whoAppointedRoom(self, roomid, json):
         time = json['time']
