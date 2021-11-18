@@ -14,27 +14,34 @@ class BaseUsers:
         result['roleid'] = row[5]
         return result
 
-    def build_map_dict_unaivalaible(self, row):
+    def build_map_dict_unavailable(self, row):
+        result = {}
+        result['startdatetime'] = row[0]
+        result['enddatetime'] = row[1]
+        result['userunavailabilityid'] = row[2]
+        return result
+
+    def build_map_dict_available(self, row):
         result = {}
         result['startdatetime'] = row[0]
         result['enddatetime'] = row[1]
         return result
 
-    def build_map_dict_checkunaivalaible(self, row):
+    def build_map_dict_checkunavailable(self, row):
         result = {}
         result['userid'] = row[0]
         result['startdatetime'] = row[1]
         result['enddatetime'] = row[2]
         return result
 
-
+    # changed
     def build_map_dict_mostreservations(self, row):
         result = {}
         result['userid'] = row[0]
         result['firstname'] = row[1]
         result['lastname'] = row[2]
         result['email'] = row[3]
-        result['meetings'] = row[4]
+        result['appointments'] = row[4]
         return result
 
     def build_map_dict_mostusedroom(self, row):
@@ -42,6 +49,16 @@ class BaseUsers:
         result['roomid'] = row[0]
         result['buildingname'] = row[1]
         result['roomnumber'] = row[2]
+        return result
+
+    # added
+    def build_map_dict_schedule(self, row):
+        result = {}
+        result["reservationid"] = row[0]
+        result["reservationname"] = row[1]
+        result["roomid"] = row[2]
+        result["startdatetime"] = row[3]
+        result["enddatetime"] = row[4]
         return result
 
 
@@ -124,54 +141,76 @@ class BaseUsers:
             dao.conn.close()
             return jsonify("USER NOT FOUND"), 404
 
+    # changed
     def markTimeUnavailable(self, userid, json):
+        #loggeduserid = json['loggeduserid']
         startdatetime = json['startdatetime']
         enddatetime = json['enddatetime']
         startdatetime = datetime.strptime(startdatetime, "%Y-%m-%d %H:%M:%S.%f")
         enddatetime = datetime.strptime(enddatetime, "%Y-%m-%d %H:%M:%S.%f")
-        dao = UsersDAO()
-        time_busy = dao.markTimeUnavailable(userid,startdatetime,enddatetime)
-        result = self.build_map_dict_unaivalaible(time_busy)
-        return jsonify(result), 200
 
+        dao = UsersDAO()
+        unavailabilityid = dao.markTimeUnavailable(userid, startdatetime, enddatetime)
+        if unavailabilityid:
+            time_busy = (startdatetime, enddatetime, unavailabilityid)
+            result = self.build_map_dict_unavailable(time_busy)
+            return jsonify(result), 200
+        else:
+            return jsonify("NO RESULT"), 404
+
+    # changed
     def markTimeAvailable(self, userid, json):
+        #loggeduserid = json['loggeduserid']
         userunavailabilityid = json['userunavailabilityid']
+
         dao = UsersDAO()
         time_available = dao.markTimeAvailable(userid, userunavailabilityid)
-        result = self.build_map_dict_unaivalaible(time_available)
-        return jsonify(result), 200
+        if time_available:
+            result = self.build_map_dict_unavailable(time_available)
+            return jsonify(result), 200
+        else:
+            return jsonify("NO RESULT"), 404
 
 
+    # changed
     def allDaySchedule(self, userid, json):
         daystart = json['daystart']
         daystart = datetime.strptime(daystart, "%Y-%m-%d %H:%M:%S.%f")
         dayend = daystart + timedelta(days=1)
         dao = UsersDAO()
-        schedule_tuple = dao.allDaySchedule(userid, daystart, dayend)
-        result_list = []
-        if not schedule_tuple:
+        sch_tuple, sch_unavailable = dao.allDaySchedule(userid, daystart, dayend)
+        if not sch_tuple and not sch_unavailable:
             return jsonify("NO SCHEDULE"), 404
         else:
-            for time in schedule_tuple:
-                result = self.build_map_dict_unaivalaible(time)
+            result_list = []
+            for appointment in sch_tuple:
+                result = self.build_map_dict_schedule(appointment)
+                result_list.append(result)
+            for unavailability in sch_unavailable:
+                tuple = (-1, "Unavailable Time Space", -1, unavailability[0], unavailability[1])
+                result = self.build_map_dict_schedule(tuple)
                 result_list.append(result)
             return jsonify(result_list), 200
 
 
     #statistics
 
-    def userWithMostReservation(self):
+    # changed
+    def userWithMostReservation(self, userid):
         dao = UsersDAO()
-        tuple = dao.userWithMostReservation()
-        result = self.build_map_dict_mostreservations(tuple)
-        return jsonify(result), 200
+        tuple = dao.userWithMostReservation(userid)
+        if tuple:
+            result = self.build_map_dict_mostreservations(tuple)
+            return jsonify(result), 200
+        else:
+            return jsonify("NO RESULT FOUND."), 404
 
     def usersTopTen(self):
         dao = UsersDAO()
         tuples = dao.userTopTen()
         result = []
         if not tuples:
-            return jsonify("Not Found"), 404
+            return jsonify("NO RESULT FOUND."), 404
         else:
             for row in tuples:
                 result.append(self.build_map_dict_mostreservations(row))
@@ -181,7 +220,7 @@ class BaseUsers:
         dao = UsersDAO()
         tuple = dao.userMostUsedRoom(userid)
         if not tuple:
-            return jsonify("No Result Found."), 404
+            return jsonify("NO RESULT FOUND."), 404
         else:
             result = self.build_map_dict_mostusedroom(tuple)
             return jsonify(result), 200
@@ -199,7 +238,7 @@ class BaseUsers:
 
         result = []
         for item in times:
-            result.append(self.build_map_dict_checkunaivalaible(item))
+            result.append(self.build_map_dict_checkunavailable(item))
 
         return jsonify(result), 200
 

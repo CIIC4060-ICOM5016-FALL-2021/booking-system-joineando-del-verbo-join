@@ -101,13 +101,19 @@ def handle_whoappointed(roomid):
         return BaseRoom().whoAppointedRoom(roomid, request.json)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
-
-@app.route('/joineando-del-verbo-join/room/roomunavailablility/<int:roomid>', methods = ['POST', 'DELETE'])
-def handle_roomavailavility(roomid):
+#new route yet to verify ----------------------------------------------------------------------------------
+@app.route('/joineando-del-verbo-join/room/makeroomunavailable/<int:roomid>', methods = ['POST'])
+def handle_roomavailable(roomid):
     if request.method == 'POST':
         return BaseRoom().makeRoomUnavailable(roomid, request.json)
-    elif request.method == 'DELETE':
-        return BaseRoom().makeRoomAvailable(roomid, request.json)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
+#new route yet to verify -----------------------------------------------------------------------------------
+@app.route('/joineando-del-verbo-join/room/makeroomvailable/', methods = ['DELETE'])
+def handle_roomunavailable():
+    if request.method == 'DELETE':
+        return BaseRoom().makeRoomAvailable(request.json)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
@@ -177,15 +183,15 @@ def handle_mostusedroom(userid):
     if request.method == 'GET':
         return BaseUsers().userMostUsedRoom(userid)
     else:
-        return jsonify('METHOD NOT ALLOWED', 405)
+        return jsonify('METHOD NOT ALLOWED'), 405
 
 
-@app.route('/joineando-del-verbo-join/users/stats/mostreservations', methods = ['GET'])
-def handle_usermostreservations():
+@app.route('/joineando-del-verbo-join/users/stats/mostreservations/<int:userid>', methods = ['GET'])
+def handle_usermostreservations(userid):
     if request.method == 'GET':
-        return BaseUsers().userWithMostReservation()
+        return BaseUsers().userWithMostReservation(userid)
     else:
-        return jsonify('METHOD NOT ALLOWED', 405)
+        return jsonify('METHOD NOT ALLOWED'), 405
 
 
 @app.route('/joineando-del-verbo-join/users/stats/topten', methods = ['GET'])
@@ -193,14 +199,14 @@ def handle_userstopten():
     if request.method == 'GET':
         return BaseUsers().usersTopTen()
     else:
-        return jsonify('METHOD NOT ALLOWED', 405)
+        return jsonify('METHOD NOT ALLOWED'), 405
 
 @app.route('/joineando-del-verbo-join/room/stats/topten', methods = ['GET'])
 def handle_roomtopten():
     if request.method == 'GET':
         return BaseRoom().roomTopTen()
     else:
-        return jsonify('METHOD NOT ALLOWED', 405)
+        return jsonify('METHOD NOT ALLOWED'), 405
 
 
 @app.route('/joineando-del-verbo-join/reservation/stats/busiesthours', methods = ['GET'])
@@ -208,7 +214,7 @@ def handle_busiesthours():
     if request.method == 'GET':
         return BaseReservation().busiestHours()
     else:
-        return jsonify('METHOD NOT ALLOWED', 405)
+        return jsonify('METHOD NOT ALLOWED'), 405
 
 
 if __name__ == '__main__':

@@ -15,23 +15,10 @@ class InvitationDAO:
         cursor.execute(query1, (userid,reservationid,))
         self.conn.commit()
 
-        query2 = "select startdatetime, enddatetime " \
-                 "from reservation " \
-                 "where reservationid = %s;"
-        cursor.execute(query2, (reservationid,))
-        result = cursor.fetchone()
-        startdatetime = result[0]
-        enddatetime = result[1]
-
-        query3 = "insert into userunavailability(userid, startdatetime, enddatetime) " \
-                 "values (%s, %s, %s);"
-        cursor.execute(query3, (userid, startdatetime, enddatetime,))
-        self.conn.commit()
-
-        query4 = "select hostid, inviteeid, reservationid, reservationname, startdatetime, enddatetime, roomid " \
+        query2 = "select hostid, inviteeid, reservationid, reservationname, startdatetime, enddatetime, roomid " \
                  "from reservation natural inner join invitation " \
                  "where reservationid = %s and inviteeid = %s;"
-        cursor.execute(query4, (reservationid, userid))
+        cursor.execute(query2, (reservationid, userid))
         confirmation = cursor.fetchone()
 
         return confirmation
@@ -60,19 +47,19 @@ class InvitationDAO:
         return result
 
 
-    def updateInvitation(self, reservationid, startdatetime, enddatetime):
-        cursor = self.conn.cursor()
-
-        query = "update userunavailability " \
-                "set startdatetime = %s, enddatetime = %s " \
-                "where startdatetime = (select startdatetime from reservation where reservationid = %s) " \
-                "and enddatetime = (select enddatetime from reservation where reservationid = %s) " \
-                "and userid IN (select inviteeid from invitation where reservationid =%s);"
-        cursor.execute(query, (startdatetime, enddatetime, reservationid, reservationid,reservationid ))
-        self.conn.commit()
-        affectedrows = cursor.rowcount
-
-        return affectedrows != 0
+    # def updateInvitation(self, reservationid, startdatetime, enddatetime):
+    #     cursor = self.conn.cursor()
+    #
+    #     query = "update userunavailability " \
+    #             "set startdatetime = %s, enddatetime = %s " \
+    #             "where startdatetime = (select startdatetime from reservation where reservationid = %s) " \
+    #             "and enddatetime = (select enddatetime from reservation where reservationid = %s) " \
+    #             "and userid IN (select inviteeid from invitation where reservationid =%s);"
+    #     cursor.execute(query, (startdatetime, enddatetime, reservationid, reservationid,reservationid ))
+    #     self.conn.commit()
+    #     affectedrows = cursor.rowcount
+    #
+    #     return affectedrows != 0
 
 
     def deleteInvitation(self, userid, reservationid):
@@ -81,13 +68,6 @@ class InvitationDAO:
         cursor.execute(query,(userid, reservationid,))
         self.conn.commit()
         affectedrows = cursor.rowcount
-
-        query2 = "delete from userunavailability " \
-                 "where startdatetime = (select startdatetime from reservation where reservationid = %s) " \
-                 "and enddatetime = (select enddatetime from reservation where reservationid = %s)" \
-                 "and userid=%s;"
-        cursor.execute(query2, (reservationid, reservationid, userid))
-        self.conn.commit()
 
         return affectedrows !=0
 
