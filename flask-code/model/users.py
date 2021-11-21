@@ -60,28 +60,34 @@ class UsersDAO:
         self.conn.close()
         return affected_rows == 1
 
-
+    #changed
     def checkUserAvailability(self, userid, startdatetime, enddatetime):
         cursor = self.conn.cursor()
-        query = "select count(*) from userunavailability \
-               where userunavailability.userid = %s \
-               and ((%s >= userunavailability.startdatetime \
-               and %s <= userunavailability.enddatetime) \
-               or (%s >= userunavailability.startdatetime \
-               and %s<= userunavailability.enddatetime) \
-               or (%s <= userunavailability.startdatetime \
-               and %s >= userunavailability.enddatetime ));"
+        query = "select count(*) " \
+                "from ((select startdatetime, enddatetime " \
+                "from reservation where hostid = %s) " \
+                "union all " \
+                "(select startdatetime, enddatetime " \
+                "from reservation natural inner join invitation " \
+                "where inviteeid = %s) " \
+                "union all " \
+                "(select startdatetime, enddatetime " \
+                "from userunavailability where userid = %s)) as t " \
+                "where (%s >= t.startdatetime and %s <= t.enddatetime) " \
+                "or (%s >= t.startdatetime and %s <= t.enddatetime) " \
+                "or (%s <= t.startdatetime and %s >= t.enddatetime);"
 
-        cursor.execute(query, (userid, startdatetime, startdatetime, enddatetime,
+        cursor.execute(query, (userid, userid, userid, startdatetime, startdatetime, enddatetime,
                                enddatetime, startdatetime, enddatetime))
         availability = cursor.fetchone()[0]
 
         return availability == 0
 
-    def markTimeUnavailable(self,userid, startdatetime,enddatetime):
+    # changed
+    def markTimeUnavailable(self, userid, startdatetime, enddatetime):
         cursor = self.conn.cursor()
         query = "insert into userunavailability(userid, startdatetime, enddatetime) " \
-                "values(%s, %s,%s) returning startdatetime, enddatetime;"
+                "values(%s, %s,%s) returning userunavailabilityid;"
         cursor.execute(query, (userid, startdatetime, enddatetime,))
         time_busy = cursor.fetchone()
         self.conn.commit()
@@ -98,43 +104,55 @@ class UsersDAO:
         self.conn.commit()
         return time_available
 
-
+    # changed - rethink
     def allDaySchedule(self, userid, startday, endday):
         cursor = self.conn.cursor()
-        query = "select startdatetime, enddatetime " \
-                "from userunavailability " \
-                "where userid = %s and startdatetime >= %s and enddatetime <= %s;"
-        cursor.execute(query, (userid, startday, endday))
-        result = []
+        query1 = "(select reservationid, reservationname, roomid, startdatetime, enddatetime " \
+                 "from reservation " \
+                 "where hostid = %s and startdatetime >= %s and enddatetime <= %s) " \
+                 "union all " \
+                 "(select reservationid, reservationname, roomid, startdatetime, enddatetime " \
+                 "from reservation natural inner join invitation " \
+                 "where inviteeid = %s and startdatetime >= %s and enddatetime <= %s);"
+        cursor.execute(query1, (userid, startday, endday, userid, startday, endday))
+        result1 = []
         for row in cursor:
-            result.append(row)
+            result1.append(row)
+        print(result1)
+
+        query2 = "select startdatetime, enddatetime " \
+                 "from userunavailability " \
+                 "where userid = %s and startdatetime >= %s and enddatetime <= %s;"
+        cursor.execute(query2, (userid, startday, endday))
+        result2 = []
+        for row in cursor:
+            result2.append(row)
+        print(result2)
+
         self.conn.close()
-        return result
+
+        return result1, result2
 
 
 
     #statistics
 
-    def userWithMostReservation(self):
+    # changed
+    def userWithMostReservation(self, userid):
         cursor = self.conn.cursor()
-        # query = "select t.userid, t.firstname, t.lastname, t.email " \
-        #         "from (select userid, firstname, lastname, email, count(hostid) " \
-        #         "from users, reservation "  \
-        #         "where userid = hostid " \
-        #         "group by userid " \
-        #         "order by count(hostid) desc, userid) as t "
-        query = "select userid, firstname, lastname, email, total " \
-                "from users natural inner join (select userid, sum(quantity) as total " \
-                "from ((select hostid as userid, count(hostid) as quantity " \
-                "from reservation " \
-                "group by hostid) " \
+        query = "select u.userid, u.firstname, u.lastname, u.email, count(u.userid) as total " \
+                "from users as u, " \
+                "((select hostid as userid, reservationid from reservation) " \
                 "union all " \
-                "(select inviteeid as userid, count(inviteeid) as quantity " \
-                "from invitation " \
-                "group by inviteeid)) as t1 " \
-                "group by userid) as t2 " \
-                "order by total desc, userid;"
-        cursor.execute(query)
+                "(select inviteeid as userid, reservationid from invitation)) as t " \
+                "where u.userid = t.userid " \
+                "and reservationid in " \
+                "(select reservationid from reservation natural inner join invitation " \
+                "where hostid = %s or inviteeid = %s) " \
+                "and u.userid != %s " \
+                "group by u.userid, u.firstname, u.lastname " \
+                "order by total desc, u.userid;"
+        cursor.execute(query, (userid,userid,userid))
         top_user = cursor.fetchone()
         self.conn.close()
         return top_user
@@ -145,13 +163,6 @@ class UsersDAO:
 
     def userTopTen(self):
         cursor = self.conn.cursor()
-        # query = "select t.userid, t.firstname, t.lastname, email " \
-        #         "from (select userid, firstname, lastname, email, count(hostid) " \
-        #         "from users, reservation "  \
-        #         "where userid = hostid " \
-        #         "group by userid " \
-        #         "order by count(hostid) desc, userid) as t " \
-        #         "limit 10;"
         query = "select userid, firstname, lastname, email, total " \
                 "from users natural inner join (select userid, sum(quantity) as total " \
                 "from ((select hostid as userid, count(hostid) as quantity " \
@@ -186,17 +197,23 @@ class UsersDAO:
         self.conn.close()
         return result
 
+    # re-think this one
     def checkUnavailableOnTimeFrame(self, userid, startdatetime, enddatetime):
         cursor = self.conn.cursor()
-        query = "select userid, startdatetime, enddatetime from userunavailability \
-               where userunavailability.userid = %s \
-               and ((%s >= userunavailability.startdatetime \
-               and %s <= userunavailability.enddatetime) \
-               or (%s >= userunavailability.startdatetime \
-               and %s<= userunavailability.enddatetime) \
-               or (%s <= userunavailability.startdatetime \
-               and %s >= userunavailability.enddatetime ));"
-        cursor.execute(query, (userid, startdatetime, startdatetime, enddatetime,
+        query = "select userid, startdatetime, endatetime " \
+                "from ((select hostid as userid, startdatetime, enddatetime " \
+                "from reservation where hostid = %s) " \
+                "union all " \
+                "(select inviteeid as userid, startdatetime, enddatetime " \
+                "from reservation natural inner join invitation " \
+                "where inviteeid = %s) " \
+                "union all " \
+                "(select userid, startdatetime, enddatetime " \
+                "from userunavailability where userid = %s)) as t " \
+                "where (%s >= t.startdatetime and %s <= t.enddatetime) " \
+                "or (%s >= t.startdatetime and %s <= t.enddatetime) " \
+                "or (%s <= t.startdatetime and %s >= t.enddatetime);"
+        cursor.execute(query, (userid, userid, userid, startdatetime, startdatetime, enddatetime,
                                enddatetime, startdatetime, enddatetime))
         result = []
         for row in cursor:

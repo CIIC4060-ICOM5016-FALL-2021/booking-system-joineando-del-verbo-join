@@ -54,17 +54,27 @@ class RoomDAO:
         self.conn.close()
         return rows_deleted != 0
 
-    def allDayScheduleRoom(self, roomid, startday,endday):
+    # changed
+    def allDayScheduleRoom(self, roomid, startday, endday):
         cursor = self.conn.cursor()
-        query1 = "select reservationname, startdatetime, enddatetime " \
-                  "from reservation " \
-                  "where roomid = %s and startdatetime >= %s and enddatetime <= %s;"
+        query1 = "select hostid, reservationid, reservationname, startdatetime, enddatetime " \
+                 "from reservation " \
+                 "where roomid = %s and startdatetime >= %s and enddatetime <= %s;"
         cursor.execute(query1, (roomid, startday, endday,))
-        result = []
+        result1 = []
         for row in cursor:
-            result.append(row)
+            result1.append(row)
+
+        query2 = "select startdatetime, enddatetime " \
+                 "from roomunavailability " \
+                 "where roomid = %s and startdatetime >= %s and enddatetime <= %s;"
+        cursor.execute(query2, (roomid, startday, endday,))
+        result2 = []
+        for row in cursor:
+            result2.append(row)
         self.conn.close()
-        return result
+
+        return result1, result2
 
     def whoAppointedRoom(self, roomid, time):
         cursor = self.conn.cursor()
@@ -88,25 +98,28 @@ class RoomDAO:
         self.conn.close()
         return name
 
+    # change
     def availableRoomAtTimeFrame(self, start, end):
         cursor = self.conn.cursor()
         queryavailable = "select roomid " \
                          "from room " \
-                         "where roomid NOT IN (select roomid " \
-                         "from roomunavailability);"
+                         "where roomid NOT IN " \
+                         "((select roomid from reservation) " \
+                         "union all " \
+                         "(select roomid from roomuavailavility));"
         cursor.execute(queryavailable)
         availables = cursor.rowcount
         print(availables)
 
         if availables > 0:
             roomid = cursor.fetchone()[0]
-
-
         else:
-            queryID = "select roomid " \
-                      "from roomunavailability " \
-                      "where %s < startdatetime " \
-                      "and %s > enddatetime;"
+            queryID = "select t.roomid " \
+                      "from ((select roomid, startdatetime, enddatetime from reservation) " \
+                      "union all " \
+                      "(select roomid, startdatetime, endatetime from roomunavailability)) as t " \
+                      "where %s < t.startdatetime " \
+                      "and %s > t.enddatetime;"
             cursor.execute(queryID, (end, start,))
             roomid = cursor.fetchone()[0]
 
@@ -121,13 +134,14 @@ class RoomDAO:
 
     #statistics
 
+    # changed
     def roomTopTen(self):
         cursor = self.conn.cursor()
-        query = "select t.roomid, t.buildingname, t.roomnumber " \
-                "from (select roomid, buildingname, roomnumber, count(roomid) " \
+        query = "select t.roomid, t.buildingname, t.roomnumber, quantity " \
+                "from (select roomid, buildingname, roomnumber, count(roomid) as quantity " \
                 "from room natural inner join building natural inner join reservation " \
                 "group by roomid, buildingname, roomnumber " \
-                "order by count(roomid) desc, roomid) as t " \
+                "order by quantity desc, roomid) as t " \
                 "limit 10;"
         cursor.execute(query)
         result = []
@@ -136,19 +150,20 @@ class RoomDAO:
         self.conn.close()
         return result
 
-
+    # changed
     def checkRoomAvailability(self, roomid, startdatetime, enddatetime):
         cursor = self.conn.cursor()
-        query = "select count(*) from roomunavailability \
-               where roomunavailability.roomid = %s \
-               and ((%s >= roomunavailability.startdatetime \
-               and %s <= roomunavailability.enddatetime) \
-               or (%s >= roomunavailability.startdatetime \
-               and %s<= roomunavailability.enddatetime) \
-               or (%s <= roomunavailability.startdatetime \
-               and %s >= roomunavailability.enddatetime ));"
+        query = "select count(*) " \
+                "from ((select startdatetime, enddatetime " \
+                "from reservation where roomid = %s) " \
+                "union all " \
+                "(select startdatetime, enddatetime " \
+                "from roomunavailability where roomid = %s)) as t " \
+                "where (%s >= t.startdatetime and %s <= t.enddatetime) " \
+                "or (%s >= t.startdatetime and %s <= t.enddatetime) " \
+                "or (%s <= t.startdatetime and %s >= t.enddatetime);"
 
-        cursor.execute(query, (roomid, startdatetime, startdatetime, enddatetime,
+        cursor.execute(query, (roomid, roomid, startdatetime, startdatetime, enddatetime,
                                enddatetime, startdatetime, enddatetime))
         availability = cursor.fetchone()[0]
 
@@ -165,10 +180,11 @@ class RoomDAO:
 
         return roomunavailabilityid
 
-    def makeRoomAvailable(self, roomid, roomunavailabilityid):
+    # changed
+    def makeRoomAvailable(self, roomunavailabilityid):
         cursor = self.conn.cursor()
-        query = "delete from roomunavailability where roomunavailabilityid = %s and roomid=%s;"
-        cursor.execute(query, (roomunavailabilityid, roomid))
+        query = "delete from roomunavailability where roomunavailabilityid = %s;"
+        cursor.execute(query, (roomunavailabilityid,))
         rows_deleted = cursor.rowcount
         self.conn.commit()
 
