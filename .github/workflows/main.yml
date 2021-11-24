@@ -16,6 +16,7 @@ jobs:
           heroku_app_name: "booking-app-joineando" #Must be unique in Heroku
           heroku_email: "fabiola.robles1@upr.edu"
           appdir: "backend" # <- This will point to the api folder in your project
+          dontuseforce: 1
         env:
           HD_DB_HOST: ec2-54-208-96-16.compute-1.amazonaws.com
           HD_DB_NAME: d24bjj94mias6u
