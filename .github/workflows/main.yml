@@ -3,7 +3,7 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -16,4 +16,4 @@ jobs:
           heroku_app_name: "booking-app-joineando" #Must be unique in Heroku.
           heroku_email: "fabiola.robles1@upr.edu"
           appdir: "backend" # <- This will point to the api folder in your project
-          dontuseforce: 1
+          dontuseforce: True
