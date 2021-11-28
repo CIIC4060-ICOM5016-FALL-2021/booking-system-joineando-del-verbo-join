@@ -1,9 +1,9 @@
 pg_config = {
-    'user': 'uyafdrasmnoyub',
-    'password': '95295805e41d44306c87d15310633067c12dfd9c0529e300b84e4b28e6adaedb',
-    'database': 'd24bjj94mias6u',
+    'user': 'mwhripillyahrt',
+    'password': 'fcb269eeff14a4e89c256e2a7be8c5034dfea22eeadbffe4977a7f97f48e6db8',
+    'database': 'dbvv12g225rnq6',
     'port': 5432,
-    'host': 'ec2-54-208-96-16.compute-1.amazonaws.com'
+    'host': 'ec2-23-23-219-25.compute-1.amazonaws.com'
 }
 
 
