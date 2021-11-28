@@ -8,19 +8,19 @@ Peter L. Santana Rodríguez - peter.santana@upr.edu
 
 ## Credenciales de Base de Datos en Heroku
 
-**Host**: `ec2-54-208-96-16.compute-1.amazonaws.com`\
+**Host**: `ec2-23-23-219-25.compute-1.amazonaws.com`\
 \
-**Database**: `d24bjj94mias6u`\
+**Database**: `dbvv12g225rnq6`\
 \
-**User**: `uyafdrasmnoyub`\
+**User**: `mwhripillyahrt`\
 \
 **Port**: `5432`\
 \
-**Password**: `95295805e41d44306c87d15310633067c12dfd9c0529e300b84e4b28e6adaedb`\
+**Password**: `fcb269eeff14a4e89c256e2a7be8c5034dfea22eeadbffe4977a7f97f48e6db8`\
 \
-**URI**: `postgres://uyafdrasmnoyub:95295805e41d44306c87d15310633067c12dfd9c0529e300b84e4b28e6adaedb@ec2-54-208-96-16.compute-1.amazonaws.com:5432/d24bjj94mias6u`\
+**URI**: `postgres://mwhripillyahrt:fcb269eeff14a4e89c256e2a7be8c5034dfea22eeadbffe4977a7f97f48e6db8@ec2-23-23-219-25.compute-1.amazonaws.com:5432/dbvv12g225rnq6`\
 \
-**Heroku CLI**: `heroku pg:psql postgresql-fitted-29141 --app booking-app-joineando`
+**Heroku CLI**: `heroku pg:psql postgresql-polished-28574 --app booking-app-joineando`
 
 ## Foto de tablas
 ![Tablas DB Booking App](https://github.com/CIIC4060-ICOM5016-FALL-2021/booking-system-joineando-del-verbo-join/blob/main/Documents/db-tables.JPG)
