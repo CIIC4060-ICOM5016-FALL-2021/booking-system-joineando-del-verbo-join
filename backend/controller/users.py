@@ -64,7 +64,6 @@ class BaseUsers:
 
 
     # verified
-
     def getAllUsers(self):
         dao = UsersDAO()
         users_tuple = dao.getAllUsers()
@@ -90,6 +89,9 @@ class BaseUsers:
         dao = UsersDAO()
 
         userid = dao.insertUser(firstname, lastname, email, password, roleid)
+        if userid == -200:
+            dao.conn.close()
+            return jsonify("EMAIL ALREADY IN USE"), 500
         if userid:
             user_tuple = (userid, firstname, lastname, email, password, roleid)
             result = self.build_map_dict(user_tuple)
@@ -142,7 +144,7 @@ class BaseUsers:
             return jsonify("USER NOT FOUND"), 404
 
     # changed
-    def markTimeUnavailable(self, userid, json):
+    def markTimeUnavailable(self, userid, json):#######################################################################
         #loggeduserid = json['loggeduserid']
         startdatetime = json['startdatetime']
         enddatetime = json['enddatetime']
@@ -159,7 +161,7 @@ class BaseUsers:
             return jsonify("NO RESULT"), 404
 
     # changed
-    def markTimeAvailable(self, userid, json):
+    def markTimeAvailable(self, userid, json):#######################################################################
         #loggeduserid = json['loggeduserid']
         userunavailabilityid = json['userunavailabilityid']
 
