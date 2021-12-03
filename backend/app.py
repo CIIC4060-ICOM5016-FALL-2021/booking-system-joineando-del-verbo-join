@@ -27,6 +27,13 @@ def handle_users():
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
+@app.route('/joineando-del-verbo-join/users/login', methods=['POST'])
+def handle_login():
+    if request.method == 'POST':
+        return BaseUsers().loginUser(request.json)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
 # verified
 @app.route('/joineando-del-verbo-join/users/<int:userid>', methods=['PUT', 'GET', 'DELETE'])
 def handle_usersid(userid):

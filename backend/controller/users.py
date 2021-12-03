@@ -14,6 +14,13 @@ class BaseUsers:
         result['roleid'] = row[5]
         return result
 
+    def build_map_login(self, row):
+        result = {}
+        result['userid'] = row[0]
+        result['firstname'] = row[1]
+        result['lastname'] = row[2]
+        return result
+
     def build_map_dict_unavailable(self, row):
         result = {}
         result['startdatetime'] = row[0]
@@ -142,6 +149,18 @@ class BaseUsers:
         else:
             dao.conn.close()
             return jsonify("USER NOT FOUND"), 404
+
+    def loginUser(self, json):
+        email = json["email"]
+        password = json["password"]
+        dao = UsersDAO()
+        result = dao.loginUser(email, password)
+        if result:
+            dao.conn.close()
+            user = self.build_map_login(result)
+            return jsonify(user), 200
+        else:
+            return jsonify("INVALID CREDENTIALS"), 500
 
     # changed
     def markTimeUnavailable(self, userid, json):#######################################################################
