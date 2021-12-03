@@ -90,6 +90,9 @@ class BaseUsers:
         dao = UsersDAO()
 
         userid = dao.insertUser(firstname, lastname, email, password, roleid)
+        if userid == -200:
+            dao.conn.close()
+            return jsonify("EMAIL ALREADY IN USE"), 500
         if userid:
             user_tuple = (userid, firstname, lastname, email, password, roleid)
             result = self.build_map_dict(user_tuple)

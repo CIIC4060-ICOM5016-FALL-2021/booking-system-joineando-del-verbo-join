@@ -21,9 +21,19 @@ class UsersDAO:
         self.conn.close()
         return result
 
+    def validateEmail(self, email):
+        cursor = self.conn.cursor()
+        query = "select email from users where email = %s"
+        cursor.execute(query, (email,))
+        count = cursor.rowcount
+
+        return True if (count == 0) else False
+
 
     def insertUser(self, firstname, lastname, email, password, roleid):
         cursor = self.conn.cursor()
+        if not self.validateEmail(email):
+            return -200
         query = "insert into users(firstname, lastname, email, password, roleid) values (%s, %s, %s, %s, %s) returning userid;"
         cursor.execute(query, (firstname, lastname, email, password, roleid))
         userid = cursor.fetchone()[0]
