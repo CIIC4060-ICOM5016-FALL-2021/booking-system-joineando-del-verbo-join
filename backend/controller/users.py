@@ -64,7 +64,6 @@ class BaseUsers:
 
 
     # verified
-
     def getAllUsers(self):
         dao = UsersDAO()
         users_tuple = dao.getAllUsers()
@@ -145,7 +144,7 @@ class BaseUsers:
             return jsonify("USER NOT FOUND"), 404
 
     # changed
-    def markTimeUnavailable(self, userid, json):
+    def markTimeUnavailable(self, userid, json):#######################################################################
         #loggeduserid = json['loggeduserid']
         startdatetime = json['startdatetime']
         enddatetime = json['enddatetime']
@@ -162,7 +161,7 @@ class BaseUsers:
             return jsonify("NO RESULT"), 404
 
     # changed
-    def markTimeAvailable(self, userid, json):
+    def markTimeAvailable(self, userid, json):#######################################################################
         #loggeduserid = json['loggeduserid']
         userunavailabilityid = json['userunavailabilityid']
 

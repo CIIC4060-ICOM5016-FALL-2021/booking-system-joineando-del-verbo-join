@@ -26,7 +26,6 @@ class UsersDAO:
         query = "select email from users where email = %s"
         cursor.execute(query, (email,))
         count = cursor.rowcount
-
         return True if (count == 0) else False
 
 
