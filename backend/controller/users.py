@@ -19,6 +19,7 @@ class BaseUsers:
         result['userid'] = row[0]
         result['firstname'] = row[1]
         result['lastname'] = row[2]
+        result['roleid'] = row[3]
         return result
 
     def build_map_dict_unavailable(self, row):

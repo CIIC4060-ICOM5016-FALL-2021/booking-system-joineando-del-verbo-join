@@ -149,7 +149,7 @@ class UsersDAO:
 
     def loginUser(self, email, password):
         cursor = self.conn.cursor()
-        query = "select userid, firstname, lastname from users where email=%s and password=%s"
+        query = "select userid, firstname, lastname, roleid from users where email=%s and password=%s"
         cursor.execute(query, (email, password))
         result = cursor.fetchone()
         return result
