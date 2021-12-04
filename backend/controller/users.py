@@ -98,7 +98,7 @@ class BaseUsers:
         userid = dao.insertUser(firstname, lastname, email, password, roleid)
         if userid == -200:
             dao.conn.close()
-            return jsonify("EMAIL ALREADY IN USE"), 500
+            return jsonify("EMAIL ALREADY IN USE"), 400
         if userid:
             user_tuple = (userid, firstname, lastname, email, password, roleid)
             result = self.build_map_dict(user_tuple)
@@ -143,9 +143,13 @@ class BaseUsers:
     def deleteUser(self, userid):
         dao = UsersDAO()
         result = dao.deleteUser(userid)
-        if result:
+        if result == -200:
+            dao.conn.close()
+            return jsonify("USER HAS MEETINGS"), 400
+        elif result:
             dao.conn.close()
             return jsonify("DELETED USER"), 200
+
         else:
             dao.conn.close()
             return jsonify("USER NOT FOUND"), 404

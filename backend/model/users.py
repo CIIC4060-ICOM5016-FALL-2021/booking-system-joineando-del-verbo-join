@@ -62,6 +62,11 @@ class UsersDAO:
 
     def deleteUser(self, userid):
         cursor = self.conn.cursor()
+        checkquery = "select (select count(*)  from invitation where inviteeid=%s) + (select  count(*) from reservation  where hostid=%s);"
+        cursor.execute(checkquery,(userid, userid))
+        count = cursor.fetchone()[0]
+        if count != 0:
+            return -200
         query = "delete from users where userid=%s;"
         cursor.execute(query, (userid,))
         affected_rows = cursor.rowcount
