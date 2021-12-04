@@ -24,12 +24,12 @@ function SignUp({ active }) {
 
 
     useEffect(() => {
-        fetchCourses();
+        fetchRoles();
     }, [])
 
 
-    const fetchCourses = async () => {
-        fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/roles')
+    const fetchRoles = async () => {
+        fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/userroles')
             .then((response) => response.json())
             .then((data) => {
                 if (data) {
@@ -37,6 +37,8 @@ function SignUp({ active }) {
                 }
             });
     }
+
+
     const signinUser = () => {
         if (email === "" || password === "" || firstname === "" || lastname === "" || role === -1) {
             setModalHeader("Please, fill all fields")
@@ -62,11 +64,11 @@ function SignUp({ active }) {
                     setModalHeader("Please, try again")
                     setModalMessage(data);
                     setOpen(true);
-                    localStorage.claer();
+                    localStorage.clear();
                 }
             })
             .catch(e => {
-                localStorage.claer();
+                localStorage.clear();
                 setModalHeader("Please, try again")
                 setModalMessage('Internal Error');
                 console.log(e)
@@ -162,8 +164,6 @@ function SignUp({ active }) {
                 <Divider vertical>Or</Divider>
             </Segment>
         </Segment>
-
-
     )
 }
 

@@ -6,7 +6,8 @@ import './TopBarMenu.css'
 export default function TopBarMenu({ active }) {
 
     const logoutUser = () => {
-        localStorage.clear()
+        localStorage.clear();
+        history.push("/");
     }
     return (
         <Segment>
