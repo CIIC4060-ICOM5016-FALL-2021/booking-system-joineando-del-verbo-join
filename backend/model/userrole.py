@@ -16,3 +16,13 @@ class UserRoleDAO:
         self.conn.commit()
         self.conn.close()
         return userroleid
+
+    def getAllUserRoles(self):
+        cursor = self.conn.cursor()
+        query = "select userroleid, userrolename from userrole"
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        self.conn.close()
+        return result
