@@ -50,8 +50,7 @@ function Login() {
             });
     }
 
-
-    return (<Segment><Header dividing textAlign="center" size="huge">Welcome to DB Demo</Header>
+    return (<Segment><Header dividing textAlign="center" size="huge">Booking App by Joineando del Verbo Join</Header>
         <Modal
             centered={false}
             open={open}
@@ -69,7 +68,6 @@ function Login() {
             </Modal.Actions>
         </Modal>
         <Segment placeholder>
-
             <Grid columns={2} relaxed='very' stackable>
                 <Grid.Column>
                     <Form>
@@ -99,7 +97,6 @@ function Login() {
                     <Button content='Sign up' icon='signup' size='big' onClick={() => history.push("/Signup")} />
                 </Grid.Column>
             </Grid>
-
             <Divider vertical>Or</Divider>
         </Segment>
     </Segment>

@@ -82,7 +82,7 @@ function SignUp() {
     })
 
 
-    return (<Segment><Header dividing textAlign="center" size="huge">Welcome to DB Demo</Header>
+    return (<Segment><Header dividing textAlign="center" size="huge">Booking App by Joineando del Verbo Join</Header>
         <Modal
             centered={false}
             open={open}
@@ -100,8 +100,7 @@ function SignUp() {
             </Modal.Actions>
         </Modal>
         <Segment placeholder>
-
-            <Grid columns={1} relaxed='very' stackable>
+            <Grid columns={2} relaxed='very' stackable>
                 <Grid.Column>
                     <Form>
                         <Form.Input
@@ -152,12 +151,15 @@ function SignUp() {
                         <Button content='Sign Up' primary onClick={signinUser} />
                     </Form>
                 </Grid.Column>
-
+                <Grid.Column verticalAlign='middle'>
+                    <Button content='Login' icon='signup' size='big' onClick={() => history.push("/Login")} />
+                </Grid.Column>
             </Grid>
-
-
+            <Divider vertical>Or</Divider>
         </Segment>
     </Segment>
+
+
     )
 }
 
