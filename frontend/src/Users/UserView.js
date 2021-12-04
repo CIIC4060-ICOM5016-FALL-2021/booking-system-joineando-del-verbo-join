@@ -2,13 +2,18 @@ import React, { Component, useState } from 'react';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import { Button, Card, Container, Modal, Tab } from "semantic-ui-react";
+import { Button, Card, Container, Modal, Segment, Tab } from "semantic-ui-react";
 import BookMeeting from "../Reservation/BookMeeting";
 import Schedule from "../Schedule/Schedule";
+import UserProfile from './UserProfile';
+import TopBarMenu from '../Menus/TopBarMenu';
 
 function UserView() {
     const [isAuth, setIsAuth] = useState(false)
     const panes = [
+        {
+            menuItem: 'Profile', render: () => <UserProfile />
+        },
         {
             menuItem: 'Booking', render: () => <BookMeeting />
         },
@@ -20,7 +25,11 @@ function UserView() {
         }
     ]
 
-    return <Tab panes={panes} />
-
+    return (
+        <Segment>
+            <TopBarMenu active="UserView" />
+            <Tab panes={panes} />
+        </Segment>
+    )
 }
 export default UserView;
