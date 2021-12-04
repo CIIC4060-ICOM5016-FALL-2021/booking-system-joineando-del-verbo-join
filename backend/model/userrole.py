@@ -26,3 +26,10 @@ class UserRoleDAO:
             result.append(row)
         self.conn.close()
         return result
+
+    def getUserRolesbyID(self, roleid):
+        cursor = self.conn.cursor()
+        query = "select userroleid, userrolename from userrole where userroleid=%s"
+        cursor.execute(query, (roleid,))
+        result = cursor.fetchone()
+        return result

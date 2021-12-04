@@ -31,4 +31,17 @@ class BaseUserRole:
             return jsonify(result_list), 200
 
 
+    def getUserRolesByID(self, userroleid):
+        dao = UserRoleDAO()
+        role = dao.getUserRolesbyID(userroleid)
+        if role:
+            dao.conn.close()
+            result = self.build_map_dict(role)
+            return jsonify(result), 200
+        else:
+            dao.conn.close()
+            return jsonify("NOT FOUND"), 404
+
+
+
 

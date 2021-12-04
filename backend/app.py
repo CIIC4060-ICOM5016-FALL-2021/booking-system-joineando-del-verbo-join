@@ -34,13 +34,6 @@ def handle_login():
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
-@app.route('/joineando-del-verbo-join/users/roles', methods=['GET'])
-def handle_userroles():
-    if request.method == 'GET':
-        return BaseUserRole().getAllUserRoles()
-    else:
-        return jsonify("METHOD NOT ALLOWED"), 405
-
 # verified
 @app.route('/joineando-del-verbo-join/users/<int:userid>', methods=['PUT', 'GET', 'DELETE'])
 def handle_usersid(userid):
@@ -76,7 +69,22 @@ def handle_usernavailability():
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
+#####################################################################
+#                           USER ROLES                              #
+#####################################################################
+@app.route('/joineando-del-verbo-join/userroles', methods=['GET'])
+def handle_userroles():
+    if request.method == 'GET':
+        return BaseUserRole().getAllUserRoles()
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
 
+@app.route('/joineando-del-verbo-join/userroles/<int:userroleid>', methods=['GET'])
+def handle_userrole(userroleid):
+    if request.method == 'GET':
+        return BaseUserRole().getUserRolesByID(userroleid)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
 #####################################################################
 #                              ROOM                                 #
 #####################################################################
