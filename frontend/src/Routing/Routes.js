@@ -3,9 +3,9 @@ import { Router, Switch, Route } from 'react-router-dom';
 
 import history from './history';
 import UserView from '../Users/UserView'
-import Login from '../Login/Login'
 import Dashboard from '../Dashboard/Dashboard'
-import SignUp from '../SignUp/SignUp';
+import Register from '../Register/Register';
+import GuardedRoute from './GuardedRoute';
 
 
 
@@ -14,10 +14,9 @@ export default class Routes extends Component {
         return (
             <Router history={history}>
                 <Switch>
-                    <Route exact path='/Login' component={Login} />
-                    <Route exact path='/UserView' component={UserView} />
-                    <Route exact path="/Dashboard" component={Dashboard} />
-                    <Route exact path="/Signup" component={SignUp} />
+                    <Route exact path='/' component={Register} />
+                    <GuardedRoute exact path='/UserView' component={UserView} />
+                    <GuardedRoute exact path="/Dashboard" component={Dashboard} />
                 </Switch>
             </Router>
         )

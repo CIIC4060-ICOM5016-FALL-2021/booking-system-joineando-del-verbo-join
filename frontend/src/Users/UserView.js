@@ -5,10 +5,14 @@ import moment from 'moment';
 import { Button, Card, Container, Modal, Tab } from "semantic-ui-react";
 import BookMeeting from "../Reservation/BookMeeting";
 import Schedule from "../Schedule/Schedule";
+import UserProfile from './UserProfile';
 
 function UserView() {
     const [isAuth, setIsAuth] = useState(false)
     const panes = [
+        {
+            menuItem: 'Profile', render: () => <UserProfile />
+        },
         {
             menuItem: 'Booking', render: () => <BookMeeting />
         },
