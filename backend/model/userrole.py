@@ -19,7 +19,7 @@ class UserRoleDAO:
 
     def getAllUserRoles(self):
         cursor = self.conn.cursor()
-        query = "select userroleid, userrolename from userrole"
+        query = "select userroleid, userrolename from userrole;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -29,7 +29,7 @@ class UserRoleDAO:
 
     def getUserRolesbyID(self, roleid):
         cursor = self.conn.cursor()
-        query = "select userroleid, userrolename from userrole where userroleid=%s"
+        query = "select userroleid, userrolename from userrole where userroleid=%s;"
         cursor.execute(query, (roleid,))
         result = cursor.fetchone()
         return result

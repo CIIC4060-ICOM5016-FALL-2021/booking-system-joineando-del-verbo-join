@@ -69,5 +69,5 @@ class InvitationDAO:
         self.conn.commit()
         affectedrows = cursor.rowcount
 
-        return affectedrows !=0
+        return affectedrows != 0
 
