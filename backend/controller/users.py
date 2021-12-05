@@ -57,6 +57,9 @@ class BaseUsers:
         result['roomid'] = row[0]
         result['buildingname'] = row[1]
         result['roomnumber'] = row[2]
+        result['roomcapacity'] = row[3]
+        result['roomtypename'] = row[4]
+        result['timesused'] = row[5]
         return result
 
     # added
