@@ -87,8 +87,8 @@ class UsersDAO:
                 "union all " \
                 "(select startdatetime, enddatetime " \
                 "from userunavailability where userid = %s)) as t " \
-                "where (%s >= t.startdatetime and %s <= t.enddatetime) " \
-                "or (%s >= t.startdatetime and %s <= t.enddatetime) " \
+                "where (%s >= t.startdatetime and %s < t.enddatetime) " \
+                "or (%s > t.startdatetime and %s <= t.enddatetime) " \
                 "or (%s <= t.startdatetime and %s >= t.enddatetime);"
 
         cursor.execute(query, (userid, userid, userid, startdatetime, startdatetime, enddatetime,
@@ -103,7 +103,7 @@ class UsersDAO:
         query = "insert into userunavailability(userid, startdatetime, enddatetime) " \
                 "values(%s, %s,%s) returning userunavailabilityid;"
         cursor.execute(query, (userid, startdatetime, enddatetime,))
-        time_busy = cursor.fetchone()
+        time_busy = cursor.fetchone()[0]
         self.conn.commit()
 
         return time_busy
@@ -231,8 +231,8 @@ class UsersDAO:
                 "union all " \
                 "(select userid, startdatetime, enddatetime " \
                 "from userunavailability where userid = %s)) as t " \
-                "where (%s >= t.startdatetime and %s <= t.enddatetime) " \
-                "or (%s >= t.startdatetime and %s <= t.enddatetime) " \
+                "where (%s >= t.startdatetime and %s < t.enddatetime) " \
+                "or (%s > t.startdatetime and %s <= t.enddatetime) " \
                 "or (%s <= t.startdatetime and %s >= t.enddatetime);"
         cursor.execute(query, (userid, userid, userid, startdatetime, startdatetime, enddatetime,
                                enddatetime, startdatetime, enddatetime))

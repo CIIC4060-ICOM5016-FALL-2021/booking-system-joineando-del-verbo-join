@@ -193,6 +193,9 @@ class BaseRoom:
         start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S.%f")
         end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S.%f")
 
+        if start > end:
+            return jsonify("END TIME SHOULD BE AFTER START TIME"), 400
+
         usersDAO = UsersDAO()
         userInfo = usersDAO.getUserByID(userid)
         if userInfo:

@@ -175,6 +175,9 @@ class BaseUsers:
         startdatetime = datetime.strptime(startdatetime, "%Y-%m-%d %H:%M:%S.%f")
         enddatetime = datetime.strptime(enddatetime, "%Y-%m-%d %H:%M:%S.%f")
 
+        if startdatetime > enddatetime:
+            return jsonify("END TIME SHOULD BE AFTER START TIME"), 400
+
         dao = UsersDAO()
         unavailabilityid = dao.markTimeUnavailable(userid, startdatetime, enddatetime)
         if unavailabilityid:
