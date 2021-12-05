@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import moment from 'moment';
-import { Button, Card, Container, Modal, Segment, Tab } from "semantic-ui-react";
+import { Segment, Tab } from "semantic-ui-react";
 import BookMeeting from "../Reservation/BookMeeting";
 import Schedule from "../Schedule/Schedule";
 import UserProfile from './UserProfile';
@@ -15,13 +13,13 @@ function UserView() {
     }, [setIsAuth])
     const panes = [
         {
-            menuItem: 'Profile', render: () => <UserProfile />
-        },
-        {
-            menuItem: 'Booking', render: () => <Tab.Pane active={true}><BookMeeting /></Tab.Pane>
+            menuItem: 'Profile', render: () => <Tab.Pane active={true}><UserProfile /></Tab.Pane>
         },
         {
             menuItem: 'Schedule', render: () => <Tab.Pane active={true}><Schedule /></Tab.Pane>
+        },
+        {
+            menuItem: 'Booking', render: () => <Tab.Pane active={true}><BookMeeting /></Tab.Pane>
         },
     ]
     if (isAuth) {
