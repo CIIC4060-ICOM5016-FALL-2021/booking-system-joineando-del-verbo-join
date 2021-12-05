@@ -1,8 +1,8 @@
-import React, {Component, useState} from 'react';
-import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import React, { Component, useState } from 'react';
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {Button, Card, Container, Modal} from "semantic-ui-react";
+import { Button, Card, Container, Modal, Segment } from "semantic-ui-react";
 
 
 // Event {
@@ -14,7 +14,7 @@ import {Button, Card, Container, Modal} from "semantic-ui-react";
 // }
 
 
-function Schedule(){
+function Schedule() {
     const [dates, setDates] = useState([{
         'title': 'Selection',
         'allDay': false,
@@ -24,7 +24,7 @@ function Schedule(){
     const [open, setOpen] = useState(false);
     const localizer = momentLocalizer(moment)
 
-    return <Container style={{ height: 800 }}><Calendar
+    return <Segment><Container style={{ height: 800 }}><Calendar
         localizer={localizer}
         startAccessor="start"
         events={dates}
@@ -35,6 +35,7 @@ function Schedule(){
 
     </Calendar>
     </Container>
+    </Segment>
 
 
 }

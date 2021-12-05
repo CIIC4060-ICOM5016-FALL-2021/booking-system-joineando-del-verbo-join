@@ -59,6 +59,8 @@ function SignUp({ active }) {
             .then((data) => {
                 if (data.userid) {
                     localStorage.setItem("userid", data.userid);
+                    localStorage.setItem("username", data.firstname);
+                    localStorage.setItem("role", data.roleid);
                     history.push('/UserView');
                 } else {
                     setModalHeader("Please, try again")
