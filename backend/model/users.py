@@ -207,13 +207,12 @@ class UsersDAO:
 
     def userMostUsedRoom(self, userid):
         cursor = self.conn.cursor()
-        query = "select t.roomid, t.buildingname, t.roomnumber " \
-                "from (select roomid, buildingname, roomnumber, count(roomid) " \
-                "from room natural inner join building natural inner join reservation " \
-                "where hostid = %s " \
-                "group by roomid, buildingname, roomnumber " \
-                "order by count(roomid) desc, roomid) as t;"
-        cursor.execute(query, (userid,))
+        query = "select roomid, buildingname, roomnumber, roomcapacity, typeid, count(roomid) as quantity " \
+                "from room natural inner join building natural inner join ((select roomid from reservation where hostid = %s) " \
+                "union all (select roomid from reservation natural inner join invitation where inviteeid = %s)) as t " \
+                "group by roomid, buildingname, roomnumber, roomcapacity, typeid " \
+                "order by quantity desc, roomid;"
+        cursor.execute(query, (userid, userid))
         result = cursor.fetchone()
         self.conn.close()
         return result
