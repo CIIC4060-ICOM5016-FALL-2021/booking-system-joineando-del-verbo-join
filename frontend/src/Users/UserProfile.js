@@ -45,9 +45,7 @@ export default function UserProfile() {
 
         const request = {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+
         };
         fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/${localStorage.getItem('userid')}`, request)
             .then((response) => {
@@ -69,10 +67,14 @@ export default function UserProfile() {
                 }
             })
             .catch((e) => {
-                console.log(e);
+                setwarning(false);
+                setdeleted(false);
+                setModalHeader("Error!");
+                setModalMessage("bah");
+                console.log(e)
+                setOpen(true);
             });
     }
-
     return (
         <Segment>
             <Modal
@@ -90,7 +92,7 @@ export default function UserProfile() {
                 <Modal.Actions>
                     {
                         warning ? (<>
-                            <Button color="green" onClick={() => { deleteUser() }}>Delete</Button>
+                            <Button primary onClick={() => { deleteUser() }}>Delete</Button>
                             <Button color="youtube" onClick={() => { setOpen(false); setwarning(false); }}>Cancel</Button></>) :
                             <Button onClick={deleted ? () => history.push('/') : () => setOpen(false)}>OK</Button>
                     }

@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
@@ -10,20 +10,25 @@ import TopBarMenu from '../Menus/TopBarMenu';
 
 function UserView() {
     const [isAuth, setIsAuth] = useState(false)
+    useEffect(() => {
+        setIsAuth(localStorage.getItem("role") === "3");
+    }, [setIsAuth])
     const panes = [
         {
             menuItem: 'Profile', render: () => <UserProfile />
         },
         {
-            menuItem: 'Booking', render: () => <BookMeeting />
+            menuItem: 'Booking', render: () => <Tab.Pane active={true}><BookMeeting /></Tab.Pane>
         },
         {
-            menuItem: 'Schedule', render: () => <Schedule />
+            menuItem: 'Schedule', render: () => <Tab.Pane active={true}><Schedule /></Tab.Pane>
         },
-        {
-            menuItem: 'Room Management', render: () => <Tab.Pane active={isAuth}><BookMeeting /></Tab.Pane>
-        }
     ]
+    if (isAuth) {
+        panes.push({
+            menuItem: 'Room Management', render: () => <Tab.Pane active={isAuth}><BookMeeting /></Tab.Pane>
+        });
+    }
 
     return (
         <Segment>

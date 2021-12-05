@@ -116,10 +116,7 @@ export default function UpdateProfileForm({ currentData, fetchUser, setModalHead
                         <Grid.Column>
                             <Button color="youtube" content='Cancel' onClick={() => setUpdate(false)} />
                         </Grid.Column>
-
                     </Grid.Row>
-
-
                 </Grid>
             </Segment>
         </Segment>
