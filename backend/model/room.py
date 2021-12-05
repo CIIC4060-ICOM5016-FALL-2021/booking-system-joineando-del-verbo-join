@@ -106,7 +106,7 @@ class RoomDAO:
                          "where roomid NOT IN " \
                          "((select roomid from reservation) " \
                          "union all " \
-                         "(select roomid from roomuavailavility));"
+                         "(select roomid from roomunavailavility));"
         cursor.execute(queryavailable)
         availables = cursor.rowcount
         print(availables)
@@ -118,8 +118,8 @@ class RoomDAO:
                       "from ((select roomid, startdatetime, enddatetime from reservation) " \
                       "union all " \
                       "(select roomid, startdatetime, endatetime from roomunavailability)) as t " \
-                      "where %s < t.startdatetime " \
-                      "and %s > t.enddatetime;"
+                      "where %s <= t.startdatetime " \
+                      "and %s >= t.enddatetime;"
             cursor.execute(queryID, (end, start,))
             roomid = cursor.fetchone()[0]
 
@@ -159,8 +159,8 @@ class RoomDAO:
                 "union all " \
                 "(select startdatetime, enddatetime " \
                 "from roomunavailability where roomid = %s)) as t " \
-                "where (%s >= t.startdatetime and %s <= t.enddatetime) " \
-                "or (%s >= t.startdatetime and %s <= t.enddatetime) " \
+                "where (%s >= t.startdatetime and %s < t.enddatetime) " \
+                "or (%s > t.startdatetime and %s <= t.enddatetime) " \
                 "or (%s <= t.startdatetime and %s >= t.enddatetime);"
 
         cursor.execute(query, (roomid, roomid, startdatetime, startdatetime, enddatetime,
