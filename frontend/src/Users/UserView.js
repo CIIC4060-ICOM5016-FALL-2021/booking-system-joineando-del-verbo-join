@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Segment, Tab } from "semantic-ui-react";
 import BookMeeting from "../Reservation/BookMeeting";
-import Schedule from "../Schedule/Schedule";
+import UserSchedule from "../Schedule/UserSchedule";
 import UserProfile from './UserProfile';
 import TopBarMenu from '../Menus/TopBarMenu';
+import MarkRoomUnavailable from '../Reservation/MarkRoomUnavailable';
+import RoomSchedule from '../Schedule/RoomSchedule';
 
 function UserView() {
     const [isAuth, setIsAuth] = useState(false)
@@ -16,16 +18,21 @@ function UserView() {
             menuItem: 'Profile', render: () => <Tab.Pane active={true}><UserProfile /></Tab.Pane>
         },
         {
-            menuItem: 'Schedule', render: () => <Tab.Pane active={true}><Schedule /></Tab.Pane>
-        },
-        {
             menuItem: 'Booking', render: () => <Tab.Pane active={true}><BookMeeting /></Tab.Pane>
         },
+        {
+            menuItem: 'User Schedule', render: () => <Tab.Pane active={true}><UserSchedule /></Tab.Pane>
+        },
+
     ]
     if (isAuth) {
         panes.push({
-            menuItem: 'Room Management', render: () => <Tab.Pane active={isAuth}><BookMeeting /></Tab.Pane>
+            menuItem: 'Room Availability', render: () => <Tab.Pane active={isAuth}><MarkRoomUnavailable /></Tab.Pane>
         });
+        panes.push({
+            menuItem: 'Room Schedule', render: () => <Tab.Pane active={isAuth}><RoomSchedule /></Tab.Pane>
+        });
+
     }
 
     return (
