@@ -130,7 +130,7 @@ class BaseReservation:
         busiest_hours = dao.busiestHours()
         result = []
         for row in busiest_hours:
-            result.append({"hour": row[0]})
+            result.append({"hour": row[0], "quantity": row[1]})
         return jsonify(result), 200
 
     def getRoomAppointments(self, roomid, json):
