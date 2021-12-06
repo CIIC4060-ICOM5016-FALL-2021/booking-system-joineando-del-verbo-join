@@ -83,11 +83,10 @@ class ReservationDAO:
 
     def busiestHours(self):
         cursor = self.conn.cursor()
-        query = "select t.hours " \
-                "from (select date_part('hour', startdatetime) as hours, count(date_part('hour', startdatetime)) as qty " \
+        query = "select date_part('hour', startdatetime) as hours, count(date_part('hour', startdatetime)) as qty " \
                 "from reservation " \
                 "group by hours " \
-                "order by qty desc, hours) as t " \
+                "order by qty desc, hours " \
                 "limit 5;"
 
         cursor.execute(query)
