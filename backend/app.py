@@ -7,7 +7,7 @@ from flask_cors import CORS
 from controller.invitation import BaseInvitation
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/')
@@ -66,6 +66,13 @@ def handle_timeunavailable(userid):
 def handle_usernavailability():
     if request.method == 'GET':
         return BaseUsers().checkUnavailableOnTimeFrame(request.json)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
+@app.route('/joineando-del-verbo-join/usersunavailability/<int:userid>', methods=['GET'])
+def handle_usernavailabilitybyid(userid):
+    if request.method == 'GET':
+        return BaseUsers().getAllUserUnavailableSlot(userid)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
@@ -153,6 +160,13 @@ def handle_room_appointments(roomid):
         return BaseReservation().getRoomAppointments(roomid, request.json)
     else:
         return jsonify('METHOD NOT ALLOWED', 405)
+
+@app.route('/joineando-del-verbo-join/roomsunavailability/<int:roomid>', methods=['GET'])
+def handle_roomunavailabilitybyid(roomid):
+    if request.method == 'GET':
+        return BaseRoom().getAllRoomUnavailableSlot(roomid)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
 
 #####################################################################
 #                          RESERVATION                              #

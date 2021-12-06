@@ -20,7 +20,7 @@ class RoomDAO:
 
     def getAllRooms(self):
         cursor = self.conn.cursor()
-        query = "select roomid, roomnumber, roomcapacity, buildingid, typeid from room;"
+        query = "select roomid, roomnumber, roomcapacity, buildingid, buildingname, typeid from room natural inner join building;"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -191,7 +191,17 @@ class RoomDAO:
         return rows_deleted != 0
 
 
+    def getAllRoomUnavailableSlot(self, roomid):
+        cursor = self.conn.cursor()
+        query = "select startdatetime, enddatetime, roomunavailabilityid " \
+                "from roomunavailability " \
+                "where roomid = %s;"
+        cursor.execute(query, (roomid,))
+        result = []
+        for row in cursor:
+            result.append(row)
 
+        return result
 
 
 

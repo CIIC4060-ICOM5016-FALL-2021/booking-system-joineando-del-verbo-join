@@ -224,6 +224,17 @@ class BaseUsers:
                 result_list.append(result)
             return jsonify(result_list), 200
 
+    def getAllUserUnavailableSlot(self, userid):
+        dao = UsersDAO()
+        result = dao.getAllUserUnavailableSlot(userid)
+        if not result:
+            return jsonify("NO UNAVAILABILITY"), 404
+        else:
+            result_list = []
+            for slot in result:
+                element = self.build_map_dict_unavailable(slot)
+                result_list.append(element)
+            return jsonify(result_list), 200
 
     #statistics
 

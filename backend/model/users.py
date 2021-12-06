@@ -112,7 +112,7 @@ class UsersDAO:
         cursor = self.conn.cursor()
         query = "delete from userunavailability " \
                 "where userid = %s and userunavailabilityid = %s " \
-                "returning startdatetime, enddatetime;"
+                "returning startdatetime, enddatetime, userunavailabilityid;"
         cursor.execute(query, (userid, userunavailabilityid,))
         time_available = cursor.fetchone()
         self.conn.commit()
@@ -236,6 +236,18 @@ class UsersDAO:
                 "or (%s <= t.startdatetime and %s >= t.enddatetime);"
         cursor.execute(query, (userid, userid, userid, startdatetime, startdatetime, enddatetime,
                                enddatetime, startdatetime, enddatetime))
+        result = []
+        for row in cursor:
+            result.append(row)
+
+        return result
+
+    def getAllUserUnavailableSlot(self, userid):
+        cursor = self.conn.cursor()
+        query = "select startdatetime, enddatetime, userunavailabilityid " \
+                 "from userunavailability " \
+                 "where userid = %s;"
+        cursor.execute(query,(userid,))
         result = []
         for row in cursor:
             result.append(row)

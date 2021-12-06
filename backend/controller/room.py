@@ -19,6 +19,16 @@ class BaseRoom:
         result['typeid'] = row[4]
         return result
 
+    def build_map_dict_all(self, row):
+        result = {}
+        result['roomid'] = row[0]
+        result['roomnumber'] = row[1]
+        result['roomcapacity'] = row[2]
+        result['buildingid'] = row[3]
+        result['buildingname'] = row[4]
+        result['typeid'] = row[5]
+        return result
+
     def build_map_dict_schedule(self, row):
         result = {}
         result['hostid'] = row[0]
@@ -59,6 +69,13 @@ class BaseRoom:
         result['reservations'] = row[3]
         return result
 
+    def build_map_dict_unavailable(self, row):
+        result = {}
+        result['startdatetime'] = row[0]
+        result['enddatetime'] = row[1]
+        result['roomunavailabilityid'] = row[2]
+        return result
+
 
     # methods
     def addNewRoom(self, json):
@@ -81,7 +98,7 @@ class BaseRoom:
         room_list = dao.getAllRooms()
         result_list = []
         for row in room_list:
-            obj = self.build_map_dict(row)
+            obj = self.build_map_dict_all(row)
             result_list.append(obj)
         return jsonify(result_list), 200
 
@@ -208,7 +225,7 @@ class BaseRoom:
             roomunavailabilityid = roomDAO.makeRoomUnavailable(roomid, start, end)
             tuple = (roomunavailabilityid, roomid, start, end)
             result = self.build_map_dict_roomunavailable(tuple)
-            return jsonify(result), 201
+            return jsonify(result), 200
         else:
             return jsonify("ACCESS DENIED"), 403
 
@@ -220,18 +237,29 @@ class BaseRoom:
         userInfo = usersDAO.getUserByID(userid)
         if userInfo:
             userRoleID = userInfo[5]
+
         else:
             userRoleID = -1
-
+        print("Here: ",userRoleID)
         if userRoleID == 3:
             roomDAO = RoomDAO()
             is_deleted = roomDAO.makeRoomAvailable(roomunavailabilityid)
             if is_deleted:
-                return jsonify("ROOM WAS MADE AVAILABLE"), 201
+                return jsonify("ROOM WAS MADE AVAILABLE"), 200
             else:
                 return jsonify("ROOM WAS ALREADY AVAILABLE"), 404
         else:
             return jsonify("ACCESS DENIED"), 403
 
 
-
+    def getAllRoomUnavailableSlot(self, roomid):
+        dao = RoomDAO()
+        result = dao.getAllRoomUnavailableSlot(roomid)
+        if not result:
+            return jsonify("NO UNAVAILABILITY"), 404
+        else:
+            result_list = []
+            for slot in result:
+                element = self.build_map_dict_unavailable(slot)
+                result_list.append(element)
+            return jsonify(result_list), 200
