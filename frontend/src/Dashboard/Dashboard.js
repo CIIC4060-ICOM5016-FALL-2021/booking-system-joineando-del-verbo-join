@@ -87,7 +87,7 @@ function Statistics() {
 
 
             <Container style={{ height: '100%' }}>
-                <BarChart width={1000} height={250} data={RoomTopTen}>
+                <BarChart width={1250} height={250} data={RoomTopTen}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="roomnumber"/>
                     <YAxis label={{ value: '# of Times Booked', angle: -90, position: 'Left' }}/>
@@ -101,8 +101,8 @@ function Statistics() {
                 Top Ten Users With Most Reservations  
             </h4>
 
-            <Container style={{height: '75%'}}>
-            <BarChart width={1000} height={250} data={UsersTopTen}>
+            <Container style={{height: '100%'}}>
+            <BarChart width={1250} height={250} data={UsersTopTen}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis label={{ value: '# of Reservations', angle: -90, position: 'Left' }} />
