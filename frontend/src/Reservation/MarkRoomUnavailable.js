@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { Calendar, momentLocalizer, } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import { Button, Container, Modal, Grid, Header, Divider } from "semantic-ui-react";
+import { Button, Container, Modal, Grid, Header, Divider, Form } from "semantic-ui-react";
 import dateFormat from 'dateformat';
 
 
 
-export default function MarkUserUnavailable() {
+export default function MarkRoomUnavailable() {
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
@@ -15,13 +15,36 @@ export default function MarkUserUnavailable() {
     const [events, setEvents] = useState([]);
     const [selected, setSelected] = useState({})
     const localizer = momentLocalizer(moment);
+    const [rooms, setRooms] = useState([])
+    const [room, setRoom] = useState("")
+
+    const handleRoom = (e, { value }) => { setRoom(value); setDates([]); setEvents([]); fetchUnavailability(value); };
 
     useEffect(() => {
-        fetchUnavailability();
+        fetchRooms()
     }, [])
 
-    const fetchUnavailability = () => {
-        fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/usersunavailability/${localStorage.getItem("userid")}`)
+    const fetchRooms = async () => {
+        // fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room')
+        fetch("http://127.0.0.1:5000/joineando-del-verbo-join/room")
+            .then((response) => response.json())
+            .then((data) => {
+                if (data) {
+                    setRooms(data);
+                }
+            });
+    }
+    const roomOptions = rooms.map(item => {
+        return {
+            key: item.roomid,
+            text: `${item.buildingname} - ${item.roomnumber}`,
+            value: item.roomid
+        }
+    })
+
+
+    const fetchUnavailability = (roomid) => {
+        fetch(`http://127.0.0.1:5000/joineando-del-verbo-join/roomsunavailability/${roomid}`)
             .then((response) => response.json())
             .then((data) => {
                 if (data !== 'NO UNAVAILABILITY') {
@@ -31,7 +54,7 @@ export default function MarkUserUnavailable() {
                             "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
                             "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
                             "allDay": false,
-                            "key": item.userunavailabilityid
+                            "key": item.roomunavailabilityid
                         }
                     }));
                 }
@@ -51,10 +74,10 @@ export default function MarkUserUnavailable() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ "startdatetime": dateFormat(dates[0].start, "yyyy-mm-dd HH:MM:ss.000000"), "enddatetime": dateFormat(dates[0].end, "yyyy-mm-dd HH:MM:ss.000000") })
+            body: JSON.stringify({ "userid": localStorage.getItem("userid"), "startdatetime": dateFormat(dates[0].start, "yyyy-mm-dd HH:MM:ss.000000"), "enddatetime": dateFormat(dates[0].end, "yyyy-mm-dd HH:MM:ss.000000") })
         };
 
-        fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/marktimeunavailable/${localStorage.getItem("userid")}`, request)
+        fetch(`http://127.0.0.1:5000/joineando-del-verbo-join/room/makeroomunavailable/${room}`, request)
             .then((response) => response.json())
             .then((data) => {
                 if (data) {
@@ -62,7 +85,7 @@ export default function MarkUserUnavailable() {
                     setModalMessage(`You have mark as unavailable the time slot from   ${dateFormat(dates[0].start, "HH:MM dddd, mmmm dS, yyyy Z")}  to  ${dateFormat(dates[0].end, "HH:MM dddd, mmmm dS, yyyy Z")}.`);
                     setOpen(true)
                     setDates([])
-                    fetchUnavailability();
+                    fetchUnavailability(room);
                 } else {
                     setModalHeader("Please, try again")
                     setModalMessage(data);
@@ -88,13 +111,16 @@ export default function MarkUserUnavailable() {
         const request = {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': "*",
+                'Access-Control-Allow-Methods': "GET,POST,OPTIONS,DELETE,PUT"
+
             },
-            body: JSON.stringify({ "userunavailabilityid": selected.key })
+            body: JSON.stringify({ "userid": localStorage.getItem("userid"), "roomunavailabilityid": selected.key })
         };
         console.log(request)
 
-        fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/marktimeunavailable/${localStorage.getItem("userid")}`, request)
+        fetch(`http://127.0.0.1:5000/joineando-del-verbo-join/room/makeroomavailable/${room}`, request)
             .then((response) => response.json())
             .then((data) => {
                 if (data !== "NO RESULT") {
@@ -102,7 +128,7 @@ export default function MarkUserUnavailable() {
                     setModalMessage(`You have mark as available the time slot from  ${dateFormat(selected.start, "HH:MM dddd, mmmm dS, yyyy")}  to  ${dateFormat(selected.end, "HH:MM dddd, mmmm dS, yyyy")}.`);
                     setOpen(true);
                     setEvents([]);
-                    fetchUnavailability();
+                    fetchUnavailability(room);
                     setSelected({});
                 } else {
                     setModalHeader("Please, try again")
@@ -123,9 +149,19 @@ export default function MarkUserUnavailable() {
         <Grid celled='internally' style={{ paddingTop: "20px" }}>
             <Grid.Row columns={2}>
                 <Grid.Column width={4} verticalAlign="top">
+                    <Form>
+                        <Form.Dropdown
+                            placeholder="Select Room"
+                            fluid
+                            selection
+                            value={room}
+                            options={roomOptions}
+                            onChange={handleRoom}
+                        />
+                    </Form>
                     <Header> Manage Availability</Header>
                     <Container fluid style={{ fontSize: "15px" }}>
-                        Select on the calendar a time that you want to be shown as unavailable. Then click the button below.
+                        Select on the calendar a time that you want the room to be shown as unavailable. Then click the button below.
                         <Container style={{ paddingTop: "20px", paddingBottom: "20px" }}>
                             <Button
                                 fluid

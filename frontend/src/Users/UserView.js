@@ -5,6 +5,7 @@ import BookMeeting from "../Reservation/BookMeeting";
 import Schedule from "../Schedule/Schedule";
 import UserProfile from './UserProfile';
 import TopBarMenu from '../Menus/TopBarMenu';
+import MarkRoomUnavailable from '../Reservation/MarkRoomUnavailable';
 
 function UserView() {
     const [isAuth, setIsAuth] = useState(false)
@@ -24,7 +25,7 @@ function UserView() {
     ]
     if (isAuth) {
         panes.push({
-            menuItem: 'Room Management', render: () => <Tab.Pane active={isAuth}><BookMeeting /></Tab.Pane>
+            menuItem: 'Room Management', render: () => <Tab.Pane active={isAuth}><MarkRoomUnavailable /></Tab.Pane>
         });
     }
 
