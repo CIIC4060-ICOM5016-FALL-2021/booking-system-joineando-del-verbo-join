@@ -26,7 +26,7 @@ export default function MarkRoomUnavailable() {
 
     const fetchRooms = async () => {
         // fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room')
-        fetch("http://127.0.0.1:5000/joineando-del-verbo-join/room")
+        fetch("https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room")
             .then((response) => response.json())
             .then((data) => {
                 if (data) {
@@ -44,7 +44,7 @@ export default function MarkRoomUnavailable() {
 
 
     const fetchUnavailability = (roomid) => {
-        fetch(`http://127.0.0.1:5000/joineando-del-verbo-join/roomsunavailability/${roomid}`)
+        fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/roomsunavailability/${roomid}`)
             .then((response) => response.json())
             .then((data) => {
                 if (data !== 'NO UNAVAILABILITY') {
@@ -77,7 +77,7 @@ export default function MarkRoomUnavailable() {
             body: JSON.stringify({ "userid": localStorage.getItem("userid"), "startdatetime": dateFormat(dates[0].start, "yyyy-mm-dd HH:MM:ss.000000"), "enddatetime": dateFormat(dates[0].end, "yyyy-mm-dd HH:MM:ss.000000") })
         };
 
-        fetch(`http://127.0.0.1:5000/joineando-del-verbo-join/room/makeroomunavailable/${room}`, request)
+        fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/makeroomunavailable/${room}`, request)
             .then((response) => response.json())
             .then((data) => {
                 if (data) {
@@ -120,7 +120,7 @@ export default function MarkRoomUnavailable() {
         };
         console.log(request)
 
-        fetch(`http://127.0.0.1:5000/joineando-del-verbo-join/room/makeroomavailable/${room}`, request)
+        fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/makeroomavailable/`, request)
             .then((response) => response.json())
             .then((data) => {
                 if (data !== "NO RESULT") {

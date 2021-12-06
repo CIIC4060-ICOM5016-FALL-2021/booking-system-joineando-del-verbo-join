@@ -12,7 +12,7 @@ import dateFormat from 'dateformat';
 //         allDay?: boolean
 //     resource?: any,
 // }
-function Schedule() {
+function UserSchedule() {
     const [dates, setDates] = useState([{
         'title': 'Selected Date',
         'allDay': false,
@@ -74,4 +74,4 @@ function Schedule() {
 
     )
 }
-export default Schedule;
+export default UserSchedule;

@@ -16,9 +16,7 @@ export default function MarkUserUnavailable() {
     const [selected, setSelected] = useState({})
     const localizer = momentLocalizer(moment);
 
-    useEffect(() => {
-        fetchUnavailability();
-    }, [])
+
 
     const fetchUnavailability = () => {
         fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/usersunavailability/${localStorage.getItem("userid")}`)
@@ -37,6 +35,9 @@ export default function MarkUserUnavailable() {
                 }
             });
     }
+    useEffect(() => {
+        fetchUnavailability();
+    }, [])
 
 
     const markUnavailableSlot = () => {
