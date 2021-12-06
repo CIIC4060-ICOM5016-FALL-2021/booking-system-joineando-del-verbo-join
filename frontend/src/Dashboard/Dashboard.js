@@ -98,7 +98,7 @@ function Statistics() {
             </Container>
 
             <h4 class="ui horizontal divider header">
-                Top Ten Users With Most Reservations
+                Top Ten Users With Most Reservations  
             </h4>
 
             <Container style={{height: '75%'}}>
