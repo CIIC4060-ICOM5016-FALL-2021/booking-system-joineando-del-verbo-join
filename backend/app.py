@@ -46,9 +46,9 @@ def handle_usersid(userid):
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
-@app.route('/joineando-del-verbo-join/users/schedule/<int:userid>', methods=['GET'])
+@app.route('/joineando-del-verbo-join/users/schedule/<int:userid>', methods=['POST'])
 def handle_userschedule(userid):
-    if request.method == 'GET':
+    if request.method == 'POST':
         return BaseUsers().allDaySchedule(userid, request.json)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
@@ -140,9 +140,9 @@ def handle_roomunavailable():
         return jsonify("METHOD NOT ALLOWED"), 405
 
 
-@app.route('/joineando-del-verbo-join/room/schedule/<int:roomid>', methods=['GET'])
+@app.route('/joineando-del-verbo-join/room/schedule/<int:roomid>', methods=['POST'])
 def handle_roomschedule(roomid):
-    if request.method == 'GET':
+    if request.method == 'POST':
         return BaseRoom().allDayScheduleRoom(roomid, request.json)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
