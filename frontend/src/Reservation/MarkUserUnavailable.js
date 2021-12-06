@@ -60,7 +60,7 @@ export default function MarkUserUnavailable() {
             .then((data) => {
                 if (data) {
                     setModalHeader("Success")
-                    setModalMessage(`You have mark as unavailable the time slot from   ${dateFormat(dates[0].start, "HH:MM dddd, mmmm dS, yyyy Z")}  to  ${dateFormat(dates[0].end, "HH:MM dddd, mmmm dS, yyyy Z")}.`);
+                    setModalMessage(`You have mark as unavailable the time slot from   ${dateFormat(dates[0].start, "HH:MM dddd, mmmm dS, yyyy")}  to  ${dateFormat(dates[0].end, "HH:MM dddd, mmmm dS, yyyy")}.`);
                     setOpen(true)
                     setDates([])
                     fetchUnavailability();
