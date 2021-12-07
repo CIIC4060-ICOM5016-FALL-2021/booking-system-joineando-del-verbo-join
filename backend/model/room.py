@@ -30,7 +30,8 @@ class RoomDAO:
 
     def getRoomById(self, roomid):
         cursor = self.conn.cursor()
-        query = "select roomid, roomnumber, roomcapacity, buildingid, typeid from room where roomid=%s;"
+        query = "select roomid, roomnumber, roomcapacity, buildingid, buildingname, typeid " \
+                "from room natural inner join building where roomid=%s;"
         cursor.execute(query, (roomid,))
         result = cursor.fetchone()
         self.conn.close()
