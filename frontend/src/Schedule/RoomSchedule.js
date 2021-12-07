@@ -13,12 +13,6 @@ import dateFormat from 'dateformat';
 //     resource?: any,
 // }
 function RoomSchedule() {
-    const [dates, setDates] = useState([{
-        'title': 'Selected Date',
-        'allDay': false,
-        'start': new Date(moment.start),
-        'end': new Date(moment.end)
-    }]);
     const localizer = momentLocalizer(moment);
     const [events, setEvents] = useState([]);
     const [rooms, setRooms] = useState([])
@@ -27,7 +21,7 @@ function RoomSchedule() {
     const [modalMessage, setModalMessage] = useState("");
     const [modalHeader, setModalHeader] = useState("");
 
-    const handleRoom = (e, { value }) => { setRoom(value); setDates([]); setEvents([]); };
+    const handleRoom = (e, { value }) => { setRoom(value); setEvents([]); };
 
     useEffect(() => {
         fetchRooms()
@@ -77,7 +71,7 @@ function RoomSchedule() {
 
     const formatEvents = events.map(item => {
         return {
-            "title": item.reservationname,
+            "title": item.reservationname + " by " + item.firstname + " " + item.lastname,
             "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
             "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
             "allDay": false

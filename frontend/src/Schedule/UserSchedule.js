@@ -42,10 +42,11 @@ function UserSchedule() {
 
     const formatEvents = events.map(item => {
         return {
-            "title": item.reservationname,
+            "title": item.reservationname + " by " + item.firstname + " " + item.lastname,
             "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
             "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
-            "allDay": false
+            "allDay": false,
+            "host": item.firstname + " " + item.lastname
         }
     });
 

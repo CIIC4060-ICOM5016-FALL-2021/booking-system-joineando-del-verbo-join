@@ -221,7 +221,7 @@ class BaseUsers:
                 result = self.build_map_dict_schedule(appointment)
                 result_list.append(result)
             for unavailability in sch_unavailable:
-                tuple = (-1, "Unavailable Time Space", -1, unavailability[0], unavailability[1], unavailability[2], unavailability[3])
+                tuple = (-1, "Unavailable Time Space", -1, unavailability[0], unavailability[1], "","")
                 result = self.build_map_dict_schedule(tuple)
                 result_list.append(result)
             return jsonify(result_list), 200
