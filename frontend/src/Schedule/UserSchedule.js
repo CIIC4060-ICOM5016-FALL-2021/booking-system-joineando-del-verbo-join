@@ -27,7 +27,11 @@ function UserSchedule() {
     const [modalHeader, setModalHeader] = useState("");
     const [event, setEvent] = useState({});
     const [editing, setediting] = useState(false);
-    const [done, setDone] = useState(false)
+    const [done, setDone] = useState(false);
+    const [invitees, setinvitees] = useState([])
+    const [toDelete, settoDelete] = useState([])
+
+    const handleToDelete = (e, { value }) => { settoDelete(value) };
 
 
     const fetchEvents = (date) => {
@@ -67,13 +71,19 @@ function UserSchedule() {
         fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/${event.roomid}`)
             .then((response) => response.json())
             .then((data) => {
-                message = `Host: ${event["host"]} |
-            Room: ${data.buildingname} - ${data.roomnumber}`;
+                message = `Host: ${event["host"]} | Room: ${data.buildingname} - ${data.roomnumber}`;
             })
             .then(() => {
                 fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/invitation/${event.reservationid}`)
                     .then((response) => response.json())
                     .then((data) => {
+                        setinvitees(data.map(item => {
+                            return {
+                                key: item.userid,
+                                text: item.firstname + " " + item.lastname,
+                                value: item.userid
+                            }
+                        }))
                         setModalHeader(event.title);
                         message = message + ` | Invitees: ${data.map(item => " " + item.firstname + " " + item.lastname + " ")}`;
                         setModalMessage(message)
@@ -81,21 +91,6 @@ function UserSchedule() {
                     });
             });
     }
-
-    const formatEvents = events.map(item => {
-        return {
-            "title": item.reservationname,
-            "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
-            "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
-            "allDay": false,
-            "host": item.firstname + " " + item.lastname,
-            "reservationid": item.reservationid,
-            "roomid": item.roomid,
-            "hostid": item.hostid,
-            "startdatetime": item.startdatetime,
-            "enddatetime": item.enddatetime
-        }
-    });
 
 
     const editReservation = (name) => {
@@ -150,6 +145,35 @@ function UserSchedule() {
             });
     }
 
+    const deleteInvitees = () => {
+        const request = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        };
+        toDelete.forEach((invitee) => {
+            fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/invitation/${invitee}/${event.reservationid}`, request)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data === "INVITATION DELETED") {
+                        setModalHeader("Success!")
+                        setModalMessage("Your Selected Inviteed were removed.");
+                        setediting(false);
+                        setOpen(true);
+                        setEvents([]);
+                        setEvent({});
+                        setinvitees([]);
+                    } else {
+                        setModalHeader("Please, try again")
+                        setModalMessage(data);
+                        setOpen(true);
+                        setediting(false);
+                    }
+                });
+        });
+    }
+
 
     const handleEdit = () => {
         const title = window.prompt('New Reservation Name')
@@ -177,6 +201,19 @@ function UserSchedule() {
                 </Modal.Content>
                 <Modal.Actions>
                     {localStorage.getItem("userid") === `${event["hostid"]}` && !editing && !done ? <>
+                        <Form.Dropdown
+                            placeholder="Select Invitees"
+                            label="Select Invitees to Delete"
+                            search
+                            fluid
+                            multiple
+                            selection
+                            options={invitees}
+                            value={toDelete}
+                            onChange={handleToDelete}
+                            style={{ padding: "5px" }}
+                        />
+                        <Button onClick={() => deleteInvitees()}>Delete Invitees</Button>
                         <Button onClick={handleEdit}>Edit Reservation</Button>
                         <Button onClick={() => deleteReservation()}>Delete Reservation</Button>
                         <Button onClick={() => { setOpen(false); setediting(false); setDone(false); }}>Close</Button></>
@@ -186,6 +223,7 @@ function UserSchedule() {
                 </Modal.Actions>
             </Modal>
             <Header> Select on a date to see your all day schedule.</Header>
+            You can also click on events to see details and edit the ones you are host.
             <Container style={{ height: "75vh" }}>
 
                 <Calendar

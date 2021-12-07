@@ -75,8 +75,8 @@ function Login({ cancel }) {
             </Modal>
             <Segment placeholder>
                 <Grid columns={2} relaxed='very' stackable>
-                    <Grid.Column className="currentColumn">
-                        <Form>
+                    <Grid.Column >
+                        <Form className="currentColumn">
                             <Form.Input
                                 icon='user'
                                 iconPosition='left'

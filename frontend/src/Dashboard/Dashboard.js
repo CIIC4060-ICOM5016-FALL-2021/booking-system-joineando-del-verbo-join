@@ -87,9 +87,9 @@ function Statistics() {
             </h4>
 
 
-            <Container style={{ width: "100vw", height: 350 }}>
+            <Container style={{ width: "100vw", height: 500 }}>
                 <ResponsiveContainer>
-                    <BarChart width={1250} height={250} data={RoomTopTen}>
+                    <BarChart width={1250} height={350} data={RoomTopTen}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="roomnumber" />
                         <YAxis label={{ value: '# of Times Booked', angle: -90, position: 'Left' }} />
@@ -104,9 +104,9 @@ function Statistics() {
                 Top Ten Users With Most Reservations
             </h4>
 
-            <Container style={{ width: "100vw", height: 350 }}>
+            <Container style={{ width: "100vw", height: 500 }}>
                 <ResponsiveContainer>
-                    <BarChart width={1250} height={250} data={UsersTopTen} >
+                    <BarChart width={1250} height={350} data={UsersTopTen} >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="fullname" />
                         <YAxis label={{ value: '# of Reservations', angle: -90, position: 'Left' }} />
@@ -121,9 +121,9 @@ function Statistics() {
                 Top Five Hours Booked
             </h4>
 
-            <Container style={{ width: "100vw", height: 350 }}>
+            <Container style={{ width: "100vw", height: 500 }}>
                 <ResponsiveContainer>
-                    <BarChart width={12500} height={250} data={HoursTopFive}>
+                    <BarChart width={12500} height={350} data={HoursTopFive}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="hour" />
                         <YAxis label={{ value: '# Booked At That Hour', angle: -90, position: 'Left' }} allowDecimals={false} />

@@ -54,7 +54,6 @@ function RoomSchedule() {
             return;
 
         }
-
         const request = {
             method: 'POST',
             headers: {
@@ -66,43 +65,44 @@ function RoomSchedule() {
             .then((response) => response.json())
             .then((data) => {
                 if (data !== 'NO SCHEDULE') {
-                    setEvents(data);
+                    setEvents(data.map(item => {
+                        return {
+                            "title": item.reservationname,
+                            "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
+                            "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
+                            "allDay": false,
+                            "host": item.firstname + " " + item.lastname,
+                            "reservationid": item.reservationid,
+                            "roomid": item.roomid,
+                            "hostid": item.hostid,
+                            "startdatetime": item.startdatetime,
+                            "enddatetime": item.enddatetime
+                        }
+                    }));
                 }
             });
     }
 
 
+    var message;
     const fetchDetails = (event) => {
-        console.log("here")
         if (event.roomid === -1) return;
-        fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/invitation/${event.reservationid}`)
+        fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/${room}`)
             .then((response) => response.json())
             .then((data) => {
-                setInvitees(data);
-                fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/${room}`)
+                message = `Host: ${event["host"]} | Room: ${data.buildingname} - ${data.roomnumber}`;
+            })
+            .then(() => {
+                fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/invitation/${event.reservationid}`)
                     .then((response) => response.json())
                     .then((data) => {
                         setModalHeader(event.title);
-                        var message = `Host: ${event["host"]} |
-                    Room: ${data.buildingname} - ${data.roomnumber} | Invitees: ${invitees.map(item => " " + item.firstname + " " + item.lastname + " ")}`;
+                        message = message + ` | Invitees: ${data.map(item => " " + item.firstname + " " + item.lastname + " ")}`;
                         setModalMessage(message)
                         setOpen(true);
                     });
             });
     }
-
-    const formatEvents = events.map(item => {
-        return {
-            "title": item.reservationname,
-            "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
-            "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
-            "allDay": false,
-            "host": item.firstname + " " + item.lastname,
-            "reservationid": item.reservationid,
-            "roomid": item.roomid,
-            "hostid": item.hostid
-        }
-    });
 
     return (
         <Grid celled='internally' style={{ paddingTop: "20px" }}>
@@ -134,7 +134,7 @@ function RoomSchedule() {
                             startAccessor="start"
                             endAccessor="end"
                             onSelectEvent={(event) => fetchDetails(event)}
-                            events={formatEvents}
+                            events={events}
                             views={["month", "day"]}
                             defaultDate={Date.now()}
                         >

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {Button, Container, Modal, Grid, Label, Segment, Form, List } from "semantic-ui-react";
+import { Button, Container, Modal, Grid, Label, Segment, Form, List } from "semantic-ui-react";
 import dateFormat from 'dateformat';
 import '../../node_modules/semantic-ui-css/components/label.css'
 
@@ -25,8 +25,8 @@ function BookMeeting() {
     const roleid = localStorage.getItem("role")
 
     const handleReservationName = (e, { value }) => setReservationName(value);
-    const handleInvitees = (e, { value }) => { setInvitees(value)};
-    const handleRoom = (e, { value }) => {setRoom(value)};
+    const handleInvitees = (e, { value }) => { setInvitees(value) };
+    const handleRoom = (e, { value }) => { setRoom(value) };
 
     const accesses = {
         "classroom": ["1", "2", "3"],
@@ -75,23 +75,23 @@ function BookMeeting() {
         console.log(JSON.stringify(json_format))
         fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/availableroom', {
             method: 'POST',
-            headers: {'Content-type': 'application/json'},
+            headers: { 'Content-type': 'application/json' },
             body: JSON.stringify(json_format)
-            })
+        })
             .then((response) => response.json())
             .then((data) => {
                 setRooms(data)
             })
     }
 
-    const roomOptions = rooms.filter(item => 
+    const roomOptions = rooms.filter(item =>
         accesses[item.roomtypename].includes(roleid)).map(item => {
-                    return {
-                        key: item.roomid,
-                        text: `${item.buildingname} ${item.roomnumber} (${item.roomtypename})`,
-                        value: item
-                    }
-    })
+            return {
+                key: item.roomid,
+                text: `${item.buildingname} ${item.roomnumber} (${item.roomtypename})`,
+                value: item
+            }
+        })
 
     const fetchUnavailableSlots = (start, end) => {
         const json_format = {
@@ -99,21 +99,23 @@ function BookMeeting() {
             startdatetime: "2021-01-01 00:00:00.000000",
             enddatetime: "2021-12-31 23:59:59.000000"
         }
-        fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/usersunavailability',{
+        fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/usersunavailability', {
             method: 'POST',
-            headers: {'Content-type': 'application/json'},
+            headers: { 'Content-type': 'application/json' },
             body: JSON.stringify(json_format)
         })
-        .then((response) => response.json())
-        .then((data) => {
-            const data_format = data.map(item => {
-                                                    return {'title': "Unavailable",
-                                                    'allDay': false,
-                                                    'start': new Date(item.startdatetime),
-                                                    'end': new Date(item.enddatetime)}
-                                                    })
-            setEvents(data_format)
-        })
+            .then((response) => response.json())
+            .then((data) => {
+                const data_format = data.map(item => {
+                    return {
+                        'title': "Unavailable",
+                        'allDay': false,
+                        "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
+                        "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)")
+                    }
+                })
+                setEvents(data_format)
+            })
     }
 
 
@@ -128,7 +130,7 @@ function BookMeeting() {
             setOpen(true);
         } else {
             setReadyDetails(true);
-            if(date.start !== undefined){
+            if (date.start !== undefined) {
                 date.title = reservationName
             }
             fetchUnavailableSlots()
@@ -136,7 +138,7 @@ function BookMeeting() {
     }
 
     const confirmDate = () => {
-        if (readyDate){
+        if (readyDate) {
             setReadyDate(false);
             return;
         }
@@ -153,7 +155,7 @@ function BookMeeting() {
     }
 
     const confirmRoom = () => {
-        if (readyRoom){
+        if (readyRoom) {
             setReadyRoom(false);
             return;
         }
@@ -179,9 +181,9 @@ function BookMeeting() {
         console.log(JSON.stringify(json_format))
         fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/reservation', {
             method: 'POST',
-            headers: {'Content-type': 'application/json'},
+            headers: { 'Content-type': 'application/json' },
             body: JSON.stringify(json_format)
-            })
+        })
             .then((response) => response.json())
             .then((data) => {
                 if (data.reservationid !== undefined) {
@@ -189,7 +191,7 @@ function BookMeeting() {
                     setModalMessage(`You have created reservation called '${data.reservationname}' with id : ${data.reservationid}.`);
                     setOpen(true)
                     resetStates()
-                }else {
+                } else {
                     setModalHeader("Please, try again.")
                     setModalMessage(`Conflict: ${data}`);
                     setOpen(true);
@@ -208,7 +210,7 @@ function BookMeeting() {
         let str = ""
         users.filter(u => invitees.includes(u.userid)).map(u => str += `[${u.email}] `)
         return str
-        
+
     }
 
     const bookingmenu =
@@ -240,39 +242,41 @@ function BookMeeting() {
             </Form>
             <Container textAlign='center' style={{ paddingTop: "10px" }}>
                 <Button primary={!readyDetails} onClick={() => confirmDetails()}>Confirm Details</Button>
-                
+
             </Container>
         </Segment>
 
     const bookingcalendar =
-    <Segment>
-        <Container style={{ height: "75vh" }}>
-            <Calendar
-                selectable={readyDetails && !readyDate}
-                localizer={localizer}
-                startAccessor="start"
-                events={[ ...events, date]}
-                endAccessor="end"
-                eventPropGetter = {event => ({ style: {backgroundColor: event.title === "Unavailable" ? "gray" : event.color}})}
-                views={["month","day"]}
-                defaultDate={Date.now()}
-                onSelecting={(selected) => {
-                    console.log(selected)
-                    setDate(
-                    {'title': `${reservationName}`,
-                        'allDay': false,
-                        'start': new Date(selected.start),
-                        'end': new Date(selected.end)
-                    })}
-                }
-            >
-            </Calendar>
-        </Container>
-        <Container textAlign='center' style={{ paddingTop: "10px" }}>
-            <Button primary={!readyDetails} onClick={() => setReadyDetails(false)}>Change Details</Button>
-            <Button primary={!readyDate} onClick={() => confirmDate()}>Confirm Date</Button>
-        </Container>
-    </Segment>
+        <Segment>
+            <Container style={{ height: "75vh" }}>
+                <Calendar
+                    selectable={readyDetails && !readyDate}
+                    localizer={localizer}
+                    startAccessor="start"
+                    events={[...events, date]}
+                    endAccessor="end"
+                    eventPropGetter={event => ({ style: { backgroundColor: event.title === "Unavailable" ? "gray" : event.color } })}
+                    views={["month", "day"]}
+                    defaultDate={Date.now()}
+                    onSelecting={(selected) => {
+                        console.log(selected)
+                        setDate(
+                            {
+                                'title': `${reservationName}`,
+                                'allDay': false,
+                                'start': new Date(selected.start),
+                                'end': new Date(selected.end)
+                            })
+                    }
+                    }
+                >
+                </Calendar>
+            </Container>
+            <Container textAlign='center' style={{ paddingTop: "10px" }}>
+                <Button primary={!readyDetails} onClick={() => setReadyDetails(false)}>Change Details</Button>
+                <Button primary={!readyDate} onClick={() => confirmDate()}>Confirm Date</Button>
+            </Container>
+        </Segment>
 
     const bookingroom =
         <Segment >
@@ -292,27 +296,27 @@ function BookMeeting() {
                 />
             </Form>
             <Container textAlign='center' style={{ paddingTop: "10px" }}>
-            <Button primary={false} onClick={() => setReadyDate(false)}>Change Date</Button>
-            <Button primary={true} onClick={() => confirmRoom()}>Confirm Room</Button>
+                <Button primary={false} onClick={() => setReadyDate(false)}>Change Date</Button>
+                <Button primary={true} onClick={() => confirmRoom()}>Confirm Room</Button>
             </Container>
         </Segment>
-    
 
-    const bookingoverview = 
+
+    const bookingoverview =
         <Segment>
             <Container textAlign="center" style={{ fontSize: "20px", paddingBottom: "15px" }}>
-            Reservation Overview
+                Reservation Overview
             </Container>
             <List>
                 <List.Item>
                     <Label size='medium'>
-                        Reservation Name: 
+                        Reservation Name:
                         <Label.Detail>{`${reservationName}`}</Label.Detail>
                     </Label>
                 </List.Item>
                 <List.Item>
                     <Label size='medium'>
-                        Invitees: 
+                        Invitees:
                         <Label.Detail>
                             {`${concatenateInvitees()}`}
                         </Label.Detail>
@@ -320,19 +324,19 @@ function BookMeeting() {
                 </List.Item>
                 <List.Item>
                     <Label size='medium'>
-                        Starting Date: 
+                        Starting Date:
                         <Label.Detail>{`${date.start}`}</Label.Detail>
                     </Label>
                 </List.Item>
                 <List.Item>
                     <Label size='medium'>
-                        Ending Date: 
+                        Ending Date:
                         <Label.Detail>{`${date.end}`}</Label.Detail>
                     </Label>
                 </List.Item>
                 <List.Item>
                     <Label size='medium'>
-                        Room: 
+                        Room:
                         <Label.Detail>{`${room.buildingname} ${room.roomnumber} (${room.roomtypename})`}</Label.Detail>
                     </Label>
                 </List.Item>
@@ -340,7 +344,7 @@ function BookMeeting() {
             <Container textAlign='center' style={{ paddingTop: "10px" }}>
                 <Button primary={false} onClick={() => setReadyRoom(false)}>Change Room</Button>
                 <Button primary={true} onClick={() => confirmReservation()}>Confirm Reservation</Button>
-            </Container>    
+            </Container>
         </Segment>
 
     return (
@@ -361,9 +365,9 @@ function BookMeeting() {
                     <Button onClick={() => setOpen(false)}>Done</Button>
                 </Modal.Actions>
             </Modal>
-            <Grid  padded>
+            <Grid padded>
                 <Grid.Row centered columns={1}>
-                    <Grid.Column open={false} width = {10} verticalAlign="middle" >
+                    <Grid.Column open={false} width={10} verticalAlign="middle" >
                         {readyDetails ? (readyDate ? (readyRoom ? bookingoverview : bookingroom) : bookingcalendar) : bookingmenu}
                     </Grid.Column>
                 </Grid.Row>

@@ -112,8 +112,8 @@ function SignUp({ active }) {
                     <Grid.Column verticalAlign='middle'>
                         <Button content='Login' icon='signup' size='big' onClick={() => active(false)} />
                     </Grid.Column>
-                    <Grid.Column className="currentColumn">
-                        <Form>
+                    <Grid.Column>
+                        <Form className="currentColumn">
                             <Form.Input
                                 icon='bookmark'
                                 iconPosition='left'
