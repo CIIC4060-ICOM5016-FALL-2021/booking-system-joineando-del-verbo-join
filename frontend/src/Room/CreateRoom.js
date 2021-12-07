@@ -115,7 +115,7 @@ function CreateRoom({active }) {
 
     return (
         <Segment>
-            <Header dividing textAlign="center" size="huge">Booking App by Joineando del Verbo Join</Header>
+            <Header dividing textAlign="center" size="huge">Create, update and delete rooms</Header>
             <Modal
                 centered={false}
                 open={open}

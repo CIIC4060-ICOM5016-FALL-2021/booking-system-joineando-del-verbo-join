@@ -34,7 +34,7 @@ function UserView() {
             menuItem: 'Room Schedule', render: () => <Tab.Pane active={isAuth}><RoomSchedule /></Tab.Pane>
         });
         panes.push({
-            menuItem: 'Create Room', render: () => <Tab.Pane active={isAuth}><CreateRoom /></Tab.Pane>
+            menuItem: 'Room Management', render: () => <Tab.Pane active={isAuth}><CreateRoom /></Tab.Pane>
         });
 
     }
