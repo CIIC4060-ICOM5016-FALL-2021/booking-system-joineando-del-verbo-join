@@ -22,11 +22,18 @@ function BookMeeting() {
     const [rooms, setRooms] = useState([])
     const [room, setRoom] = useState({})
     const userid = localStorage.getItem("userid")
+    const roleid = localStorage.getItem("role")
 
     const handleReservationName = (e, { value }) => setReservationName(value);
     const handleInvitees = (e, { value }) => { setInvitees(value)};
     const handleRoom = (e, { value }) => {setRoom(value)};
 
+    const accesses = {
+        "classroom": ["1", "2", "3"],
+        "laboratory": ["2", "3"],
+        "study-space": ["1", "2", "3"],
+        "staff-space": ["3"]
+    }
 
     useEffect(() => {
         fetchUsers()
@@ -77,12 +84,13 @@ function BookMeeting() {
             })
     }
 
-    const roomOptions = rooms.map(item => {
-        return {
-            key: item.roomid,
-            text: `${item.buildingname} ${item.roomnumber} (${item.roomtypename})`,
-            value: item
-        }
+    const roomOptions = rooms.filter(item => 
+        accesses[item.roomtypename].includes(roleid)).map(item => {
+                    return {
+                        key: item.roomid,
+                        text: `${item.buildingname} ${item.roomnumber} (${item.roomtypename})`,
+                        value: item
+                    }
     })
 
     const fetchUnavailableSlots = (start, end) => {
