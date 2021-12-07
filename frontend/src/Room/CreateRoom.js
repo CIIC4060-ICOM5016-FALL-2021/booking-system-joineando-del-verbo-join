@@ -121,7 +121,7 @@ function CreateRoom({ active }) {
                     setOpen(true);
                     setRoomNumber("")
                     setRoomCapacity("")
-                    getAllRooms();
+                    fetchAllRooms();
                 } else {
                     setModalHeader("Please, try again")
                     setModalMessage("Unexpected error creating your room");
