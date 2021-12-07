@@ -210,6 +210,13 @@ def handle_invitations(reservationid, inviteeid):
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
+@app.route('/joineando-del-verbo-join/invitation/<int:reservationid>', methods=['GET'])
+def handle_invitation(reservationid):
+    if request.method == 'GET':
+        return BaseInvitation().allInviteesForReservation(reservationid)
+    else:
+        return jsonify("METHOD NOT ALLOWED"), 405
+
 
 #####################################################################
 #                         STATISTICS                                #
