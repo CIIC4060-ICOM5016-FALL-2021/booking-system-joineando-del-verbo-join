@@ -221,7 +221,7 @@ class UsersDAO:
     # re-think this one
     def checkUnavailableOnTimeFrame(self, userid, startdatetime, enddatetime):
         cursor = self.conn.cursor()
-        query = "select userid, startdatetime, endatetime " \
+        query = "select userid, startdatetime, enddatetime " \
                 "from ((select hostid as userid, startdatetime, enddatetime " \
                 "from reservation where hostid = %s) " \
                 "union all " \
