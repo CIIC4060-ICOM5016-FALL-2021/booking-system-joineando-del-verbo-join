@@ -46,7 +46,7 @@ function BookMeeting() {
             })
     }
 
-    const userOptions = users.filter(item => item.userid !== userid).map(item => {
+    const userOptions = users.filter(item => `${item.userid}` !== userid).map(item => {
         return {
             key: item.userid,
             text: item.email,
@@ -80,6 +80,7 @@ function BookMeeting() {
             .then((response) => response.json())
             .then((data) => {
                 setRooms(data)
+                setRoom(data[0])
             })
     }
 

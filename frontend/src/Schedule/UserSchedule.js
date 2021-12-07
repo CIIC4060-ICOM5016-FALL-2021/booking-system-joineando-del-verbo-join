@@ -134,6 +134,7 @@ function UserSchedule() {
             .then((data) => {
                 if (data === "DELETED") {
                     setEvent({})
+                    setEvents([])
                     setModalHeader("Success!")
                     setModalMessage("Your Reservation has been deleted");
                     setediting(false);
