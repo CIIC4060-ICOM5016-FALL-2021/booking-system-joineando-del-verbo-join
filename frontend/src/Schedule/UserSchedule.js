@@ -58,7 +58,7 @@ function UserSchedule() {
                 <Calendar
                     eventPropGetter={event => ({
                         style: {
-                            backgroundColor: event.title === "Unavailable Time Space" ? "#FD2A2A" : event.color,
+                            backgroundColor: event.roomid === -1 ? "#FD2A2A" : event.color,
                         },
                     })}
                     onNavigate={(date) => fetchEvents(date)}
