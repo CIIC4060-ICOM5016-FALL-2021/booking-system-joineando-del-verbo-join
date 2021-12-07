@@ -114,14 +114,14 @@ class BaseInvitation:
     #     else:
     #         return jsonify("INVITATION NOT UPDATED"), 404
     #
-    # def deleteInvitation(self, userid, reservationid):
-    #     dao = InvitationDAO()
-    #     deleted = dao.deleteInvitation(userid, reservationid)
-    #     if deleted:
-    #         return jsonify("INVITATION DELETED"), 200
-    #     else:
-    #
-    #         return jsonify("COULD NOT DELELETE INVITATION"), 404
+    def deleteInvitation(self, userid, reservationid):
+        dao = InvitationDAO()
+        deleted = dao.deleteInvitation(userid, reservationid)
+        if deleted:
+            return jsonify("INVITATION DELETED"), 200
+        else:
+
+            return jsonify("COULD NOT DELELETE INVITATION"), 404
 
 
 
