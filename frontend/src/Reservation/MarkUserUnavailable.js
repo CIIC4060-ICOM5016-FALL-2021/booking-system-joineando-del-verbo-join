@@ -155,7 +155,7 @@ export default function MarkUserUnavailable() {
                         <Calendar
                             eventPropGetter={event => ({
                                 style: {
-                                    backgroundColor: event.title === "Unavailable Time Space" ? "#FD2A2A" : event.color,
+                                    backgroundColor: event.title === "Unavailable Time Space" ? "grey" : event.color,
                                 },
                             })}
                             selectable

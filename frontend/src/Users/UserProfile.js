@@ -93,7 +93,7 @@ export default function UserProfile() {
                 setwarning(false);
                 setdeleted(false);
                 setModalHeader("Error!");
-                setModalMessage("bah");
+                setModalMessage("There was an unexpected error. Please, try again.");
                 console.log(e)
                 setOpen(true);
             });
