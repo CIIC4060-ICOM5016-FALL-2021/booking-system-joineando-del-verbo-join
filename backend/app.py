@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from backend.model.room import RoomDAO
 from controller.users import BaseUsers
 from controller.userrole import BaseUserRole
 from controller.reservation import BaseReservation
@@ -251,6 +252,19 @@ def handle_busiesthours():
         return BaseReservation().busiestHours()
     else:
         return jsonify('METHOD NOT ALLOWED'), 405
+
+
+#####################################################################
+#                          BUILDING                                 #
+#####################################################################
+
+@app.route('/joineando-del-verbo-join/buildings', methods = ['GET'])
+def handle_get_all_buildings():
+    if request.method == 'GET':
+        return RoomDAO().getAllBuildings
+    else:
+        return jsonify('METHOD NOT ALLOWED'), 405
+
 
 
 if __name__ == '__main__':

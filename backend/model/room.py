@@ -203,6 +203,17 @@ class RoomDAO:
 
         return result
 
+    def getAllBuildings(self):
+        cursor = self.conn.cursor()
+        query = "select buildingid, buildingname from building;"
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        self.conn.close()
+        return result
+
+
 
 
 
