@@ -30,13 +30,14 @@ function UserSchedule() {
     const [done, setDone] = useState(false);
     const [invitees, setinvitees] = useState([])
     const [toDelete, settoDelete] = useState([])
+    const [currentDate, setCurrentDate] = useState({})
     const converter = `${new Date(Date.now())}`.substring(25);
 
     const handleToDelete = (e, { value }) => { settoDelete(value) };
 
 
     const fetchEvents = (date) => {
-
+        setCurrentDate(date)
         const request = {
             method: 'POST',
             headers: {
@@ -106,11 +107,12 @@ function UserSchedule() {
             .then((response) => response.json())
             .then((data) => {
                 if (data !== "NOT UPDATED") {
+                    setEvent({})
                     setModalHeader("Success!")
                     setModalMessage("Your Reservation has been updated");
                     setediting(false);
-                    setOpen(true);
-                    setEvents([]);
+                    setDone(true);
+                    fetchEvents(currentDate)
                 } else {
                     setModalHeader("Please, try again")
                     setModalMessage(data);
@@ -131,12 +133,12 @@ function UserSchedule() {
             .then((response) => response.json())
             .then((data) => {
                 if (data === "DELETED") {
+                    setEvent({})
                     setModalHeader("Success!")
                     setModalMessage("Your Reservation has been deleted");
                     setediting(false);
-                    setOpen(true);
-                    setEvents([]);
-                    setEvent({})
+                    setDone(true);
+                    fetchEvents(currentDate)
                 } else {
                     setModalHeader("Please, try again")
                     setModalMessage(data);
@@ -158,13 +160,14 @@ function UserSchedule() {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data === "INVITATION DELETED") {
+                        setEvent({})
                         setModalHeader("Success!")
-                        setModalMessage("Your Selected Inviteed were removed.");
+                        setModalMessage("Your selected invitee(s) were removed.");
                         setediting(false);
-                        setOpen(true);
-                        setEvents([]);
+                        setDone(true);
                         setEvent({});
                         setinvitees([]);
+                        fetchEvents(currentDate)
                     } else {
                         setModalHeader("Please, try again")
                         setModalMessage(data);
@@ -180,7 +183,6 @@ function UserSchedule() {
         const title = window.prompt('New Reservation Name')
         if (title) {
             editReservation(title);
-            setDone(true);
         } else {
             setediting(false);
         }
@@ -218,9 +220,7 @@ function UserSchedule() {
                         <Button onClick={handleEdit}>Edit Reservation</Button>
                         <Button onClick={() => deleteReservation()}>Delete Reservation</Button>
                         <Button onClick={() => { setOpen(false); setediting(false); setDone(false); }}>Close</Button></>
-                        : editing ? <><Button onClick={() => { setOpen(false); setediting(false); setDone(false); }}>Cancel</Button>
-                            <Button onClick={() => handleEdit()}>Edit</Button></> :
-                            <Button onClick={() => { setOpen(false); setediting(false); setDone(false); }}>OK</Button>}
+                        : <Button onClick={() => { setOpen(false); setediting(false); setDone(false); }}>OK</Button>}
                 </Modal.Actions>
             </Modal>
             <Header> Select on a date to see your all day schedule.</Header>

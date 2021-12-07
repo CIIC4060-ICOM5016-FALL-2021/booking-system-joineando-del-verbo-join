@@ -4,7 +4,6 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import { Button, Container, Modal, Grid, Label, Segment, Form, List } from "semantic-ui-react";
 import dateFormat from 'dateformat';
-import '../../node_modules/semantic-ui-css/components/label.css'
 
 function BookMeeting() {
     const [date, setDate] = useState({});
@@ -47,7 +46,7 @@ function BookMeeting() {
             })
     }
 
-    const userOptions = users.filter(item => item.userid != userid).map(item => {
+    const userOptions = users.filter(item => item.userid !== userid).map(item => {
         return {
             key: item.userid,
             text: item.email,
@@ -325,13 +324,13 @@ function BookMeeting() {
                 <List.Item>
                     <Label size='medium'>
                         Starting Date:
-                        <Label.Detail>{`${date.start}`}</Label.Detail>
+                        <Label.Detail>{`${date.start}`.slice(0, 25)}</Label.Detail>
                     </Label>
                 </List.Item>
                 <List.Item>
                     <Label size='medium'>
                         Ending Date:
-                        <Label.Detail>{`${date.end}`}</Label.Detail>
+                        <Label.Detail>{`${date.end}`.slice(0, 25)}</Label.Detail>
                     </Label>
                 </List.Item>
                 <List.Item>
