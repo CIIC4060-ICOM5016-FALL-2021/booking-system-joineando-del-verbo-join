@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "737828eb-de38-4ed9-b355-e2d2838e6437",
+		"_postman_id": "6cf7cece-4c08-469b-945a-b2575ff6f073",
 		"name": "Booking-app-API-routes",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -69,7 +69,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstname\": \"Fabiola\",\r\n    \"lastname\": \"Oak\",\r\n    \"email\": \"fab.oak@email.com\",\r\n    \"password\": \"password\",\r\n    \"roleid\": 1\r\n}\r\n",
+							"raw": "{\r\n    \"firstname\": \"Fabiola\",\r\n    \"lastname\": \"Robles\",\r\n    \"email\": \"fabiola.robles1@upr.edu\",\r\n    \"password\": \"12345\",\r\n    \"roleid\": 1\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -77,7 +77,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/6",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/7",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -87,7 +87,7 @@
 							"path": [
 								"joineando-del-verbo-join",
 								"users",
-								"6"
+								"7"
 							]
 						},
 						"description": "Update a user from the DB by providing its ID"
@@ -100,7 +100,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/180",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/26",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -110,7 +110,7 @@
 							"path": [
 								"joineando-del-verbo-join",
 								"users",
-								"180"
+								"26"
 							]
 						},
 						"description": "Delete a user from the DB by providing its ID."
@@ -151,7 +151,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"hostid\": 19,\r\n    \"roomid\": 8,\r\n    \"reservationname\": \"Ensayo pa reyes\",\r\n    \"startdatetime\": \"2021-01-05 00:10:00.000000\",\r\n    \"enddatetime\": \"2021-01-05 00:19:00.000000\",\r\n    \"inviteesIds\": [4,8,9, 19]\r\n}",
+							"raw": "{\r\n    \"hostid\": 21,\r\n    \"roomid\": 8,\r\n    \"reservationname\": \"Ensayo\",\r\n    \"startdatetime\": \"2022-01-05 10:00:00.000000\",\r\n    \"enddatetime\": \"2022-01-05 20:00:00.000000\",\r\n    \"inviteesIds\": [13,24, 23]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -212,7 +212,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"hostid\": 6,\r\n    \"roomid\": 8,\r\n    \"reservationname\": \"Sexto Piso Stefani V 2.0\",\r\n    \"startdatetime\": \"2021-03-12 00:12:54.000000\",\r\n    \"enddatetime\": \"2021-03-12 00:22:54.000000\",\r\n    \"inviteesIds\": [8,9]\r\n}\r\n",
+							"raw": "{\r\n    \"hostid\": 6,\r\n    \"roomid\": 8,\r\n    \"reservationname\": \"La Formula\",\r\n    \"startdatetime\": \"2021-12-12 04:30:00.000000\",\r\n    \"enddatetime\": \"2021-12-12 08:00:00.000000\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -220,7 +220,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/reservation/28",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/reservation/24",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -230,7 +230,7 @@
 							"path": [
 								"joineando-del-verbo-join",
 								"reservation",
-								"28"
+								"24"
 							]
 						},
 						"description": "Update a reservation from the DB by providing its ID"
@@ -243,7 +243,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/reservation/33",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/reservation/27",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -253,7 +253,7 @@
 							"path": [
 								"joineando-del-verbo-join",
 								"reservation",
-								"33"
+								"27"
 							]
 						},
 						"description": "Delete a user from the DB by providing its ID."
@@ -272,7 +272,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"roomnumber\" : 1234,\r\n    \"roomcapacity\" : 99,\r\n    \"buildingid\" : 1,\r\n    \"typeid\" : 1\r\n}",
+							"raw": "{\r\n    \"roomnumber\" : 3168,\r\n    \"roomcapacity\" : 45,\r\n    \"buildingid\" : 1,\r\n    \"typeid\" : 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -302,7 +302,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/8",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/28",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -312,7 +312,7 @@
 							"path": [
 								"joineando-del-verbo-join",
 								"room",
-								"8"
+								"28"
 							]
 						},
 						"description": "Get a room from the DB by providing its ID"
@@ -326,7 +326,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"roomnumber\" : 1234,\r\n    \"roomcapacity\" : 99,\r\n    \"buildingid\" : 1,\r\n    \"typeid\" : 1\r\n}",
+							"raw": "{\r\n    \"roomcapacity\" : 99,\r\n    \"buildingid\" : 1,\r\n    \"typeid\" : 1,\r\n    \"roomnumber\": 3168\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -334,7 +334,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/1",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/28",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -344,7 +344,7 @@
 							"path": [
 								"joineando-del-verbo-join",
 								"room",
-								"1"
+								"28"
 							]
 						},
 						"description": "Update a room from the DB by providing its ID"
@@ -357,7 +357,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/1",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/28",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -367,7 +367,7 @@
 							"path": [
 								"joineando-del-verbo-join",
 								"room",
-								"1"
+								"28"
 							]
 						},
 						"description": "Delete a room from the DB by providing its ID."
@@ -408,7 +408,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"reservationid\": 9,\r\n    \"inviteeid\" : 8\r\n}",
+							"raw": "{\r\n    \"reservationid\": 10,\r\n    \"inviteeid\" : 4\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -438,7 +438,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/invitation/4/34",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/invitation/4/10",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -449,7 +449,7 @@
 								"joineando-del-verbo-join",
 								"invitation",
 								"4",
-								"34"
+								"10"
 							]
 						},
 						"description": "Get a invitation from the DB by providing its ID (composite: .../inviteeid/reservationid)"
@@ -462,7 +462,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/invitation/7/9",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/invitation/4/10",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -472,8 +472,8 @@
 							"path": [
 								"joineando-del-verbo-join",
 								"invitation",
-								"7",
-								"9"
+								"4",
+								"10"
 							]
 						},
 						"description": "Delete an invitation from the DB by providing its ID  (composite: .../inviteeid/reservationid)"
@@ -515,7 +515,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/stats/mostreservations",
+							"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/stats/mostreservations/4",
 							"protocol": "https",
 							"host": [
 								"booking-app-joineando",
@@ -526,7 +526,8 @@
 								"joineando-del-verbo-join",
 								"users",
 								"stats",
-								"mostreservations"
+								"mostreservations",
+								"4"
 							]
 						}
 					},
@@ -584,7 +585,7 @@
 					"response": []
 				},
 				{
-					"name": "Most Booked Rooms Top Ten Copy",
+					"name": "Most Booked Rooms Top Ten",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -610,11 +611,8 @@
 		},
 		{
 			"name": "Find an available room at a time frame",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -643,51 +641,13 @@
 			"response": []
 		},
 		{
-			"name": "Who appointed room at time frame",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"time\": \"2021-11-12 00:12:54.000000\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/whoappointed/9",
-					"protocol": "https",
-					"host": [
-						"booking-app-joineando",
-						"herokuapp",
-						"com"
-					],
-					"path": [
-						"joineando-del-verbo-join",
-						"room",
-						"whoappointed",
-						"9"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "All Day Schedule Room",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"daystart\": \"2021-11-11 00:00:00.000000\"\r\n}",
+					"raw": "{\r\n    \"userid\": 13,\r\n    \"daystart\": \"2021-12-17 00:00:00.000000\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -695,7 +655,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/schedule/3",
+					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/schedule/1",
 					"protocol": "https",
 					"host": [
 						"booking-app-joineando",
@@ -706,7 +666,7 @@
 						"joineando-del-verbo-join",
 						"room",
 						"schedule",
-						"3"
+						"1"
 					]
 				}
 			},
@@ -714,15 +674,12 @@
 		},
 		{
 			"name": "All Day Schedule User",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"daystart\": \"2021-01-05 00:00:00.000000\"\r\n}",
+					"raw": "{\r\n    \"daystart\": \"2021-12-17 00:00:00.000000\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -730,7 +687,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/schedule/8",
+					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/schedule/13",
 					"protocol": "https",
 					"host": [
 						"booking-app-joineando",
@@ -741,7 +698,7 @@
 						"joineando-del-verbo-join",
 						"users",
 						"schedule",
-						"8"
+						"13"
 					]
 				}
 			},
@@ -783,11 +740,8 @@
 		},
 		{
 			"name": "Find Time Available for everyone",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -829,7 +783,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/marktimeunavailable/9",
+					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/marktimeunavailable/13",
 					"protocol": "https",
 					"host": [
 						"booking-app-joineando",
@@ -840,7 +794,7 @@
 						"joineando-del-verbo-join",
 						"users",
 						"marktimeunavailable",
-						"9"
+						"13"
 					]
 				}
 			},
@@ -853,7 +807,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n     \"userunavailabilityid\": 37\r\n}",
+					"raw": "{\r\n     \"userunavailabilityid\": 55\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -861,7 +815,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/marktimeunavailable/9",
+					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/users/marktimeunavailable/13",
 					"protocol": "https",
 					"host": [
 						"booking-app-joineando",
@@ -872,7 +826,7 @@
 						"joineando-del-verbo-join",
 						"users",
 						"marktimeunavailable",
-						"9"
+						"13"
 					]
 				}
 			},
@@ -885,7 +839,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"userid\": 19,\r\n    \"startdatetime\": \"2021-01-01 00:00:00.000000\",\r\n    \"enddatetime\": \"2021-12-31 23:59:59.000000\"\r\n}",
+					"raw": "{\r\n    \"userid\": 13,\r\n    \"startdatetime\": \"2021-01-01 00:00:00.000000\",\r\n    \"enddatetime\": \"2021-12-31 23:59:59.000000\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -893,7 +847,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/roomunavailablility/8",
+					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/makeroomunavailable/8",
 					"protocol": "https",
 					"host": [
 						"booking-app-joineando",
@@ -903,7 +857,7 @@
 					"path": [
 						"joineando-del-verbo-join",
 						"room",
-						"roomunavailablility",
+						"makeroomunavailable",
 						"8"
 					]
 				}
@@ -917,7 +871,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n     \"userid\": 19,\r\n     \"roomunavailabilityid\": 19\r\n}",
+					"raw": "{\r\n     \"userid\": 13,\r\n     \"roomunavailabilityid\": 10\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -925,7 +879,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/roomunavailablility/8",
+					"raw": "https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/makeroomavailable/",
 					"protocol": "https",
 					"host": [
 						"booking-app-joineando",
@@ -935,8 +889,8 @@
 					"path": [
 						"joineando-del-verbo-join",
 						"room",
-						"roomunavailablility",
-						"8"
+						"makeroomavailable",
+						""
 					]
 				}
 			},
