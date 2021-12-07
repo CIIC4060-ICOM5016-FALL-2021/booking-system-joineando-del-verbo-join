@@ -12,23 +12,29 @@ function CreateRoom({active }) {
     const [open, setOpen] = useState(false);
     const [buildings, setBuildings] = useState([]);
     const [roomtypes, setRoomTypes] = useState([]);
+    const [rooms, setRooms] = useState([]);
     const [roomNumber, setRoomNumber] = useState("");
     const [roomCapacity, setRoomCapacity] = useState(0);
     const [modalMessage, setModalMessage] = useState("");
     const [modalHeader, setModalHeader] = useState("");
     const [buildingid, setBuildingId] = useState(-1);
     const [roomtypeid, setRoomType] = useState(-1);
+    const [roomid, setRoomId] = useState(0);
+    const [warning, setwarning] = useState(false);
+    const [deleted, setdeleted] = useState(false);
 
 
     const handleRoomNumber = (e, { value }) => setRoomNumber(value);
     const handleRoomCapacity = (e, { value }) => setRoomCapacity(value);
     const handleBuildingId = (e, { value }) => setBuildingId(value);
     const handleRoomType = (e, { value }) => setRoomType(value);
+    const handleRoomId = (e, { value }) => setRoomId(value);
 
 
     useEffect(() => {
         fetchBuildings()
         fetchRoomTypes()
+        fetchAllRooms()
     }, [])
 
 
@@ -56,6 +62,16 @@ function CreateRoom({active }) {
             });
     }
 
+    const fetchAllRooms = async () => {
+        fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room')
+            .then((response) => response.json())
+            .then((data) => {
+                if (data) {
+                    setRooms(data)
+                }
+            })
+    }
+
     const getAllBuildings = buildings.map(item => {
         return {
             key: item.buildingid,
@@ -70,6 +86,14 @@ function CreateRoom({active }) {
             key: item.roomtypeid,
             text: item.roomtypename,
             value: item.roomtypeid
+        }
+    })
+
+    const getAllRooms = rooms.map(item => {
+        return {
+            key: item.roomid,
+            text: item.buildingname + " " + item.roomnumber ,
+            value: item.roomid
         }
     })
 
@@ -112,10 +136,50 @@ function CreateRoom({active }) {
             });
         }
 
+        const deleteRoom = async () => {
+            if (roomid === ""){
+                setModalHeader("Please, select room")
+                setModalMessage("The field needs to have a roomid to be deleted.");
+                setOpen(true);
+                return;
+
+            }
+            const request = {
+                method: 'DELETE',
+            };
+            fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/${roomid}`, request)
+                .then((response) => {
+                    if (response.status === 200) {
+                        setdeleted(true);
+                        setwarning(false);
+                        setdeleted(true);
+                        setModalHeader("Success!");
+                        setModalMessage("Room was deleted. All reservations related to that Room were deleted as well.");
+                        setOpen(true)
+                        fetchAllRooms()
+                    }
+                    else if (response.status === 400) {
+                        setwarning(false);
+                        setdeleted(false);
+                        setModalHeader("Error!");
+                        setModalMessage("Room cannot be deleted.");
+                        setOpen(true);
+                    }
+                })
+                .catch((e) => {
+                    setwarning(false);
+                    setdeleted(false);
+                    setModalHeader("Error!");
+                    setModalMessage("bah");
+                    console.log(e)
+                    setOpen(true);
+                });
+        }
+
 
     return (
         <Segment>
-            <Header dividing textAlign="center" size="huge">Create, update and delete rooms</Header>
+            <Header dividing textAlign="center" size="huge">Create or delete rooms</Header>
             <Modal
                 centered={false}
                 open={open}
@@ -133,8 +197,9 @@ function CreateRoom({active }) {
                 </Modal.Actions>
             </Modal>
             <Segment placeholder>
-                <Grid columns={1} relaxed='very' stackable>
+                <Grid columns={2} relaxed='very' stackable>
                     <Grid.Column >
+                    <Header textAlign="center">Create Room</Header>
                         <Form>
                             <Form.Input
                                 icon='bookmark'
@@ -173,9 +238,26 @@ function CreateRoom({active }) {
                             <Button content='Create Room' primary onClick={createRoom} />
                         </Form>
                     </Grid.Column>
+                        <Grid.Column verticalAlign='middle'>
+                            <Header textAlign="center">Delete Room</Header>
+                            <Form>
+                                <Form.Dropdown
+                                    placeholder="Select Room"
+                                    fluid
+                                    selection
+                                    value={roomid}
+                                    options={getAllRooms}
+                                    onChange={handleRoomId}
+                                />
+                                <Button content='Delete Room' primary onClick={deleteRoom} />
+                            </Form>
+                        </Grid.Column>
                 </Grid>
+                <Divider vertical>Or</Divider>
             </Segment>
         </Segment>
+
+        
     )
 
 
