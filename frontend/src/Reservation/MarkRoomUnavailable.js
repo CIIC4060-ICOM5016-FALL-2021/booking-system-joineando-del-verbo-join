@@ -17,6 +17,7 @@ export default function MarkRoomUnavailable() {
     const localizer = momentLocalizer(moment);
     const [rooms, setRooms] = useState([])
     const [room, setRoom] = useState("")
+    const converter = `${new Date(Date.now())}`.substring(25);
 
     const handleRoom = (e, { value }) => { setRoom(value); setDates([]); setEvents([]); fetchUnavailability(value); };
 
@@ -51,8 +52,8 @@ export default function MarkRoomUnavailable() {
                     setEvents(data.map(item => {
                         return {
                             "title": "Unavailable Time Space",
-                            "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
-                            "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
+                            "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + converter),
+                            "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + converter),
                             "allDay": false,
                             "key": item.roomunavailabilityid
                         }

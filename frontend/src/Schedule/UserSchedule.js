@@ -30,6 +30,7 @@ function UserSchedule() {
     const [done, setDone] = useState(false);
     const [invitees, setinvitees] = useState([])
     const [toDelete, settoDelete] = useState([])
+    const converter = `${new Date(Date.now())}`.substring(25);
 
     const handleToDelete = (e, { value }) => { settoDelete(value) };
 
@@ -50,8 +51,8 @@ function UserSchedule() {
                     setEvents(data.map(item => {
                         return {
                             "title": item.reservationname,
-                            "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
-                            "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
+                            "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + converter),
+                            "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + converter),
                             "allDay": false,
                             "host": item.firstname + " " + item.lastname,
                             "reservationid": item.reservationid,

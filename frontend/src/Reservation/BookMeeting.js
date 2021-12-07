@@ -96,8 +96,8 @@ function BookMeeting() {
     const fetchUnavailableSlots = (start, end) => {
         const json_format = {
             usersIDs: [...invitees, userid],
-            startdatetime: "2021-01-01 00:00:00.000000",
-            enddatetime: "2021-12-31 23:59:59.000000"
+            startdatetime: "2000-01-01 00:00:00.000000",
+            enddatetime: "2121-12-31 23:59:59.000000"
         }
         fetch('https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/usersunavailability', {
             method: 'POST',

@@ -15,8 +15,8 @@ export default function MarkUserUnavailable() {
     const [events, setEvents] = useState([]);
     const [selected, setSelected] = useState({})
     const localizer = momentLocalizer(moment);
+    const converter = `${new Date(Date.now())}`.substring(25);
 
-    // console.log(moment('2018-07-17 19:00:00', 'YYYY-MM-DD HH:mm:ss').tz('UTC').format()) // "2018-07-18T00:00:00Z")
 
 
     const fetchUnavailability = () => {
@@ -27,8 +27,8 @@ export default function MarkUserUnavailable() {
                     setEvents(data.map(item => {
                         return {
                             "title": "Unavailable Time Space",
-                            "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
-                            "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
+                            "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + converter),
+                            "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + converter),
                             "allDay": false,
                             "key": item.userunavailabilityid
                         }
