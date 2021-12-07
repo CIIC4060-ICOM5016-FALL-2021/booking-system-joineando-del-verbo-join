@@ -42,7 +42,7 @@ function UserSchedule() {
 
     const formatEvents = events.map(item => {
         return {
-            "title": item.reservationname + " by " + item.firstname + " " + item.lastname,
+            "title": item.roomid === -1 ? item.reservationname : item.reservationname + " by " + item.firstname + " " + item.lastname,
             "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
             "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
             "allDay": false,
@@ -58,7 +58,7 @@ function UserSchedule() {
                 <Calendar
                     eventPropGetter={event => ({
                         style: {
-                            backgroundColor: event.roomid === -1 ? "#FD2A2A" : event.color,
+                            backgroundColor: event.title === "Unavailable Time Space" ? "#FD2A2A" : event.color,
                         },
                     })}
                     onNavigate={(date) => fetchEvents(date)}

@@ -194,7 +194,7 @@ export default function MarkRoomUnavailable() {
                             })}
                             selectable
                             onSelectSlot={() => setSelected({})}
-                            onSelectEvent={(event) => event.title === "Unavailable Time Space" ? setSelected(event) : setSelected({})}
+                            onSelectEvent={(event) => event.roomid === -1 ? setSelected(event) : setSelected({})}
                             localizer={localizer}
                             startAccessor="start"
                             events={[...dates, ...events]}
