@@ -265,6 +265,16 @@ def handle_get_all_buildings():
         return jsonify('METHOD NOT ALLOWED'), 405
 
 
+#####################################################################
+#                          ROOM TYPE                                #
+#####################################################################
+
+@app.route('/joineando-del-verbo-join/roomtype', methods = ['GET'])
+def handle_get_all_room_type():
+    if request.method == 'GET':
+        return BaseRoom().getAllRoomTypes()
+    else:
+        return jsonify('METHOD NOT ALLOWED'), 405
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -82,6 +82,12 @@ class BaseRoom:
         result['buildingname'] = row[1]
         return result
 
+    def build_map_dict_roomtype(self, row):
+        result = {}
+        result['roomtypeid'] = row[0]
+        result['roomtypename'] = row[1]
+        return result
+
 
     # methods
     def addNewRoom(self, json):
@@ -276,5 +282,14 @@ class BaseRoom:
         result_list = []
         for row in building_list:
             obj = self.build_map_dict_building(row)
+            result_list.append(obj)
+        return jsonify(result_list), 200
+
+    def getAllRoomTypes(self):
+        dao = RoomDAO()
+        room_type_list = dao.getAllRoomTypes()
+        result_list = []
+        for row in room_type_list:
+            obj = self.build_map_dict_roomtype(row)
             result_list.append(obj)
         return jsonify(result_list), 200

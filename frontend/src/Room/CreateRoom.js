@@ -8,17 +8,35 @@
 
 // function CreateRoom() {
 
+//     const [buildings, setBuildings] = useState([])
+
+//     useEffect(() => {
+//         fetchBuildings()
+//     }, [])
+
+
 
 
 //     const fetchBuildings = async () => {
-//         fetch("https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room")
+//         fetch("https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/buildings")
 //             .then((response) => response.json())
 //             .then((data) => {
 //                 if (data) {
-//                     setRooms(data);
+//                     setBuildings(data);
 //                 }
 //             });
 //     }
 
+//     const getAllBuildings = buildings.map(item => {
+//         return {
+//             "buildingid" : item.buildingid,
+//             "buildingname": item.buildingname
+            
+//         }
+//     })
+
 
 // }
+
+
+// export default SignUp;
