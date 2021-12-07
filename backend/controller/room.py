@@ -47,6 +47,14 @@ class BaseRoom:
         result['userid'] = row[2]
         return result
 
+    def build_map_dict_findroomavailable(self, row):
+        result={}
+        result['roomid'] = row[0]
+        result['buildingname'] = row[1]
+        result['roomnumber'] = row[2]
+        result['roomtypename'] = row[3]
+        return result
+
     def build_map_dict_roomavailable(self, row):
         result = {}
         result['buildingname'] = row[0]
@@ -203,8 +211,10 @@ class BaseRoom:
         start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S.%f")
         end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S.%f")
         dao = RoomDAO()
-        room = dao.availableRoomAtTimeFrame(start, end)
-        result = self.build_map_dict_roomavailable(room)
+        rooms = dao.availableRoomAtTimeFrame(start, end)
+        result = []
+        for room in rooms:
+            result.append(self.build_map_dict_findroomavailable(room))
         return jsonify(result), 200
 
     #statistics

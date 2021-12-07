@@ -62,9 +62,9 @@ def handle_timeunavailable(userid):
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
 
-@app.route('/joineando-del-verbo-join/usersunavailability', methods=['GET'])
+@app.route('/joineando-del-verbo-join/usersunavailability', methods=['POST'])
 def handle_usernavailability():
-    if request.method == 'GET':
+    if request.method == 'POST':
         return BaseUsers().checkUnavailableOnTimeFrame(request.json)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405
@@ -117,9 +117,9 @@ def handle_roomid(roomid):
         return jsonify("METHOD NOT ALLOWED"), 405
 
 
-@app.route('/joineando-del-verbo-join/room/availableroom', methods=['GET'])
+@app.route('/joineando-del-verbo-join/room/availableroom', methods=['POST'])
 def handle_availableroom():
-    if request.method == 'GET':
+    if request.method == 'POST':
         return BaseRoom().availableRoomAtTimeFrame(request.json)
     else:
         return jsonify("METHOD NOT ALLOWED"), 405

@@ -101,36 +101,23 @@ class RoomDAO:
     # change
     def availableRoomAtTimeFrame(self, start, end):
         cursor = self.conn.cursor()
-        queryavailable = "select roomid " \
-                         "from room " \
-                         "where roomid NOT IN " \
-                         "((select roomid from reservation) " \
+        queryavailable = "select distinct roomid, buildingname, roomnumber, roomtypename " \
+                         "from room natural inner join building, roomtype " \
+                         "where typeid = roomtypeid " \
+                         "and roomid NOT IN (select distinct t.roomid " \
+                         "from ((select roomid, startdatetime, enddatetime from reservation) " \
                          "union all " \
-                         "(select roomid from roomunavailavility));"
-        cursor.execute(queryavailable)
-        availables = cursor.rowcount
-        print(availables)
+                         "(select roomid, startdatetime, enddatetime from roomunavailability)) as t " \
+                         "where (%s >= t.startdatetime and %s < t.enddatetime) " \
+                         "or (%s > t.startdatetime and %s <= t.enddatetime) " \
+                         "or (%s <= t.startdatetime and %s >= t.enddatetime));"
+        cursor.execute(queryavailable, (start, start, end, end, start, end))
 
-        if availables > 0:
-            roomid = cursor.fetchone()[0]
-        else:
-            queryID = "select t.roomid " \
-                      "from ((select roomid, startdatetime, enddatetime from reservation) " \
-                      "union all " \
-                      "(select roomid, startdatetime, endatetime from roomunavailability)) as t " \
-                      "where %s <= t.startdatetime " \
-                      "and %s >= t.enddatetime;"
-            cursor.execute(queryID, (end, start,))
-            roomid = cursor.fetchone()[0]
-
-
-        query = "select buildingname, roomnumber, roomtypename " \
-                "from room natural inner join building natural inner join roomtype " \
-                "where roomid = %s;"
-        cursor.execute(query, (roomid,))
-        room = cursor.fetchone()
+        rooms = []
+        for room in cursor:
+            rooms.append(room)
         self.conn.close()
-        return room
+        return rooms
 
     #statistics
 
