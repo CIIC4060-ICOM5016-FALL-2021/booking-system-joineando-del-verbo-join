@@ -80,6 +80,7 @@ class BaseRoom:
         result = {}
         result['buildingid'] = row[0]
         result['buildingname'] = row[1]
+        return result
 
 
     # methods
