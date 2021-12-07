@@ -76,6 +76,11 @@ class BaseRoom:
         result['roomunavailabilityid'] = row[2]
         return result
 
+    def build_map_dict_building(self, row):
+        result = {}
+        result['buildingid'] = row[0]
+        result['buildingname'] = row[1]
+
 
     # methods
     def addNewRoom(self, json):
@@ -263,3 +268,12 @@ class BaseRoom:
                 element = self.build_map_dict_unavailable(slot)
                 result_list.append(element)
             return jsonify(result_list), 200
+
+    def getAllBuildings(self):
+        dao = RoomDAO()
+        building_list = dao.getAllBuildings()
+        result_list = []
+        for row in building_list:
+            obj = self.build_map_dict_building(row)
+            result_list.append(obj)
+        return jsonify(result_list), 200
