@@ -7,7 +7,7 @@ import UserProfile from './UserProfile';
 import TopBarMenu from '../Menus/TopBarMenu';
 import MarkRoomUnavailable from '../Reservation/MarkRoomUnavailable';
 import RoomSchedule from '../Schedule/RoomSchedule';
-// import CreateRoom from '../Room/CreateRoom'
+import CreateRoom from '../Room/CreateRoom'
 
 function UserView() {
     const [isAuth, setIsAuth] = useState(false)
@@ -33,9 +33,9 @@ function UserView() {
         panes.push({
             menuItem: 'Room Schedule', render: () => <Tab.Pane active={isAuth}><RoomSchedule /></Tab.Pane>
         });
-        // panes.push({
-        //     menuItem: 'Create Room', render: () => <Tab.Pane active={isAuth}><CreateRoom /></Tab.Pane>
-        // });
+        panes.push({
+            menuItem: 'Create Room', render: () => <Tab.Pane active={isAuth}><CreateRoom /></Tab.Pane>
+        });
 
     }
 
