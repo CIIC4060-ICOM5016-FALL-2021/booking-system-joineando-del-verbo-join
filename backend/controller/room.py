@@ -129,7 +129,7 @@ class BaseRoom:
         dao = RoomDAO()
         room_tuple = dao.getRoomById(roomid)
         if room_tuple:
-            result = self.build_map_dict(room_tuple)
+            result = self.build_map_dict_all(room_tuple)
             return jsonify(result), 200
         else:
             return jsonify("ROOM NOT FOUND"), 404
