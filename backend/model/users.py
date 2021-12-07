@@ -121,11 +121,11 @@ class UsersDAO:
     # changed - rethink
     def allDaySchedule(self, userid, startday, endday):
         cursor = self.conn.cursor()
-        query1 = "(select reservationid, reservationname, roomid, startdatetime, enddatetime , firstname, lastname " \
+        query1 = "(select reservationid, reservationname, roomid, startdatetime, enddatetime , firstname, lastname, hostid " \
                  "from reservation  inner join users on(users.userid = reservation.hostid)" \
                  "where hostid = %s and startdatetime >= %s and enddatetime <= %s) " \
                  "union all " \
-                 "(select reservationid, reservationname, roomid, startdatetime, enddatetime , firstname, lastname " \
+                 "(select reservationid, reservationname, roomid, startdatetime, enddatetime , firstname, lastname, hostid " \
                  "from reservation natural inner join invitation inner join users on(users.userid = reservation.hostid) " \
                  "where inviteeid = %s and startdatetime >= %s and enddatetime <= %s);"
         cursor.execute(query1, (userid, startday, endday, userid, startday, endday))
