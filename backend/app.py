@@ -258,7 +258,7 @@ def handle_busiesthours():
 #                          BUILDING                                 #
 #####################################################################
 
-@app.route('/joineando-del-verbo-join/buildings/', methods = ['GET'])
+@app.route('/joineando-del-verbo-join/buildings', methods = ['GET'])
 def handle_get_all_buildings():
     if request.method == 'GET':
         return RoomDAO().getAllBuildings

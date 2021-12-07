@@ -205,7 +205,7 @@ class RoomDAO:
 
     def getAllBuildings(self):
         cursor = self.conn.cursor()
-        query = "select buildingid, buildingname from building"
+        query = "select buildingid, buildingname from building;"
         cursor.execute(query)
         result = []
         for row in cursor:
