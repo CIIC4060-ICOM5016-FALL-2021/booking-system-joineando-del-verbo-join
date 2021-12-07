@@ -36,6 +36,8 @@ class BaseRoom:
         result['reservationname'] = row[2]
         result['startdatetime'] = row[3]
         result['enddatetime'] = row[4]
+        result["firstname"] = row[5]
+        result["lastname"] = row[6]
         return result
 
     def build_map_dict_name(self, row: tuple):
@@ -165,7 +167,7 @@ class BaseRoom:
                     obj = self.build_map_dict_schedule(row)
                     result_list.append(obj)
                 for row in sch_unavailable:
-                    tuple = (-1, -1, "Unavailable Time Space", row[0], row[1])
+                    tuple = (-1, -1, "Unavailable Time Space", row[0], row[1], "", "")
                     obj = self.build_map_dict_schedule(tuple)
                     result_list.append(obj)
                 return jsonify(result_list), 200
