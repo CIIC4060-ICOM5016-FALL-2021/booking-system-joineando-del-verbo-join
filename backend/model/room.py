@@ -57,8 +57,8 @@ class RoomDAO:
     # changed
     def allDayScheduleRoom(self, roomid, startday, endday):
         cursor = self.conn.cursor()
-        query1 = "select hostid, reservationid, reservationname, startdatetime, enddatetime " \
-                 "from reservation " \
+        query1 = "select hostid, reservationid, reservationname, startdatetime, enddatetime , firstname, lastname " \
+                 "from reservation  inner join users on(users.userid = reservation.hostid)" \
                  "where roomid = %s and startdatetime >= %s and enddatetime <= %s;"
         cursor.execute(query1, (roomid, startday, endday,))
         result1 = []
@@ -66,7 +66,7 @@ class RoomDAO:
             result1.append(row)
 
         query2 = "select startdatetime, enddatetime " \
-                 "from roomunavailability " \
+                 "from roomunavailability  " \
                  "where roomid = %s and startdatetime >= %s and enddatetime <= %s;"
         cursor.execute(query2, (roomid, startday, endday,))
         result2 = []
