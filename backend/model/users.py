@@ -134,7 +134,7 @@ class UsersDAO:
             result1.append(row)
         print(result1)
 
-        query2 = "select startdatetime, enddatetime , firstname, lastname " \
+        query2 = "select startdatetime, enddatetime " \
                  "from userunavailability  natural inner join users " \
                  "where userid = %s and startdatetime >= %s and enddatetime <= %s;"
         cursor.execute(query2, (userid, startday, endday))
