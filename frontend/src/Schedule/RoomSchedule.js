@@ -20,6 +20,8 @@ function RoomSchedule() {
     const [open, setOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
     const [modalHeader, setModalHeader] = useState("");
+    const [invitees, setInvitees] = useState([]);
+
 
     const handleRoom = (e, { value }) => { setRoom(value); setEvents([]); };
 
@@ -69,12 +71,35 @@ function RoomSchedule() {
             });
     }
 
+
+    const fetchDetails = (event) => {
+        console.log("here")
+        if (event.roomid === -1) return;
+        fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/invitation/${event.reservationid}`)
+            .then((response) => response.json())
+            .then((data) => {
+                setInvitees(data);
+                fetch(`https://booking-app-joineando.herokuapp.com/joineando-del-verbo-join/room/${room}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        setModalHeader(event.title);
+                        var message = `Host: ${event["host"]} |
+                    Room: ${data.buildingname} - ${data.roomnumber} | Invitees: ${invitees.map(item => " " + item.firstname + " " + item.lastname + " ")}`;
+                        setModalMessage(message)
+                        setOpen(true);
+                    });
+            });
+    }
+
     const formatEvents = events.map(item => {
         return {
-            "title": item.roomid === -1 ? item.reservationname : item.reservationname + " by " + item.firstname + " " + item.lastname,
+            "title": item.reservationname,
             "start": new Date(new Date(item.startdatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
             "end": new Date(new Date(item.enddatetime).toUTCString().slice(0, 26) + "GMT-0400 (Bolivia Time)"),
-            "allDay": false
+            "allDay": false,
+            "host": item.firstname + " " + item.lastname,
+            "reservationid": item.reservationid,
+            "roomid": item.roomid
         }
     });
 
@@ -107,6 +132,7 @@ function RoomSchedule() {
                             localizer={localizer}
                             startAccessor="start"
                             endAccessor="end"
+                            onSelectEvent={(event) => fetchDetails(event)}
                             events={formatEvents}
                             views={["month", "day"]}
                             defaultDate={Date.now()}
