@@ -99,7 +99,8 @@ function RoomSchedule() {
             "allDay": false,
             "host": item.firstname + " " + item.lastname,
             "reservationid": item.reservationid,
-            "roomid": item.roomid
+            "roomid": item.roomid,
+            "hostid": item.hostid
         }
     });
 
@@ -125,7 +126,7 @@ function RoomSchedule() {
                         <Calendar
                             eventPropGetter={event => ({
                                 style: {
-                                    backgroundColor: event.title === "Unavailable Time Space" ? "#FD2A2A" : event.color,
+                                    backgroundColor: event.title === "Unavailable Time Space" ? "grey" : event.color,
                                 },
                             })}
                             onNavigate={(date) => fetchEvents(date)}
