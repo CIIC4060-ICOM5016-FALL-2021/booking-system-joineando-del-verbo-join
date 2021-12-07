@@ -213,6 +213,16 @@ class RoomDAO:
         self.conn.close()
         return result
 
+    def getAllRoomTypes(self):
+        cursor = self.conn.cursor()
+        query = "select rooomtypeid, roomtypename from roomtype;"
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        self.conn.close()
+        return result
+
 
 
 
