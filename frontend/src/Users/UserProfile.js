@@ -66,6 +66,7 @@ export default function UserProfile() {
             });
     };
 
+
     const deleteUser = async () => {
         const request = {
             method: 'DELETE',
