@@ -1,0 +1,6 @@
+./venv/
+./idea/
+backend/.idea/
+backend/config/__pycache__/
+backend/controller/__pycache__/
+backend/model/__pycache__/
